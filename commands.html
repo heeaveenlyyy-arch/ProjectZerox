@@ -1,0 +1,1458 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECT ZEROX | Commands</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #000;
+    --panel: #090909;
+    --panel2: #101010;
+    --border: #222;
+    --text: #f5f5f5;
+    --muted: #858585;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(ellipse at 50% -20%, rgba(90,90,90,.13), transparent 55%),
+        #000;
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* AMBIENT BACKGROUND */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: -30%;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.035), transparent 25%),
+        radial-gradient(circle at 80% 65%, rgba(120,120,120,.035), transparent 30%);
+    animation: ambientMove 16s ease-in-out infinite alternate;
+}
+
+@keyframes ambientMove {
+    from { transform: translate(-2%, -1%) scale(1); }
+    to { transform: translate(2%, 2%) scale(1.08); }
+}
+
+header, main, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #292929;
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* NAVBAR */
+
+header {
+    height: 78px;
+    padding: 0 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,.94);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
+    transition: .3s;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    transition: .35s ease;
+}
+
+.logo:hover {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 0 9px rgba(255,255,255,.2));
+}
+
+.logo .project {
+    color: #f5f5f5;
+}
+
+.logo .zerox {
+    background: linear-gradient(90deg, #666, #fff, #777, #666);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: logoShine 5s linear infinite;
+}
+
+@keyframes logoShine {
+    to { background-position: 200% center; }
+}
+
+nav {
+    display: flex;
+    gap: 30px;
+}
+
+nav a {
+    position: relative;
+    color: #888;
+    text-decoration: none;
+    font-size: 13px;
+    transition: color .3s ease;
+}
+
+nav a:hover,
+nav a.active {
+    color: white;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #fff;
+    transition: width .3s ease;
+}
+
+nav a:hover::after,
+nav a.active::after {
+    width: 100%;
+}
+
+/* MAIN */
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 75px 25px;
+}
+
+.heading {
+    margin-bottom: 38px;
+    animation: fadeUp .8s ease both;
+}
+
+.heading small {
+    color: #777;
+    letter-spacing: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.heading h1 {
+    font-size: clamp(38px, 6vw, 60px);
+    letter-spacing: -2px;
+    margin: 15px 0;
+    text-shadow: 0 0 35px rgba(255,255,255,.09);
+    animation: titleAppear 1s ease both;
+}
+
+.heading p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 14px;
+    max-width: 550px;
+}
+
+.heading-line {
+    width: 65px;
+    height: 2px;
+    background: #555;
+    margin-top: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.heading-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+    animation: lineShine 3s ease-in-out infinite;
+}
+
+@keyframes lineShine {
+    0% { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(150%); }
+}
+
+@keyframes titleAppear {
+    from {
+        opacity: 0;
+        letter-spacing: 5px;
+        filter: blur(7px);
+    }
+    to {
+        opacity: 1;
+        letter-spacing: -2px;
+        filter: blur(0);
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* SEARCH */
+
+.search-area {
+    margin-bottom: 30px;
+    position: relative;
+    animation: fadeUp .8s .1s ease both;
+}
+
+.search-area input {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 18px 20px 18px 48px;
+    color: white;
+    outline: none;
+    font-size: 13px;
+    transition: all .35s ease;
+}
+
+.search-area input:focus {
+    border-color: #666;
+    background: #0c0c0c;
+    box-shadow:
+        0 0 0 3px rgba(255,255,255,.035),
+        0 0 25px rgba(255,255,255,.045);
+    transform: translateY(-2px);
+}
+
+.search-icon {
+    position: absolute;
+    left: 19px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 17px;
+    transition: .3s ease;
+}
+
+.search-area:focus-within .search-icon {
+    color: white;
+    transform: translateY(-50%) scale(1.15);
+}
+
+/* LAYOUT */
+
+.layout {
+    display: grid;
+    grid-template-columns: 235px 1fr;
+    gap: 25px;
+    animation: fadeUp .8s .15s ease both;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    height: fit-content;
+    background: rgba(9,9,9,.92);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    padding: 20px 13px;
+    position: sticky;
+    top: 100px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.3);
+}
+
+.sidebar-title {
+    color: #666;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin: 3px 10px 17px;
+    text-transform: uppercase;
+}
+
+.category {
+    width: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #999;
+    text-align: left;
+    padding: 13px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    position: relative;
+    overflow: hidden;
+    transition: all .3s cubic-bezier(.2,.8,.2,1);
+}
+
+.category-icon {
+    color: #777;
+    font-size: 15px;
+    width: 19px;
+    text-align: center;
+    transition: .3s ease;
+}
+
+.category:hover {
+    transform: translateX(4px);
+    background: #151515;
+    border-color: #292929;
+    color: white;
+}
+
+.category:hover .category-icon {
+    transform: scale(1.2);
+    color: white;
+}
+
+.category.selected {
+    background: #171717;
+    border-color: #292929;
+    color: white;
+    box-shadow: inset 0 0 20px rgba(255,255,255,.025);
+}
+
+.category.selected .category-icon {
+    color: white;
+}
+
+.category::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 2px;
+    height: 60%;
+    background: white;
+    opacity: 0;
+    transform: scaleY(.3);
+    transition: .3s ease;
+}
+
+.category.selected::before {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+/* COMMAND CONTENT */
+
+.content {
+    min-width: 0;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 19px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-title h2 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.count {
+    color: #777;
+    font-size: 11px;
+}
+
+.command-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+/* COMMAND CARDS */
+
+.command {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    overflow: hidden;
+    position: relative;
+    animation: cardAppear .45s ease both;
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        background .3s ease,
+        box-shadow .3s ease;
+}
+
+.command:nth-child(2) { animation-delay: .035s; }
+.command:nth-child(3) { animation-delay: .07s; }
+.command:nth-child(4) { animation-delay: .105s; }
+.command:nth-child(5) { animation-delay: .14s; }
+.command:nth-child(6) { animation-delay: .175s; }
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.command:hover {
+    transform: translateY(-3px);
+    border-color: #505050;
+    background: #0b0b0b;
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.5),
+        0 0 18px rgba(255,255,255,.025);
+}
+
+.command.open {
+    border-color: #444;
+    background: #080808;
+}
+
+.command-top {
+    width: 100%;
+    padding: 19px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: transparent;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.command-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.command-symbol {
+    width: 39px;
+    height: 39px;
+    display: grid;
+    place-items: center;
+    background: #141414;
+    border: 1px solid #292929;
+    border-radius: 8px;
+    color: #aaa;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: all .35s ease;
+}
+
+.command:hover .command-symbol {
+    color: white;
+    border-color: #555;
+    background: #1b1b1b;
+    box-shadow: 0 0 16px rgba(255,255,255,.06);
+    transform: rotate(-5deg) scale(1.06);
+}
+
+.command-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+
+.command-desc {
+    color: #777;
+    font-size: 11px;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.command-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.command-type {
+    color: #888;
+    background: #121212;
+    border: 1px solid #292929;
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 9px;
+    letter-spacing: .7px;
+    transition: .25s ease;
+}
+
+.command:hover .command-type {
+    border-color: #555;
+    color: white;
+}
+
+.arrow {
+    color: #777;
+    font-size: 17px;
+    transition: transform .35s cubic-bezier(.2,.8,.2,1);
+}
+
+.command.open .arrow {
+    transform: rotate(180deg);
+    color: white;
+}
+
+/* DETAILS */
+
+.command-details {
+    display: none;
+    padding: 22px;
+    border-top: 1px solid var(--border);
+    background: #050505;
+}
+
+.command.open .command-details {
+    display: block;
+    animation: detailsAppear .35s ease both;
+}
+
+@keyframes detailsAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+        filter: blur(3px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.detail-block {
+    margin-bottom: 20px;
+}
+
+.detail-block:last-child {
+    margin-bottom: 0;
+}
+
+.detail-block h4 {
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+
+.detail-block p {
+    color: #bbb;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.variants {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.variant {
+    background: #111;
+    border: 1px solid #292929;
+    padding: 9px 12px;
+    border-radius: 5px;
+    color: #ddd;
+    font-family: Consolas, monospace;
+    font-size: 11px;
+    transition: all .25s ease;
+}
+
+.variant:hover {
+    color: white;
+    border-color: #666;
+    background: #1a1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(255,255,255,.04);
+}
+
+.example {
+    background: #101010;
+    border: 1px solid #242424;
+    padding: 13px;
+    border-radius: 6px;
+    color: #ddd;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.permission-tag {
+    display: inline-block;
+    border: 1px solid #292929;
+    background: #101010;
+    color: #aaa;
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 10px;
+}
+
+/* EMPTY SEARCH */
+
+.empty {
+    padding: 55px 20px;
+    border: 1px dashed #292929;
+    border-radius: 9px;
+    text-align: center;
+    color: #777;
+    font-size: 13px;
+}
+
+.empty strong {
+    display: block;
+    font-size: 20px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+/* FOOTER */
+
+footer {
+    border-top: 1px solid var(--border);
+    padding: 35px 20px;
+    text-align: center;
+    color: #555;
+    font-size: 11px;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer-logo {
+    color: #aaa;
+    margin-bottom: 10px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    transition: .3s ease;
+}
+
+.footer-logo:hover {
+    color: white;
+    letter-spacing: 5px;
+    text-shadow: 0 0 15px rgba(255,255,255,.2);
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 760px) {
+    header {
+        padding: 0 18px;
+    }
+
+    .logo {
+        font-size: 14px;
+        gap: 8px;
+    }
+
+    nav {
+        gap: 13px;
+    }
+
+    nav a {
+        font-size: 11px;
+    }
+
+    .container {
+        padding: 45px 16px;
+    }
+
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .sidebar-title {
+        width: 100%;
+    }
+
+    .category {
+        width: auto;
+        margin: 0;
+        padding: 10px;
+    }
+
+    .command-top {
+        padding: 15px;
+    }
+
+    .command-symbol {
+        width: 34px;
+        height: 34px;
+    }
+
+    .command-type {
+        display: none;
+    }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        <span class="project">PROJECT</span>
+        <span class="zerox">ZEROX</span>
+    </div>
+
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="commands.html" class="active">Comandos</a>
+        <a href="index.html#invite">Invitar bot</a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="heading">
+        <small>PROJECT ZEROX / DOCUMENTATION</small>
+        <h1>Command Center.</h1>
+        <p>
+            Explora todas las funciones de Zerox.
+            Descubre los comandos, sus variantes, ejemplos
+            y permisos necesarios.
+        </p>
+        <div class="heading-line"></div>
+    </section>
+
+    <div class="search-area">
+        <span class="search-icon">⌕</span>
+        <input
+            type="text"
+            id="search"
+            placeholder="Buscar un comando..."
+            autocomplete="off"
+        >
+    </div>
+
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-title">Explorar categorías</div>
+
+            <button class="category selected" data-category="all">
+                <span class="category-icon">⌘</span>
+                Todos
+            </button>
+
+            <button class="category" data-category="moderation">
+                <span class="category-icon">◈</span>
+                Moderación
+            </button>
+
+            <button class="category" data-category="automessages">
+                <span class="category-icon">▤</span>
+                Sistemas
+            </button>
+
+            <button class="category" data-category="fun">
+                <span class="category-icon">✧</span>
+                Diversión
+            </button>
+
+            <button class="category" data-category="marry">
+                <span class="category-icon">♡</span>
+                Matrimonios
+            </button>
+
+            <button class="category" data-category="utility">
+                <span class="category-icon">⚙</span>
+                Utilidad
+            </button>
+
+            <button class="category" data-category="info">
+                <span class="category-icon">ⓘ</span>
+                Información
+            </button>
+        </aside>
+
+        <section class="content">
+
+            <div class="section-title">
+                <h2 id="categoryTitle">Todos los comandos</h2>
+                <span class="count" id="count"></span>
+            </div>
+
+            <div class="command-list" id="commandList"></div>
+
+        </section>
+    </div>
+</main>
+
+<footer>
+    <div class="footer-logo">PROJECT ZEROX</div>
+    COMMAND CENTER · 2026
+</footer>
+
+<script>
+
+const commands = [
+
+/* MODERACIÓN */
+
+{
+name:"ban",category:"moderation",symbol:"◈",
+description:"Banea a un usuario del servidor.",
+detail:"Expulsa permanentemente a un miembro del servidor, según la configuración del comando.",
+usage:"Selecciona o menciona al usuario que deseas banear.",
+example:"?ban @usuario",
+permission:"Permiso de banear miembros.",
+variants:["?ban @usuario","/ban usuario"]
+},
+{
+name:"unban",category:"moderation",symbol:"◈",
+description:"Retira el baneo de un usuario.",
+detail:"Permite retirar el baneo de un usuario utilizando su ID.",
+usage:"Introduce el ID del usuario.",
+example:"?unban ID",
+permission:"Permiso de banear miembros.",
+variants:["?unban ID","/unban ID"]
+},
+{
+name:"kick",category:"moderation",symbol:"◈",
+description:"Expulsa a un miembro del servidor.",
+detail:"Expulsa al usuario seleccionado del servidor.",
+usage:"Menciona al usuario que deseas expulsar.",
+example:"?kick @usuario",
+permission:"Permiso de expulsar miembros.",
+variants:["?kick @usuario","/kick usuario"]
+},
+{
+name:"mute",category:"moderation",symbol:"◈",
+description:"Silencia o aísla a un usuario.",
+detail:"Aplica una restricción de comunicación al usuario seleccionado.",
+usage:"Selecciona al usuario que deseas silenciar.",
+example:"?mute @usuario",
+permission:"Permisos de moderación correspondientes.",
+variants:["?mute @usuario","/mute usuario"]
+},
+{
+name:"unmute",category:"moderation",symbol:"◈",
+description:"Retira el silencio de un usuario.",
+detail:"Retira la restricción de comunicación del usuario.",
+usage:"Selecciona al usuario que deseas desilenciar.",
+example:"?unmute @usuario",
+permission:"Permisos de moderación correspondientes.",
+variants:["?unmute @usuario","/unmute usuario"]
+},
+{
+name:"warn",category:"moderation",symbol:"◈",
+description:"Gestiona advertencias de usuarios.",
+detail:"Permite gestionar las advertencias de los miembros.",
+usage:"Consulta las opciones disponibles del comando.",
+example:"?warn",
+permission:"Administradores.",
+variants:["?warn","/warn"]
+},
+{
+name:"lock",category:"moderation",symbol:"◈",
+description:"Bloquea el canal actual.",
+detail:"Restringe el envío de mensajes en el canal actual.",
+usage:"Ejecuta el comando en el canal que deseas bloquear.",
+example:"?lock",
+permission:"Permisos de administración del canal.",
+variants:["?lock","/lock"]
+},
+{
+name:"unlock",category:"moderation",symbol:"◈",
+description:"Desbloquea el canal actual.",
+detail:"Restaura los permisos de escritura del canal.",
+usage:"Ejecuta el comando para desbloquear el canal.",
+example:"?unlock",
+permission:"Administradores.",
+variants:["?unlock","/lock (opción desbloquear)"]
+},
+{
+name:"purge",category:"moderation",symbol:"◈",
+description:"Elimina una cantidad determinada de mensajes.",
+detail:"Elimina mensajes del canal actual.",
+usage:"Indica la cantidad de mensajes que deseas eliminar.",
+example:"?purge 10",
+permission:"Administradores.",
+variants:["?purge cantidad","/purge"]
+},
+{
+name:"security",category:"moderation",symbol:"◈",
+description:"Configura la protección Anti-Flood.",
+detail:"Permite configurar las opciones de protección contra Flood.",
+usage:"Ejecuta el comando para abrir sus opciones.",
+example:"?security",
+permission:"Permisos de administración.",
+variants:["?security","/security"]
+},
+
+/* WELCOME, TICKETS Y BOOSTTRACKER */
+
+{
+name:"welcome edit",category:"automessages",symbol:"▤",
+description:"Personaliza el sistema de bienvenidas.",
+detail:"Abre un panel interactivo para personalizar mensajes, colores y variables.",
+usage:"Abre el panel de edición.",
+example:"/welcome edit",
+permission:"Permisos de configuración del servidor.",
+variants:["/welcome edit"]
+},
+{
+name:"welcome setup",category:"automessages",symbol:"▤",
+description:"Configura el canal de bienvenidas.",
+detail:"Configura el canal donde se enviarán los mensajes de bienvenida.",
+usage:"Selecciona el canal correspondiente.",
+example:"/welcome setup #bienvenidas",
+permission:"Permisos de configuración del servidor.",
+variants:["/welcome setup [canal]"]
+},
+{
+name:"welcome test",category:"automessages",symbol:"▤",
+description:"Envía una bienvenida de prueba.",
+detail:"Envía un mensaje de prueba al canal configurado.",
+usage:"Ejecuta el comando después de configurar el sistema.",
+example:"/welcome test",
+permission:"Permisos de configuración del servidor.",
+variants:["/welcome test"]
+},
+{
+name:"welcome enable",category:"automessages",symbol:"▤",
+description:"Activa las bienvenidas.",
+detail:"Activa el sistema de mensajes de bienvenida.",
+usage:"Ejecuta el comando para activar el sistema.",
+example:"/welcome enable",
+permission:"Permisos de configuración del servidor.",
+variants:["/welcome enable"]
+},
+{
+name:"welcome disable",category:"automessages",symbol:"▤",
+description:"Desactiva las bienvenidas.",
+detail:"Desactiva el sistema de mensajes de bienvenida.",
+usage:"Ejecuta el comando para desactivar el sistema.",
+example:"/welcome disable",
+permission:"Permisos de configuración del servidor.",
+variants:["/welcome disable"]
+},
+{
+name:"ticket edit",category:"automessages",symbol:"▤",
+description:"Personaliza el sistema de tickets.",
+detail:"Abre el panel privado de configuración del sistema de tickets.",
+usage:"Abre el panel de configuración.",
+example:"/ticket edit",
+permission:"Permisos de configuración del servidor.",
+variants:["/ticket edit"]
+},
+{
+name:"ticket setup",category:"automessages",symbol:"▤",
+description:"Configura y publica el panel de tickets.",
+detail:"Configura el canal y despliega el panel público de tickets.",
+usage:"Selecciona el canal donde estará el panel.",
+example:"/ticket setup #soporte",
+permission:"Permisos de configuración del servidor.",
+variants:["/ticket setup [canal]"]
+},
+{
+name:"ticket add",category:"automessages",symbol:"▤",
+description:"Añade un usuario al ticket actual.",
+detail:"Permite añadir a un usuario al ticket en el que se ejecuta el comando.",
+usage:"Selecciona al usuario que deseas añadir.",
+example:"/ticket add @usuario",
+permission:"Administradores o Staff.",
+variants:["/ticket add @usuario"]
+},
+{
+name:"boosttracker",category:"automessages",symbol:"▤",
+description:"Abre el panel de control de Boosts.",
+detail:"Abre el panel interactivo del rastreador de mejoras del servidor.",
+usage:"Ejecuta el comando para abrir el panel.",
+example:"/boosttracker",
+permission:"Permisos de configuración del servidor.",
+variants:["/boosttracker"]
+},
+{
+name:"boosttracker setup",category:"automessages",symbol:"▤",
+description:"Configura el canal de anuncios de Boosts.",
+detail:"Configura el canal donde se anunciarán las mejoras del servidor.",
+usage:"Ejecuta el comando para configurar el canal.",
+example:"/boosttracker setup",
+permission:"Permisos de configuración del servidor.",
+variants:["/boosttracker setup"]
+},
+{
+name:"boosttracker edit",category:"automessages",symbol:"▤",
+description:"Personaliza los anuncios de Boosts.",
+detail:"Permite personalizar textos, imágenes y variables.",
+usage:"Abre el panel de edición.",
+example:"/boosttracker edit",
+permission:"Permisos de configuración del servidor.",
+variants:["/boosttracker edit"]
+},
+{
+name:"boosttracker enable",category:"automessages",symbol:"▤",
+description:"Activa el rastreador de Boosts.",
+detail:"Activa las notificaciones de Server Boosts.",
+usage:"Ejecuta el comando para activar el rastreador.",
+example:"/boosttracker enable",
+permission:"Permisos de configuración del servidor.",
+variants:["/boosttracker enable"]
+},
+{
+name:"boosttracker disable",category:"automessages",symbol:"▤",
+description:"Desactiva el rastreador de Boosts.",
+detail:"Desactiva las notificaciones de Server Boosts.",
+usage:"Ejecuta el comando para desactivar el rastreador.",
+example:"/boosttracker disable",
+permission:"Permisos de configuración del servidor.",
+variants:["/boosttracker disable"]
+},
+
+/* DIVERSIÓN */
+
+{
+name:"kill",category:"fun",symbol:"✧",
+description:"Muestra una interacción animada con otro usuario.",
+detail:"Envía una interacción ficticia mediante un GIF.",
+usage:"Menciona al usuario con quien quieres interactuar.",
+example:"?kill @usuario",
+permission:"Todos los miembros.",
+variants:["?kill @usuario","/kill usuario"]
+},
+{
+name:"punch",category:"fun",symbol:"✧",
+description:"Muestra una interacción con un GIF.",
+detail:"Envía una animación de interacción entre usuarios.",
+usage:"Menciona al usuario.",
+example:"?punch @usuario",
+permission:"Todos los miembros.",
+variants:["?punch @usuario","/punch usuario"]
+},
+{
+name:"mad",category:"fun",symbol:"✧",
+description:"Muestra un gatito enojado.",
+detail:"Envía una imagen o GIF de un gato enojado.",
+usage:"Ejecuta el comando.",
+example:"?mad",
+permission:"Todos los miembros.",
+variants:["?mad","/mad"]
+},
+{
+name:"menealachapa",category:"fun",symbol:"✧",
+description:"Muestra un GIF de un gato.",
+detail:"Envía el GIF del gato meneando la chapa.",
+usage:"Ejecuta el comando.",
+example:"?menealachapa",
+permission:"Todos los miembros.",
+variants:["?menealachapa","/menealachapa"]
+},
+{
+name:"gay",category:"fun",symbol:"✧",
+description:"Calcula un porcentaje y actualiza la tabla.",
+detail:"Comando de entretenimiento que genera un porcentaje aleatorio.",
+usage:"Ejecuta el comando o menciona a un usuario si corresponde.",
+example:"?gay @usuario",
+permission:"Todos los miembros.",
+variants:["?gay","/gay"]
+},
+{
+name:"kchar",category:"fun",symbol:"✧",
+description:"Envía una interacción con un GIF.",
+detail:"Comando de interacción y entretenimiento.",
+usage:"Ejecuta el comando.",
+example:"?kchar",
+permission:"Todos los miembros.",
+variants:["?kchar","/kchar"]
+},
+{
+name:"random",category:"fun",symbol:"✧",
+description:"Envía un GIF de meme.",
+detail:"Muestra el meme del comando Random.",
+usage:"Ejecuta el comando.",
+example:"?random",
+permission:"Todos los miembros.",
+variants:["?random","/random"]
+},
+{
+name:"aura",category:"fun",symbol:"✧",
+description:"Suma o resta aura.",
+detail:"Actualiza el total de aura guardado.",
+usage:"Consulta las opciones disponibles del comando.",
+example:"?aura",
+permission:"Todos los miembros.",
+variants:["?aura","/aura"]
+},
+{
+name:"happy",category:"fun",symbol:"✧",
+description:"Muestra una interacción de felicidad.",
+detail:"Muestra que estás feliz o feliz por alguien.",
+usage:"Ejecuta el comando.",
+example:"?happy",
+permission:"Todos los miembros.",
+variants:["?happy","/happy"]
+},
+
+/* MATRIMONIOS */
+
+{
+name:"marry",category:"marry",symbol:"♡",
+description:"Consulta tu matrimonio o propone uno.",
+detail:"Permite consultar con quién estás casado o proponer matrimonio.",
+usage:"Menciona a la persona a quien deseas proponer matrimonio. También puedes aceptar o rechazar propuestas.",
+example:"?marry @usuario",
+permission:"Todos los miembros.",
+variants:["?marry","?marry @usuario Accept","?marry @usuario Decline","/marry"]
+},
+{
+name:"divorce",category:"marry",symbol:"♡",
+description:"Finaliza tu matrimonio.",
+detail:"Permite divorciarte de tu pareja registrada.",
+usage:"Ejecuta el comando para finalizar el matrimonio.",
+example:"?divorce",
+permission:"Todos los miembros.",
+variants:["?divorce","/divorce"]
+},
+
+/* UTILIDAD */
+
+{
+name:"afk",category:"utility",symbol:"⚙",
+description:"Establece tu estado AFK.",
+detail:"Establece un estado de ausencia.",
+usage:"Puedes añadir un mensaje de ausencia.",
+example:"?afk Estoy ocupado",
+permission:"Todos los miembros.",
+variants:["?afk","/afk"]
+},
+{
+name:"autoreact",category:"utility",symbol:"⚙",
+description:"Configura el sistema de autorreacciones.",
+detail:"Permite gestionar el sistema de reacciones automáticas.",
+usage:"Ejecuta el comando para abrir sus opciones.",
+example:"?autoreact",
+permission:"Permisos de configuración correspondientes.",
+variants:["?autoreact","?ar","/ar"]
+},
+{
+name:"ajustes",category:"utility",symbol:"⚙",
+description:"Configura el prefijo secundario del bot.",
+detail:"Permite configurar o eliminar el prefijo secundario del bot.",
+usage:"Ejecuta el comando para abrir las opciones.",
+example:"?ajustes",
+permission:"Permisos de administración.",
+variants:["?ajustes","/ajustes"]
+},
+{
+name:"role",category:"utility",symbol:"⚙",
+description:"Gestiona roles del servidor.",
+detail:"Ofrece herramientas para la gestión avanzada de roles.",
+usage:"Consulta las opciones disponibles.",
+example:"?role",
+permission:"Permisos de gestión de roles.",
+variants:["?role","/role"]
+},
+{
+name:"roles",category:"utility",symbol:"⚙",
+description:"Muestra los roles del servidor.",
+detail:"Muestra una lista de roles con paginación.",
+usage:"Ejecuta el comando.",
+example:"?roles",
+permission:"Todos los miembros.",
+variants:["?roles","/roles"]
+},
+
+/* INFORMACIÓN */
+
+{
+name:"help",category:"info",symbol:"ⓘ",
+description:"Abre el menú interactivo de ayuda.",
+detail:"Muestra el centro de comandos y sus categorías.",
+usage:"Ejecuta el comando.",
+example:"?help",
+permission:"Todos los miembros.",
+variants:["?help","/help"]
+},
+{
+name:"profile",category:"info",symbol:"ⓘ",
+description:"Muestra tu perfil o el de otro usuario.",
+detail:"Genera un perfil visual del usuario.",
+usage:"Ejecuta el comando. Puedes indicar otro usuario si está disponible.",
+example:"?profile @usuario",
+permission:"Todos los miembros.",
+variants:["?profile","/profile"]
+},
+{
+name:"server",category:"info",symbol:"ⓘ",
+description:"Muestra información del servidor.",
+detail:"Muestra información detallada del servidor.",
+usage:"Ejecuta el comando.",
+example:"?server",
+permission:"Todos los miembros.",
+variants:["?server","/server"]
+},
+{
+name:"question",category:"info",symbol:"ⓘ",
+description:"Hazle una pregunta al bot.",
+detail:"Envía una pregunta y recibe una respuesta del bot.",
+usage:"Escribe tu pregunta después del comando.",
+example:"?q ¿Qué puedes hacer?",
+permission:"Todos los miembros.",
+variants:["?q","?question","/question"]
+}
+
+];
+
+/* CATEGORY SETTINGS */
+
+const categoryNames = {
+all: "Todos los comandos",
+moderation: "Moderación & Seguridad",
+automessages: "Sistemas automáticos",
+fun: "Diversión & Interacción",
+marry: "Matrimonios",
+utility: "Utilidad & Configuración",
+info: "Información"
+};
+
+let activeCategory = "all";
+
+const list = document.getElementById("commandList");
+const search = document.getElementById("search");
+const count = document.getElementById("count");
+const title = document.getElementById("categoryTitle");
+
+/* DETAIL BUILDER */
+
+function makeDetail(label, value, isCode = false, isTag = false) {
+    const block = document.createElement("div");
+    block.className = "detail-block";
+
+    const heading = document.createElement("h4");
+    heading.textContent = label;
+
+    const content = document.createElement(isCode ? "div" : "p");
+
+    if (isCode) content.className = "example";
+    if (isTag) content.className = "permission-tag";
+
+    content.textContent = value;
+    block.append(heading, content);
+
+    return block;
+}
+
+/* RENDER COMMANDS */
+
+function renderCommands() {
+    const query = search.value.toLowerCase().trim();
+
+    const filtered = commands.filter(command => {
+        const categoryMatch =
+            activeCategory === "all" ||
+            command.category === activeCategory;
+
+        const searchMatch =
+            command.name.toLowerCase().includes(query) ||
+            command.description.toLowerCase().includes(query) ||
+            command.variants.join(" ").toLowerCase().includes(query);
+
+        return categoryMatch && searchMatch;
+    });
+
+    title.textContent = categoryNames[activeCategory];
+    count.textContent = filtered.length + " comandos";
+
+    list.innerHTML = "";
+
+    if (filtered.length === 0) {
+        list.innerHTML = `
+            <div class="empty">
+                <strong>⌕</strong>
+                No se encontraron comandos.
+                <br>Prueba con otra búsqueda.
+            </div>
+        `;
+        return;
+    }
+
+    filtered.forEach(command => {
+        const item = document.createElement("article");
+        item.className = "command";
+
+        const top = document.createElement("button");
+        top.className = "command-top";
+        top.type = "button";
+
+        const info = document.createElement("div");
+        info.className = "command-info";
+
+        const symbol = document.createElement("div");
+        symbol.className = "command-symbol";
+        symbol.textContent = command.symbol;
+
+        const text = document.createElement("div");
+
+        const name = document.createElement("div");
+        name.className = "command-name";
+        name.textContent = command.name;
+
+        const desc = document.createElement("div");
+        desc.className = "command-desc";
+        desc.textContent = command.description;
+
+        text.append(name, desc);
+        info.append(symbol, text);
+
+        const right = document.createElement("div");
+        right.className = "command-right";
+
+        const type = document.createElement("span");
+        type.className = "command-type";
+        type.textContent = command.variants.every(v => v.startsWith("/"))
+            ? "SLASH"
+            : "PREFIX + SLASH";
+
+        const arrow = document.createElement("span");
+        arrow.className = "arrow";
+        arrow.textContent = "⌄";
+
+        right.append(type, arrow);
+        top.append(info, right);
+
+        const details = document.createElement("div");
+        details.className = "command-details";
+
+        const variantBlock = document.createElement("div");
+        variantBlock.className = "detail-block";
+
+        const variantHeading = document.createElement("h4");
+        variantHeading.textContent = "Variantes disponibles";
+
+        const variants = document.createElement("div");
+        variants.className = "variants";
+
+        command.variants.forEach(variant => {
+            const code = document.createElement("span");
+            code.className = "variant";
+            code.textContent = variant;
+            variants.appendChild(code);
+        });
+
+        variantBlock.append(variantHeading, variants);
+
+        details.append(
+            variantBlock,
+            makeDetail("Cómo utilizarlo", command.usage),
+            makeDetail("Descripción", command.detail),
+            makeDetail("Ejemplo", command.example, true),
+            makeDetail("Permisos", command.permission, false, true)
+        );
+
+        top.addEventListener("click", () => {
+            item.classList.toggle("open");
+        });
+
+        item.append(top, details);
+        list.appendChild(item);
+    });
+}
+
+/* CATEGORY FILTER */
+
+document.querySelectorAll(".category").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".category").forEach(item => {
+            item.classList.remove("selected");
+        });
+
+        button.classList.add("selected");
+        activeCategory = button.dataset.category;
+
+        renderCommands();
+    });
+});
+
+/* SEARCH */
+
+search.addEventListener("input", renderCommands);
+
+/* INITIALIZE */
+
+renderCommands();
+
+</script>
+
+</body>
+</html>
