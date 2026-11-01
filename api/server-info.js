@@ -1,5 +1,4 @@
-
-const { unseal, getCookie } = require("./lib/session");
+const { getValidSession } = require("./lib/session");
 
 const DISCORD_API = "https://discord.com/api/v10";
 
@@ -16,16 +15,10 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: "ID de servidor inválido" });
     }
 
-    const sessionCookie = getCookie(req, "zerox_session");
+    const session = await getValidSession(req, res);
 
-    if (!sessionCookie) {
-      return res.status(401).json({ error: "Inicia sesión primero" });
-    }
-
-    const session = unseal(sessionCookie);
-
-    if (!session || !session.accessToken) {
-      return res.status(401).json({ error: "Sesión no válida" });
+    if (!session?.accessToken) {
+      return res.status(401).json({ error: "Sesión no válida. Inicia sesión nuevamente." });
     }
 
     const botToken = process.env.DISCORD_BOT_TOKEN;
@@ -36,19 +29,15 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Verificar acceso del usuario al servidor.
-    const userGuildsResponse = await fetch(
-      `${DISCORD_API}/users/@me/guilds`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.accessToken}`
-        }
+    const userGuildsResponse = await fetch(`${DISCORD_API}/users/@me/guilds`, {
+      headers: {
+        Authorization: `Bearer ${session.accessToken}`
       }
-    );
+    });
 
     if (!userGuildsResponse.ok) {
       return res.status(401).json({
-        error: "No se pudo verificar tu cuenta de Discord"
+        error: "Discord no pudo verificar tu cuenta. Vuelve a iniciar sesión."
       });
     }
 
@@ -56,13 +45,10 @@ module.exports = async (req, res) => {
     const userGuild = userGuilds.find(guild => guild.id === id);
 
     if (!userGuild) {
-      return res.status(403).json({
-        error: "No tienes acceso a este servidor"
-      });
+      return res.status(403).json({ error: "No tienes acceso a este servidor" });
     }
 
     const permissions = BigInt(userGuild.permissions || "0");
-
     const canManage =
       userGuild.owner ||
       (permissions & 0x8n) === 0x8n ||
@@ -74,11 +60,8 @@ module.exports = async (req, res) => {
       });
     }
 
-    const headers = {
-      Authorization: `Bot ${botToken}`
-    };
+    const headers = { Authorization: `Bot ${botToken}` };
 
-    // Obtener información, canales, roles y emojis.
     const [guildResponse, channelsResponse, rolesResponse, emojisResponse] =
       await Promise.all([
         fetch(`${DISCORD_API}/guilds/${id}?with_counts=true`, { headers }),
@@ -108,7 +91,6 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-
       server: {
         id: guild.id,
         name: guild.name,
@@ -117,14 +99,12 @@ module.exports = async (req, res) => {
         channelCount: channels.length,
         roleCount: roles.length
       },
-
       channels: channels.map(channel => ({
         id: channel.id,
         name: channel.name,
         type: channel.type,
         parentId: channel.parent_id ?? null
       })),
-
       roles: roles.map(role => ({
         id: role.id,
         name: role.name,
@@ -132,17 +112,14 @@ module.exports = async (req, res) => {
         position: role.position,
         managed: role.managed
       })),
-
       emojis: emojis.map(emoji => ({
         id: emoji.id,
         name: emoji.name,
         animated: emoji.animated
       }))
     });
-
   } catch (error) {
     console.error("Error en /api/server-info:", error);
-
     return res.status(500).json({
       error: "Error interno al obtener la información del servidor"
     });
