@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -270,6 +270,8 @@ nav a.active::after {
     transition-delay: .1s;
 }
 
+/* LOGIN */
+
 .login-card {
     max-width: 470px;
     margin: 65px auto;
@@ -303,26 +305,6 @@ nav a.active::after {
 @keyframes shineLine {
     0%, 100% { opacity: .3; transform: translateX(-15%); }
     50% { opacity: 1; transform: translateX(15%); }
-}
-
-.login-symbol {
-    width: 68px;
-    height: 68px;
-    display: grid;
-    place-items: center;
-    margin: 0 auto 25px;
-    border-radius: 17px;
-    background: linear-gradient(145deg, #252525, #0b0b0b);
-    border: 1px solid rgba(255,255,255,.13);
-    color: white;
-    font-size: 27px;
-    box-shadow: 0 10px 35px rgba(0,0,0,.4);
-    animation: symbolFloat 4s ease-in-out infinite;
-}
-
-@keyframes symbolFloat {
-    0%, 100% { transform: translateY(0) rotate(0); }
-    50% { transform: translateY(-7px) rotate(4deg); }
 }
 
 .login-card h2 {
@@ -584,6 +566,10 @@ nav a.active::after {
     animation: spin .8s linear infinite;
 }
 
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* SERVERS */
 
 .servers {
@@ -743,15 +729,6 @@ nav a.active::after {
     animation: fadeUp .5s ease both;
 }
 
-.status::before {
-    content: "✦";
-    display: block;
-    color: #aaa;
-    font-size: 19px;
-    margin-bottom: 10px;
-    animation: symbolFloat 3s ease-in-out infinite;
-}
-
 .error {
     color: #c4c4c4;
 }
@@ -762,6 +739,17 @@ nav a.active::after {
     padding: 40px 15px;
     font-size: 12px;
     grid-column: 1 / -1;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* FOOTER */
@@ -898,7 +886,6 @@ footer {
     </section>
 
     <section id="loginSection" class="login-card hidden">
-        <div class="login-symbol">✦</div>
         <h2>Inicia sesión para continuar</h2>
         <p>Conecta tu cuenta de Discord para consultar los servidores que administras.</p>
         <a href="/api/auth/login" class="login-btn">Conectar con Discord ↗</a>
@@ -977,6 +964,11 @@ function observeReveals(root = document) {
         return;
     }
 
+    if (!revealObserver) {
+        elements.forEach(element => element.classList.add("visible"));
+        return;
+    }
+
     elements.forEach(element => revealObserver.observe(element));
 }
 
@@ -994,16 +986,6 @@ if ("IntersectionObserver" in window && !reduceMotion) {
     });
 } else {
     revealObserver = null;
-}
-
-function revealElement(element) {
-    element.classList.add("reveal");
-
-    if (reduceMotion || !revealObserver) {
-        element.classList.add("visible");
-    } else {
-        revealObserver.observe(element);
-    }
 }
 
 observeReveals();
@@ -1203,7 +1185,6 @@ const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
 let particles = [];
-let animationFrame;
 
 function resizeCanvas() {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
@@ -1271,7 +1252,7 @@ function animateParticles() {
     });
 
     ctx.globalAlpha = 1;
-    animationFrame = requestAnimationFrame(animateParticles);
+    requestAnimationFrame(animateParticles);
 }
 
 window.addEventListener("resize", resizeCanvas);
@@ -1286,4 +1267,3 @@ loadDashboard();
 
 </body>
 </html>
-```
