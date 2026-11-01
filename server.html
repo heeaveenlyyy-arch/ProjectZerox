@@ -4,1643 +4,1176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Project Zerox - Un bot de Discord para llevar tu servidor al siguiente nivel.">
-<title>Project Zerox | Discord Bot</title>
+<meta name="theme-color" content="#000000">
+<title>Server Dashboard | Project Zerox</title>
 
 <style>
-:root {
-    --bg: #000000;
-    --panel: #080505;
-    --panel2: #100909;
-    --accent: #8B0000;
-    --accent2: #B51225;
-    --glow: #E32636;
-    --text: #ffffff;
-    --muted: #a7a0a0;
-    --border: rgba(181,18,37,.25);
-    --shadow: rgba(181,18,37,.22);
-}
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    scroll-behavior: smooth;
 }
 
+:root {
+    --bg: #000;
+    --panel: #090909;
+    --panel2: #101010;
+    --border: #222;
+    --text: #f5f5f5;
+    --muted: #858585;
+}
+
+html { scroll-behavior: smooth; }
+
 body {
-    background: var(--bg);
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse at 50% -20%, rgba(90,90,90,.13), transparent 55%),
+        #000;
     color: var(--text);
     font-family: Arial, Helvetica, sans-serif;
     overflow-x: hidden;
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button, select {
-    font: inherit;
-}
-
-#starfield {
+body::before {
+    content: "";
     position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    inset: -30%;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,.035), transparent 25%),
+        radial-gradient(circle at 80% 65%, rgba(120,120,120,.035), transparent 30%);
+    animation: ambientMove 16s ease-in-out infinite alternate;
 }
 
-/* NAVBAR */
+@keyframes ambientMove {
+    from { transform: translate(-2%, -1%) scale(1); }
+    to { transform: translate(2%, 2%) scale(1.08); }
+}
 
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 78px;
-    padding: 0 7%;
+button, a { font: inherit; }
+
+button { cursor: pointer; }
+
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: #000; }
+::-webkit-scrollbar-thumb {
+    background: #292929;
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover { background: #555; }
+
+header, main, aside { position: relative; z-index: 1; }
+
+/* HEADER */
+
+header {
+    height: 75px;
+    padding: 0 5%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(0,0,0,.85);
-    backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border);
-    z-index: 1000;
+    background: rgba(0,0,0,.94);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(15px);
 }
 
 .logo {
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    white-space: nowrap;
-}
-
-.logo span {
-    color: var(--glow);
-    text-shadow: 0 0 15px var(--shadow);
-}
-
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-}
-
-.nav-links a {
-    color: var(--muted);
-    font-size: 14px;
-    transition: .25s;
-}
-
-.nav-links a:hover {
-    color: var(--glow);
-}
-
-.nav-actions {
     display: flex;
     align-items: center;
     gap: 9px;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-.selector {
-    background: #0c0c0c;
-    color: white;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 10px 9px;
-    outline: none;
-    cursor: pointer;
-    font-size: 12px;
-    max-width: 145px;
+.logo .project { color: #f5f5f5; }
+
+.logo .zerox {
+    background: linear-gradient(90deg, #666, #fff, #777, #666);
+    background-size: 200% auto;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: logoShine 5s linear infinite;
 }
 
-.selector:focus {
-    border-color: var(--glow);
-    box-shadow: 0 0 12px var(--shadow);
+@keyframes logoShine {
+    to { background-position: 200% center; }
 }
 
-.selector option {
-    background: #080808;
-    color: white;
-}
-
-.btn {
-    display: inline-flex;
-    justify-content: center;
+.header-right {
+    display: flex;
     align-items: center;
-    gap: 8px;
-    background: var(--accent);
-    border: 1px solid var(--accent2);
-    color: white;
-    padding: 13px 21px;
-    border-radius: 9px;
-    font-weight: bold;
-    font-size: 13px;
-    cursor: pointer;
-    transition: .25s;
-    box-shadow: 0 0 18px var(--shadow);
+    gap: 18px;
 }
 
-.btn:hover {
-    background: var(--accent2);
-    transform: translateY(-3px);
-    box-shadow: 0 0 28px var(--shadow);
+.header-link {
+    color: #888;
+    text-decoration: none;
+    font-size: 12px;
+    transition: .3s;
 }
 
-.btn-outline {
-    background: transparent;
-    border: 1px solid var(--border);
-    box-shadow: none;
-}
+.header-link:hover { color: white; }
 
-.btn-outline:hover {
-    background: var(--accent);
-    border-color: var(--accent2);
-}
-
-/* DISCORD LOGIN */
-
-.login-btn {
-    background: #080808;
-    border: 1px solid var(--border);
-    box-shadow: none;
-    white-space: nowrap;
-}
-
-.login-btn:hover {
-    background: #111111;
-    border-color: var(--glow);
-    box-shadow: 0 0 22px var(--shadow);
-}
-
-.discord-icon {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    fill: currentColor;
-}
-
-/* DISCORD USER PROFILE */
-
-.auth-profile {
+.user-info {
     display: flex;
     align-items: center;
     gap: 9px;
-}
-
-.auth-user {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #080808;
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 6px 10px;
-    color: white;
+    color: #aaa;
     font-size: 12px;
-    font-weight: bold;
-    transition: .25s;
 }
 
-.auth-user:hover {
-    border-color: var(--glow);
-    box-shadow: 0 0 15px var(--shadow);
-}
-
-.auth-user img {
-    width: 30px;
-    height: 30px;
+.user-avatar {
+    width: 31px;
+    height: 31px;
     border-radius: 50%;
     object-fit: cover;
+    background: #171717;
+    border: 1px solid #333;
 }
 
-.logout-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    border-radius: 9px;
-    padding: 10px 12px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: .25s;
-    white-space: nowrap;
-}
-
-.logout-btn:hover {
-    color: white;
-    border-color: var(--glow);
-    background: var(--accent);
-}
-
-[hidden] {
-    display: none !important;
-}
-
-.menu-toggle {
+.mobile-menu {
     display: none;
-    background: transparent;
-    border: 1px solid var(--border);
+    background: #111;
     color: white;
-    border-radius: 8px;
-    padding: 9px 12px;
-    cursor: pointer;
-    font-size: 20px;
+    border: 1px solid #292929;
+    padding: 8px 12px;
+    border-radius: 6px;
 }
 
-/* HERO */
+/* APP */
 
-.hero {
-    min-height: 100vh;
-    padding: 150px 8% 90px;
+.app {
+    display: flex;
+    min-height: calc(100vh - 75px);
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 245px;
+    flex-shrink: 0;
+    padding: 27px 14px;
+    background: rgba(7,7,7,.94);
+    border-right: 1px solid var(--border);
+    min-height: calc(100vh - 75px);
+    position: sticky;
+    top: 75px;
+    height: calc(100vh - 75px);
+}
+
+.server-card {
+    padding: 15px 12px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 9px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 50px;
-    position: relative;
+    gap: 12px;
+    margin-bottom: 30px;
+    overflow: hidden;
 }
 
-.hero-content {
-    max-width: 650px;
-    position: relative;
-    z-index: 2;
-}
-
-.eyebrow {
-    display: inline-block;
-    padding: 9px 15px;
-    border: 1px solid var(--border);
-    border-radius: 30px;
-    color: var(--glow);
-    background: rgba(255,255,255,.025);
-    font-size: 12px;
-    letter-spacing: 1px;
-    margin-bottom: 25px;
-}
-
-.hero h1 {
-    font-size: clamp(48px, 7vw, 83px);
-    line-height: 1.05;
-    font-weight: 900;
-    letter-spacing: -3px;
-}
-
-.hero h1 span {
-    color: var(--glow);
-    text-shadow: 0 0 35px var(--shadow);
-}
-
-.hero p {
-    color: var(--muted);
-    line-height: 1.8;
-    font-size: 16px;
-    margin: 25px 0 30px;
-    max-width: 570px;
-}
-
-.hero-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 13px;
-}
-
-/* DECORATED BOT AVATAR */
-
-.hero-preview {
-    width: 340px;
-    height: 340px;
-    min-width: 280px;
-    position: relative;
+.server-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    background: #171717;
+    border: 1px solid #292929;
     display: grid;
     place-items: center;
-    isolation: isolate;
-    transition: transform .4s ease;
-}
-
-.hero-preview:hover {
-    transform: translateY(-7px);
-}
-
-/* Delicate circular outline */
-
-.hero-preview::before {
-    content: "";
-    position: absolute;
-    inset: 5px;
-    border: 1px solid var(--glow);
-    border-radius: 50%;
-    opacity: .45;
-    box-shadow: 0 0 22px var(--shadow);
-    animation: ringPulse 4s ease-in-out infinite;
-    z-index: -1;
-}
-
-/* Soft outer glow */
-
-.hero-preview::after {
-    content: "";
-    position: absolute;
-    width: 90%;
-    height: 90%;
-    border-radius: 50%;
-    background: var(--shadow);
-    filter: blur(45px);
-    opacity: .55;
-    z-index: -2;
-}
-
-/* Bot image */
-
-.hero-preview img {
-    display: block;
-    width: 86%;
-    height: 86%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid rgba(255,255,255,.22);
-    box-shadow: 0 0 25px rgba(0,0,0,.7);
-}
-
-/* Decorations */
-
-.avatar-decoration {
-    position: absolute;
-    z-index: 3;
-    color: var(--glow);
-    text-shadow: 0 0 12px var(--shadow);
-    pointer-events: none;
-    user-select: none;
-}
-
-.decoration-heart {
-    font-size: 25px;
-    animation: floatHeart 4s ease-in-out infinite;
-}
-
-.decoration-star {
-    font-size: 22px;
-    animation: twinkle 2.5s ease-in-out infinite;
-}
-
-.decoration-sparkle {
-    font-size: 15px;
-    animation: twinkle 3s ease-in-out infinite;
-}
-
-.heart-one {
-    top: 14%;
-    left: 4%;
-    transform: rotate(-15deg);
-}
-
-.heart-two {
-    bottom: 15%;
-    right: 1%;
-    font-size: 20px;
-    animation-delay: 1.2s;
-}
-
-.heart-three {
-    top: 48%;
-    right: -8%;
+    flex-shrink: 0;
     font-size: 16px;
-    animation-delay: .7s;
+    color: #bbb;
+    object-fit: cover;
 }
 
-.star-one {
-    top: 2%;
-    right: 24%;
+.server-name {
+    font-size: 12px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.star-two {
-    bottom: 4%;
-    left: 22%;
-    font-size: 19px;
-    animation-delay: .8s;
+.server-label {
+    color: #777;
+    font-size: 10px;
+    margin-top: 5px;
 }
 
-.star-three {
-    top: 34%;
-    left: -8%;
-    font-size: 17px;
-    animation-delay: 1.4s;
+.sidebar-title {
+    color: #666;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin: 0 10px 14px;
+    text-transform: uppercase;
 }
 
-.sparkle-one {
-    top: 22%;
-    right: 2%;
+.nav-item {
+    width: 100%;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #999;
+    text-align: left;
+    padding: 13px 12px;
+    border-radius: 7px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    position: relative;
+    overflow: hidden;
+    transition: all .3s cubic-bezier(.2,.8,.2,1);
 }
 
-.sparkle-two {
-    bottom: 27%;
-    left: 1%;
-    animation-delay: 1s;
+.nav-icon {
+    color: #777;
+    font-size: 16px;
+    width: 19px;
+    text-align: center;
+    transition: .3s;
 }
 
-.sparkle-three {
-    bottom: 2%;
-    right: 32%;
-    animation-delay: 1.7s;
+.nav-item:hover {
+    transform: translateX(4px);
+    background: #151515;
+    border-color: #292929;
+    color: white;
 }
 
-@keyframes ringPulse {
-    0%, 100% {
-        opacity: .3;
-        transform: scale(1);
-    }
-    50% {
-        opacity: .65;
-        transform: scale(1.025);
-    }
+.nav-item:hover .nav-icon {
+    transform: scale(1.15);
+    color: white;
 }
 
-@keyframes floatHeart {
-    0%, 100% {
-        transform: translateY(0) rotate(-10deg);
-    }
-    50% {
-        transform: translateY(-9px) rotate(8deg);
-    }
+.nav-item.active {
+    background: #171717;
+    border-color: #292929;
+    color: white;
+    box-shadow: inset 0 0 20px rgba(255,255,255,.025);
 }
 
-@keyframes twinkle {
-    0%, 100% {
-        opacity: .45;
-        transform: scale(.85);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.2);
-    }
+.nav-item.active .nav-icon { color: white; }
+
+.nav-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 2px;
+    height: 60%;
+    background: white;
+    opacity: 0;
+    transform: scaleY(.3);
+    transition: .3s;
+}
+
+.nav-item.active::before {
+    opacity: 1;
+    transform: scaleY(1);
+}
+
+.sidebar-bottom {
+    position: absolute;
+    bottom: 20px;
+    left: 14px;
+    right: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 15px;
+}
+
+.back-link {
+    display: block;
+    color: #777;
+    font-size: 11px;
+    padding: 10px;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.back-link:hover { color: white; }
+
+/* MAIN CONTENT */
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: 48px clamp(20px, 5vw, 65px);
+    max-width: 1500px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.page-heading {
+    margin-bottom: 32px;
+    animation: fadeUp .7s ease both;
+}
+
+.page-heading small {
+    color: #777;
+    letter-spacing: 4px;
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.page-heading h1 {
+    font-size: clamp(32px, 5vw, 48px);
+    letter-spacing: -2px;
+    margin: 13px 0;
+    text-shadow: 0 0 35px rgba(255,255,255,.09);
+}
+
+.page-heading p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 13px;
+}
+
+.heading-line {
+    width: 65px;
+    height: 2px;
+    background: #555;
+    margin-top: 22px;
+    position: relative;
+    overflow: hidden;
+}
+
+.heading-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, #fff, transparent);
+    animation: lineShine 3s ease-in-out infinite;
+}
+
+@keyframes lineShine {
+    0% { transform: translateX(-100%); }
+    60%, 100% { transform: translateX(150%); }
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* SECTIONS */
 
-section {
-    padding: 100px 8%;
+.page-section {
+    display: none;
+    animation: fadeUp .45s ease both;
 }
+
+.page-section.visible { display: block; }
 
 .section-heading {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto 55px;
-}
-
-.section-heading small {
-    color: var(--glow);
-    font-weight: bold;
-    letter-spacing: 2px;
-    font-size: 12px;
-}
-
-.section-heading h2 {
-    font-size: clamp(30px, 5vw, 46px);
-    margin: 15px 0;
-}
-
-.section-heading p {
-    color: var(--muted);
-    line-height: 1.8;
-}
-
-/* FEATURES */
-
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 19px;
-}
-
-.feature-card {
-    background: linear-gradient(145deg, var(--panel2), var(--panel));
-    border: 1px solid var(--border);
-    border-radius: 13px;
-    padding: 28px;
-    transition: .3s;
-}
-
-.feature-card:hover {
-    transform: translateY(-7px);
-    border-color: var(--accent2);
-    box-shadow: 0 0 30px var(--shadow);
-}
-
-.feature-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 11px;
-    background: var(--accent);
-    display: grid;
-    place-items: center;
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
     margin-bottom: 22px;
 }
 
-.feature-card h3 {
-    margin-bottom: 12px;
+.section-heading h2 {
     font-size: 18px;
 }
 
-.feature-card p {
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.7;
+.section-heading p {
+    color: #777;
+    font-size: 11px;
+    margin-top: 6px;
 }
 
-/* COMMANDS */
+/* CARDS */
 
-.showcase {
-    background: linear-gradient(180deg, transparent, var(--panel), transparent);
-}
-
-.command-grid {
+.card-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    max-width: 900px;
-    margin: auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 13px;
+    margin-bottom: 22px;
 }
 
-.command-card {
-    background: #050505;
+.card {
+    background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 11px;
-    padding: 22px;
-    transition: .25s;
+    border-radius: 9px;
+    padding: 20px;
+    transition: .3s ease;
 }
 
-.command-card:hover {
-    border-color: var(--accent2);
-    box-shadow: 0 0 20px var(--shadow);
+.card:hover {
+    transform: translateY(-3px);
+    border-color: #505050;
+    background: #0b0b0b;
+    box-shadow: 0 8px 25px rgba(0,0,0,.5);
 }
 
-.command-card h3 {
-    color: var(--glow);
-    font-size: 14px;
-    margin-bottom: 13px;
-}
-
-.command-card code {
-    display: block;
-    color: #ddd;
-    background: rgba(255,255,255,.035);
-    padding: 11px;
-    border-radius: 6px;
-    margin-top: 8px;
-    font-size: 13px;
-}
-
-.command-card p {
-    color: var(--muted);
-    font-size: 13px;
-    margin-top: 10px;
-}
-
-/* COMMAND CTA */
-
-.command-section {
-    text-align: center;
-    padding-top: 40px;
-}
-
-.command-section p {
-    color: var(--muted);
-    margin: 15px auto 25px;
-    line-height: 1.7;
-}
-
-/* INVITE */
-
-.invite {
-    text-align: center;
-    background:
-        radial-gradient(ellipse at center, var(--shadow), transparent 65%);
-}
-
-.invite-box {
-    max-width: 850px;
-    margin: auto;
-    padding: 65px 35px;
-    background: rgba(8,8,8,.8);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    box-shadow: 0 0 55px var(--shadow);
-}
-
-.invite-box h2 {
-    font-size: clamp(30px, 5vw, 45px);
+.card-icon {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: #141414;
+    border: 1px solid #292929;
+    border-radius: 8px;
+    color: #aaa;
+    font-size: 16px;
     margin-bottom: 17px;
 }
 
-.invite-box p {
-    color: var(--muted);
-    line-height: 1.8;
-    margin-bottom: 27px;
+.card-label {
+    color: #777;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-/* SUPPORT */
-
-.support {
-    text-align: center;
+.card-value {
+    font-size: 23px;
+    font-weight: 700;
+    margin-top: 8px;
+    overflow-wrap: anywhere;
 }
 
-.support-box {
-    max-width: 700px;
-    margin: auto;
-    padding: 40px;
-    border: 1px solid var(--border);
-    border-radius: 15px;
+.card-description {
+    color: #777;
+    font-size: 11px;
+    margin-top: 7px;
+    line-height: 1.6;
+}
+
+/* GENERAL SERVER */
+
+.server-overview {
+    display: flex;
+    align-items: center;
+    gap: 18px;
     background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 20px;
 }
 
-.support-box h2 {
-    margin-bottom: 15px;
-    font-size: 30px;
+.server-overview img {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #333;
+    background: #151515;
 }
 
-.support-box p {
-    color: var(--muted);
+.server-overview h3 {
+    font-size: 18px;
+    overflow-wrap: anywhere;
+}
+
+.server-overview p {
+    color: #777;
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+/* MODULE CARDS */
+
+.module-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 23px;
+    margin-bottom: 14px;
+    transition: .3s;
+}
+
+.module-card:hover { border-color: #444; }
+
+.module-header {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 17px;
+}
+
+.module-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    background: #141414;
+    border: 1px solid #292929;
+    border-radius: 8px;
+    font-size: 17px;
+    color: #bbb;
+}
+
+.module-header h3 { font-size: 14px; }
+
+.module-header p {
+    color: #777;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.module-description {
+    color: #999;
+    font-size: 12px;
     line-height: 1.8;
-    margin-bottom: 24px;
+    margin-bottom: 17px;
 }
 
-/* FOOTER */
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #aaa;
+    background: #121212;
+    border: 1px solid #292929;
+    border-radius: 5px;
+    padding: 7px 10px;
+    font-size: 10px;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #888;
+}
+
+.info-box {
+    background: #101010;
+    border: 1px solid #292929;
+    border-radius: 8px;
+    padding: 16px;
+    color: #888;
+    font-size: 11px;
+    line-height: 1.8;
+    margin-top: 15px;
+}
+
+.info-box strong { color: #ddd; }
+
+/* BUTTONS */
+
+.button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #333;
+    background: #151515;
+    color: #eee;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 11px;
+    text-decoration: none;
+    transition: .3s;
+}
+
+.button:hover {
+    background: #222;
+    border-color: #666;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.button.secondary {
+    background: transparent;
+    color: #888;
+}
+
+.button.secondary:hover {
+    background: #151515;
+    color: white;
+}
+
+/* LOADING / ERRORS */
+
+.loading-state, .error-state {
+    padding: 35px 20px;
+    text-align: center;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    color: #888;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #292929;
+    border-top-color: #eee;
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-state h3 {
+    color: #ddd;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
 
 footer {
+    position: relative;
+    z-index: 1;
     border-top: 1px solid var(--border);
-    padding: 30px 8%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    background: #020202;
+    padding: 25px;
+    text-align: center;
+    color: #555;
+    font-size: 10px;
+    letter-spacing: 1px;
 }
 
-footer p {
-    color: var(--muted);
-    font-size: 12px;
+@media(max-width: 1000px) {
+    .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.footer-links {
-    display: flex;
-    gap: 20px;
-    font-size: 13px;
-    color: var(--muted);
-}
+@media(max-width: 760px) {
+    header { padding: 0 17px; height: 65px; }
+    .logo { font-size: 14px; }
+    .header-link { display: none; }
+    .mobile-menu { display: block; }
+    .app { display: block; }
 
-.footer-links a:hover {
-    color: var(--glow);
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 1050px) {
-    .navbar {
-        padding: 0 4%;
-    }
-
-    .nav-links {
-        gap: 15px;
-    }
-
-    .nav-links a {
-        font-size: 12px;
-    }
-
-    .hero {
-        padding-left: 6%;
-        padding-right: 6%;
-    }
-}
-
-@media (max-width: 850px) {
-    .navbar {
-        height: 72px;
-        padding: 0 5%;
-    }
-
-    .nav-links {
+    .sidebar {
         display: none;
-        position: absolute;
-        top: 72px;
-        left: 0;
         width: 100%;
-        padding: 22px;
-        background: rgba(0,0,0,.97);
+        height: auto;
+        min-height: 0;
+        position: relative;
+        top: 0;
+        padding: 15px;
+        border-right: none;
         border-bottom: 1px solid var(--border);
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
     }
 
-    .nav-links.active {
-        display: flex;
-    }
+    .sidebar.open { display: block; }
 
-    .menu-toggle {
-        display: block;
-    }
+    .server-card { margin-bottom: 18px; }
 
-    .nav-actions > .btn:not(.login-btn) {
-        display: none;
-    }
-
-    .login-btn {
-        display: inline-flex;
-        padding: 10px 12px;
-        font-size: 12px;
-    }
-
-    .selector {
-        max-width: 115px;
-        padding: 9px 5px;
-        font-size: 11px;
-    }
-
-    .hero {
-        flex-direction: column;
-        align-items: flex-start;
-        padding-top: 145px;
-    }
-
-    .hero-preview {
-        width: 280px;
-        height: 280px;
-        min-width: 280px;
-        align-self: center;
-    }
-
-    .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 550px) {
-    .logo {
-        font-size: 17px;
-        letter-spacing: 2px;
-    }
-
-    .nav-actions {
+    .nav-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 5px;
     }
 
-    .selector {
-        max-width: 95px;
-        font-size: 10px;
+    .nav-item { margin: 0; }
+
+    .sidebar-bottom {
+        position: static;
+        margin-top: 12px;
     }
 
-    .login-btn {
-        padding: 9px;
-        min-width: 36px;
-    }
-
-    .login-btn .login-text {
-        display: none;
-    }
-
-    .auth-user span {
-        display: none;
-    }
-
-    .auth-profile {
-        gap: 5px;
-    }
-
-    .auth-user {
-        padding: 5px;
-    }
-
-    .logout-btn {
-        padding: 9px;
-        font-size: 10px;
-    }
-
-    .hero {
-        padding-left: 6%;
-        padding-right: 6%;
-    }
-
-    .hero h1 {
-        letter-spacing: -2px;
-    }
-
-    .hero-preview {
-        width: 245px;
-        height: 245px;
-        min-width: 245px;
-    }
-
-    .heart-one {
-        left: 0;
-    }
-
-    .heart-three {
-        right: -4%;
-    }
-
-    .star-three {
-        left: -4%;
-    }
-
-    section {
-        padding: 75px 6%;
-    }
-
-    .features-grid,
-    .command-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .feature-card {
-        padding: 23px;
-    }
-
-    .invite-box,
-    .support-box {
-        padding: 35px 20px;
-    }
-
-    footer {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .footer-links {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+    main { padding: 35px 17px; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .card { padding: 15px; }
+    .card-value { font-size: 19px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
-    }
+@media(max-width: 420px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .server-overview { padding: 15px; }
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="starfield"></canvas>
+<header>
+    <a href="index.html" class="logo">
+        <span class="project">PROJECT</span>
+        <span class="zerox">ZEROX</span>
+    </a>
 
-<header class="navbar">
-    <a href="#inicio" class="logo">PROJECT <span>ZEROX</span></a>
-
-    <nav class="nav-links" id="navLinks">
-        <a href="#inicio" data-i18n="navHome">Inicio</a>
-        <a href="#funciones" data-i18n="navFeatures">Funciones</a>
-        <a href="commands.html" data-i18n="navCommands">Comandos</a>
-        <a href="dashboard.html" data-i18n="navDashboard">Dashboard</a>
-        <a href="#invitar" data-i18n="navInvite">Invitar bot</a>
-        <a href="#soporte" data-i18n="navSupport">Soporte</a>
-    </nav>
-
-    <div class="nav-actions">
-        <select class="selector" id="languageSelect" aria-label="Language">
-            <option value="es">Español</option>
-            <option value="en">English</option>
-            <option value="pt">Português</option>
-        </select>
-
-        <select class="selector" id="themeSelect" aria-label="Theme color">
-            <option value="darkred">Rojo oscuro</option>
-            <option value="red">Rojo</option>
-            <option value="darkblue">Azul oscuro</option>
-            <option value="blue">Azul</option>
-            <option value="cyan">Celeste</option>
-            <option value="darkpurple">Morado oscuro</option>
-            <option value="purple">Morado</option>
-        </select>
-
-        <!-- LOGIN -->
-        <a href="/api/auth/login"
-           class="btn login-btn"
-           id="loginButton"
-           aria-label="Iniciar sesión con Discord">
-
-            <svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M19.54 5.34A19.8 19.8 0 0 0 14.68 3.8a.07.07 0 0 0-.07.04c-.21.38-.44.87-.6 1.26a18.3 18.3 0 0 0-5.49 0c-.16-.4-.4-.88-.61-1.26a.07.07 0 0 0-.07-.04 19.7 19.7 0 0 0-4.86 1.54.06.06 0 0 0-.03.03C-.14 9.9-.98 14.32-.55 18.68c0 .02.01.04.03.05a19.9 19.9 0 0 0 5.96 3.02.07.07 0 0 0 .08-.03c.46-.63.87-1.3 1.22-2a.07.07 0 0 0-.04-.1 13.1 13.1 0 0 1-1.86-.89.07.07 0 0 1-.01-.12c.12-.09.25-.19.37-.29a.07.07 0 0 1 .07-.01c3.9 1.78 8.13 1.78 11.99 0a.07.07 0 0 1 .07.01c.12.1.25.2.37.29a.07.07 0 0 1-.01.12c-.6.35-1.22.65-1.87.89a.07.07 0 0 0-.04.1c.36.7.77 1.37 1.22 2a.07.07 0 0 0 .08.03 19.8 19.8 0 0 0 5.97-3.02.07.07 0 0 0 .03-.05c.51-5.03-.86-9.41-3.63-13.3a.06.06 0 0 0-.03-.03ZM8.02 15.34c-1.17 0-2.13-1.07-2.13-2.38 0-1.32.94-2.39 2.13-2.39 1.2 0 2.15 1.08 2.13 2.39 0 1.31-.94 2.38-2.13 2.38Zm7.96 0c-1.17 0-2.13-1.07-2.13-2.38 0-1.32.94-2.39 2.13-2.39 1.2 0 2.15 1.08 2.13 2.39 0 1.31-.93 2.38-2.13 2.38Z"/>
-            </svg>
-
-            <span class="login-text" data-i18n="loginButton">Iniciar sesión</span>
-        </a>
-
-        <!-- PROFILE -->
-        <div class="auth-profile" id="authProfile" hidden>
-            <a href="dashboard.html" class="auth-user">
-                <img id="navAvatar" src="" alt="Avatar">
-                <span id="navUsername">Usuario</span>
-            </a>
-
-            <button class="logout-btn" id="logoutButton" data-i18n="logoutButton">
-                Cerrar sesión
-            </button>
+    <div class="header-right">
+        <a href="dashboard.html" class="header-link">Mis servidores</a>
+        <div class="user-info" id="userInfo" style="display:none">
+            <img class="user-avatar" id="userAvatar" alt="">
+            <span id="userName"></span>
         </div>
-
-        <a href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
-           class="btn" data-i18n="navAdd">Añadir a Discord</a>
-
-        <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+        <button class="mobile-menu" id="mobileMenu" type="button">☰</button>
     </div>
 </header>
 
-<main>
+<div class="app">
 
-<section class="hero" id="inicio">
-    <div class="hero-content">
-        <div class="eyebrow" data-i18n="heroBadge">BOT DE DISCORD MULTIFUNCIONAL</div>
+    <aside class="sidebar" id="sidebar">
 
-        <h1 data-i18n="heroTitle">Tu servidor.<br>Tu <span>Zerox.</span></h1>
-
-        <p data-i18n="heroDescription">
-            Lleva tu comunidad al siguiente nivel con Project Zerox.
-            Herramientas, sistemas y funciones diseñadas para mejorar
-            la experiencia de tu servidor.
-        </p>
-
-        <div class="hero-buttons">
-            <a href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
-               class="btn" data-i18n="heroInvite">Añadir a Discord ↗</a>
-
-            <a href="commands.html" class="btn btn-outline" data-i18n="heroCommands">Ver comandos</a>
+        <div class="server-card">
+            <img class="server-icon" id="sidebarServerIcon" alt="" style="display:none">
+            <div class="server-icon" id="sidebarServerFallback">◈</div>
+            <div style="min-width:0">
+                <div class="server-name" id="sidebarServerName">Cargando servidor...</div>
+                <div class="server-label">SERVER DASHBOARD</div>
+            </div>
         </div>
-    </div>
 
-    <!-- DECORATED BOT AVATAR -->
-    <div class="hero-preview">
+        <div class="sidebar-title">Administración</div>
 
-        <img
-            src="https://cdn.discordapp.com/avatars/1534310875962540212/137046208090a4852329f360205a5e22.png?size=1024"
-            alt="Project Zerox Bot"
-            loading="eager"
-        >
+        <div class="nav-list">
+            <button class="nav-item active" data-section="general">
+                <span class="nav-icon">⌂</span>
+                General
+            </button>
 
-        <span class="avatar-decoration decoration-heart heart-one">♡</span>
-        <span class="avatar-decoration decoration-heart heart-two">♥</span>
-        <span class="avatar-decoration decoration-heart heart-three">♡</span>
+            <button class="nav-item" data-section="tickets">
+                <span class="nav-icon">▤</span>
+                Tickets
+            </button>
 
-        <span class="avatar-decoration decoration-star star-one">☆</span>
-        <span class="avatar-decoration decoration-star star-two">☆</span>
-        <span class="avatar-decoration decoration-star star-three">☆</span>
+            <button class="nav-item" data-section="boosttracker">
+                <span class="nav-icon">✧</span>
+                Boost Tracker
+            </button>
 
-        <span class="avatar-decoration decoration-sparkle sparkle-one">✧</span>
-        <span class="avatar-decoration decoration-sparkle sparkle-two">✧</span>
-        <span class="avatar-decoration decoration-sparkle sparkle-three">✧</span>
+            <button class="nav-item" data-section="welcome">
+                <span class="nav-icon">◇</span>
+                Bienvenidas
+            </button>
+        </div>
 
-    </div>
-</section>
+        <div class="sidebar-bottom">
+            <a href="dashboard.html" class="back-link">← Volver a mis servidores</a>
+        </div>
 
-<section id="funciones">
-    <div class="section-heading">
-        <small data-i18n="featuresBadge">CARACTERÍSTICAS</small>
-        <h2 data-i18n="featuresTitle">Todo lo que necesitas</h2>
-        <p data-i18n="featuresDescription">
-            Una colección de herramientas para administrar, organizar
-            y mejorar tu comunidad de Discord.
-        </p>
-    </div>
+    </aside>
 
-    <div class="features-grid">
-        <article class="feature-card">
-            <div class="feature-icon">🛡️</div>
-            <h3 data-i18n="feature1Title">Moderación</h3>
-            <p data-i18n="feature1Desc">Herramientas para mantener tu servidor organizado y bajo control.</p>
-        </article>
+    <main>
 
-        <article class="feature-card">
-            <div class="feature-icon">⚙️</div>
-            <h3 data-i18n="feature2Title">Automatización</h3>
-            <p data-i18n="feature2Desc">Sistemas que ayudan a simplificar las tareas de tu comunidad.</p>
-        </article>
+        <div class="page-heading">
+            <small>PROJECT ZEROX / SERVER MANAGEMENT</small>
+            <h1 id="pageTitle">General.</h1>
+            <p id="pageDescription">Información y estadísticas de tu servidor.</p>
+            <div class="heading-line"></div>
+        </div>
 
-        <article class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3 data-i18n="feature3Title">Información</h3>
-            <p data-i18n="feature3Desc">Consulta información útil sobre servidores y usuarios.</p>
-        </article>
+        <!-- GENERAL -->
 
-        <article class="feature-card">
-            <div class="feature-icon">🔧</div>
-            <h3 data-i18n="feature4Title">Utilidades</h3>
-            <p data-i18n="feature4Desc">Funciones prácticas para hacer más sencilla tu experiencia.</p>
-        </article>
+        <section class="page-section visible" id="section-general">
 
-        <article class="feature-card">
-            <div class="feature-icon">🎮</div>
-            <h3 data-i18n="feature5Title">Entretenimiento</h3>
-            <p data-i18n="feature5Desc">Diversión y actividades para mantener activa tu comunidad.</p>
-        </article>
+            <div id="generalLoading" class="loading-state">
+                <div class="loading-spinner"></div>
+                Cargando información del servidor...
+            </div>
 
-        <article class="feature-card">
-            <div class="feature-icon">🎫</div>
-            <h3 data-i18n="feature6Title">Sistemas</h3>
-            <p data-i18n="feature6Desc">Funciones adicionales para personalizar tu servidor.</p>
-        </article>
-    </div>
-</section>
+            <div id="generalContent" style="display:none">
 
-<section class="showcase">
-    <div class="section-heading">
-        <small data-i18n="showcaseBadge">PROJECT ZEROX</small>
-        <h2 data-i18n="showcaseTitle">Potencia en cada comando</h2>
-        <p data-i18n="showcaseDescription">
-            Accede a diferentes herramientas directamente desde Discord.
-        </p>
-    </div>
+                <div class="server-overview">
+                    <img id="mainServerIcon" alt="" style="display:none">
+                    <div class="server-icon" id="mainServerFallback">◈</div>
+                    <div>
+                        <h3 id="mainServerName">Servidor</h3>
+                        <p id="mainServerId">ID: —</p>
+                    </div>
+                </div>
 
-    <div class="command-grid">
-        <article class="command-card">
-            <h3 data-i18n="command1Title">Moderación</h3>
-            <code>?help</code>
-            <p data-i18n="command1Desc">Consulta los comandos disponibles.</p>
-        </article>
+                <div class="card-grid">
 
-        <article class="command-card">
-            <h3 data-i18n="command2Title">Información</h3>
-            <code>?ping</code>
-            <p data-i18n="command2Desc">Consulta la respuesta del bot.</p>
-        </article>
+                    <div class="card">
+                        <div class="card-icon">♙</div>
+                        <div class="card-label">Miembros</div>
+                        <div class="card-value" id="memberCount">—</div>
+                        <div class="card-description">Miembros del servidor</div>
+                    </div>
 
-        <article class="command-card">
-            <h3 data-i18n="command3Title">Servidor</h3>
-            <code>?serverinfo</code>
-            <p data-i18n="command3Desc">Consulta información del servidor.</p>
-        </article>
+                    <div class="card">
+                        <div class="card-icon">▤</div>
+                        <div class="card-label">Canales</div>
+                        <div class="card-value" id="channelCount">—</div>
+                        <div class="card-description">Canales disponibles</div>
+                    </div>
 
-        <article class="command-card">
-            <h3 data-i18n="command4Title">Bienvenida</h3>
-            <code>/welcome</code>
-            <p data-i18n="command4Desc">Configura el sistema de bienvenida.</p>
-        </article>
+                    <div class="card">
+                        <div class="card-icon">♙</div>
+                        <div class="card-label">Roles</div>
+                        <div class="card-value" id="roleCount">—</div>
+                        <div class="card-description">Roles del servidor</div>
+                    </div>
+                </div>
 
-        <article class="command-card">
-            <h3 data-i18n="command5Title">Tickets</h3>
-            <code>/ticket</code>
-            <p data-i18n="command5Desc">Accede al sistema de tickets.</p>
-        </article>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">◈</div>
+                        <div>
+                            <h3>Project Zerox</h3>
+                            <p>Estado de conexión</p>
+                        </div>
+                    </div>
+                    <span class="status">
+                        <span class="status-dot"></span>
+                        Información cargada
+                    </span>
+                </div>
 
-        <article class="command-card">
-            <h3 data-i18n="command6Title">Boost Tracker</h3>
-            <code>/boosttracker</code>
-            <p data-i18n="command6Desc">Consulta las funciones del sistema de boosts.</p>
-        </article>
-    </div>
-</section>
+            </div>
 
-<section class="command-section">
-    <div class="section-heading">
-        <h2 data-i18n="allCommandsTitle">Descubre todos los comandos</h2>
-        <p data-i18n="allCommandsDesc">Explora la lista de comandos y conoce las herramientas de Project Zerox.</p>
-        <a href="commands.html" class="btn" data-i18n="allCommandsButton">Ver todos los comandos ↗</a>
-    </div>
-</section>
+            <div id="generalError" class="error-state" style="display:none">
+                <h3>No se pudo cargar el servidor</h3>
+                <p id="generalErrorMessage">Comprueba tu sesión y vuelve a intentarlo.</p>
+                <button class="button" id="retryButton" type="button" style="margin-top:15px">
+                    Reintentar
+                </button>
+            </div>
 
-<section class="invite" id="invitar">
-    <div class="invite-box">
-        <h2 data-i18n="inviteTitle">Lleva Zerox a tu servidor</h2>
-        <p data-i18n="inviteDescription">
-            Añade Project Zerox y descubre todas las herramientas
-            que tiene para ofrecerte.
-        </p>
+        </section>
 
-        <a href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
-           class="btn" data-i18n="inviteButton">Añadir a Discord ↗</a>
-    </div>
-</section>
+        <!-- TICKETS -->
 
-<section class="support" id="soporte">
-    <div class="support-box">
-        <h2 data-i18n="supportTitle">¿Necesitas ayuda?</h2>
-        <p data-i18n="supportDescription">
-            Únete a nuestro servidor de soporte para recibir ayuda,
-            consultar novedades y formar parte de la comunidad.
-        </p>
+        <section class="page-section" id="section-tickets">
 
-        <a href="https://discord.gg/yBNw9S4vbp"
-           target="_blank" rel="noopener noreferrer"
-           class="btn" data-i18n="supportButton">Servidor de soporte ↗</a>
-    </div>
-</section>
+            <div class="section-heading">
+                <div>
+                    <h2>Sistema de Tickets</h2>
+                    <p>Administración y personalización de tickets.</p>
+                </div>
+                <span class="status"><span class="status-dot"></span> Módulo</span>
+            </div>
 
-</main>
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">▤</div>
+                    <div>
+                        <h3>Configuración de Tickets</h3>
+                        <p>Project Zerox / Tickets</p>
+                    </div>
+                </div>
+
+                <p class="module-description">
+                    Desde aquí podrás administrar el canal de tickets,
+                    los roles de soporte, el mensaje público, el mensaje
+                    de bienvenida y la apariencia de los botones.
+                </p>
+
+                <div class="info-box">
+                    <strong>Integración pendiente.</strong><br>
+                    La configuración web todavía no está conectada al
+                    almacenamiento del bot. Por ahora, utiliza
+                    <strong>/ticket edit</strong> en Discord para
+                    administrar este módulo.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- BOOST TRACKER -->
+
+        <section class="page-section" id="section-boosttracker">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Boost Tracker</h2>
+                    <p>Administración de notificaciones de mejoras.</p>
+                </div>
+                <span class="status"><span class="status-dot"></span> Módulo</span>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">✧</div>
+                    <div>
+                        <h3>Configuración de Boost Tracker</h3>
+                        <p>Project Zerox / Boost Tracker</p>
+                    </div>
+                </div>
+
+                <p class="module-description">
+                    Personaliza los anuncios de Server Boosts, el canal
+                    de notificaciones, el contenido del mensaje, el
+                    autor y las variables disponibles.
+                </p>
+
+                <div class="info-box">
+                    <strong>Integración pendiente.</strong><br>
+                    La configuración web aún no está conectada al bot.
+                    Utiliza <strong>/boosttracker edit</strong> en
+                    Discord para administrar este módulo.
+                </div>
+            </div>
+
+        </section>
+
+        <!-- WELCOME -->
+
+        <section class="page-section" id="section-welcome">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Bienvenidas</h2>
+                    <p>Administración de mensajes de bienvenida.</p>
+                </div>
+                <span class="status"><span class="status-dot"></span> Módulo</span>
+            </div>
+
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">◇</div>
+                    <div>
+                        <h3>Configuración de Bienvenidas</h3>
+                        <p>Project Zerox / Welcome</p>
+                    </div>
+                </div>
+
+                <p class="module-description">
+                    Configura el canal de bienvenida, personaliza
+                    el contenido del mensaje, utiliza variables
+                    dinámicas y prueba el resultado.
+                </p>
+
+                <div class="info-box">
+                    <strong>Integración pendiente.</strong><br>
+                    La configuración web todavía no está conectada
+                    al bot. Utiliza <strong>/welcome edit</strong>
+                    en Discord para administrar este módulo.
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
 
 <footer>
-    <div>
-        <div class="logo">PROJECT <span>ZEROX</span></div>
-        <p data-i18n="footerTagline">Tu servidor. Tu Zerox.</p>
-    </div>
-
-    <div class="footer-links">
-        <a href="#inicio" data-i18n="footerHome">Inicio</a>
-        <a href="commands.html" data-i18n="footerCommands">Comandos</a>
-        <a href="https://discord.gg/yBNw9S4vbp" target="_blank" rel="noopener noreferrer" data-i18n="footerSupport">Soporte</a>
-    </div>
-
-    <p>© 2026 Project Zerox. <span data-i18n="footerRights">Todos los derechos reservados.</span></p>
+    PROJECT ZEROX · SERVER DASHBOARD
 </footer>
 
 <script>
-const translations = {
-    es: {
-        title: "Project Zerox | Discord Bot",
-        description: "Project Zerox - Un bot de Discord para llevar tu servidor al siguiente nivel.",
-        navHome: "Inicio",
-        navFeatures: "Funciones",
-        navCommands: "Comandos",
-        navDashboard: "Dashboard",
-        navInvite: "Invitar bot",
-        navSupport: "Soporte",
-        navAdd: "Añadir a Discord",
-        loginButton: "Iniciar sesión",
-        logoutButton: "Cerrar sesión",
-        heroBadge: "BOT DE DISCORD MULTIFUNCIONAL",
-        heroTitle: 'Tu servidor.<br>Tu <span>Zerox.</span>',
-        heroDescription: "Lleva tu comunidad al siguiente nivel con Project Zerox. Herramientas, sistemas y funciones diseñadas para mejorar la experiencia de tu servidor.",
-        heroInvite: "Añadir a Discord ↗",
-        heroCommands: "Ver comandos",
-        featuresBadge: "CARACTERÍSTICAS",
-        featuresTitle: "Todo lo que necesitas",
-        featuresDescription: "Una colección de herramientas para administrar, organizar y mejorar tu comunidad de Discord.",
-        feature1Title: "Moderación",
-        feature1Desc: "Herramientas para mantener tu servidor organizado y bajo control.",
-        feature2Title: "Automatización",
-        feature2Desc: "Sistemas que ayudan a simplificar las tareas de tu comunidad.",
-        feature3Title: "Información",
-        feature3Desc: "Consulta información útil sobre servidores y usuarios.",
-        feature4Title: "Utilidades",
-        feature4Desc: "Funciones prácticas para hacer más sencilla tu experiencia.",
-        feature5Title: "Entretenimiento",
-        feature5Desc: "Diversión y actividades para mantener activa tu comunidad.",
-        feature6Title: "Sistemas",
-        feature6Desc: "Funciones adicionales para personalizar tu servidor.",
-        showcaseBadge: "PROJECT ZEROX",
-        showcaseTitle: "Potencia en cada comando",
-        showcaseDescription: "Accede a diferentes herramientas directamente desde Discord.",
-        command1Title: "Moderación",
-        command1Desc: "Consulta los comandos disponibles.",
-        command2Title: "Información",
-        command2Desc: "Consulta la respuesta del bot.",
-        command3Title: "Servidor",
-        command3Desc: "Consulta información del servidor.",
-        command4Title: "Bienvenida",
-        command4Desc: "Configura el sistema de bienvenida.",
-        command5Title: "Tickets",
-        command5Desc: "Accede al sistema de tickets.",
-        command6Title: "Boost Tracker",
-        command6Desc: "Consulta las funciones del sistema de boosts.",
-        allCommandsTitle: "Descubre todos los comandos",
-        allCommandsDesc: "Explora la lista de comandos y conoce las herramientas de Project Zerox.",
-        allCommandsButton: "Ver todos los comandos ↗",
-        inviteTitle: "Lleva Zerox a tu servidor",
-        inviteDescription: "Añade Project Zerox y descubre todas las herramientas que tiene para ofrecerte.",
-        inviteButton: "Añadir a Discord ↗",
-        supportTitle: "¿Necesitas ayuda?",
-        supportDescription: "Únete a nuestro servidor de soporte para recibir ayuda, consultar novedades y formar parte de la comunidad.",
-        supportButton: "Servidor de soporte ↗",
-        footerTagline: "Tu servidor. Tu Zerox.",
-        footerHome: "Inicio",
-        footerCommands: "Comandos",
-        footerSupport: "Soporte",
-        footerRights: "Todos los derechos reservados."
-    },
+const API = {
+    serverInfo: "/api/server-info",
+    authMe: "/api/auth/me"
+};
 
-    en: {
-        title: "Project Zerox | Discord Bot",
-        description: "Project Zerox - A Discord bot to take your server to the next level.",
-        navHome: "Home",
-        navFeatures: "Features",
-        navCommands: "Commands",
-        navDashboard: "Dashboard",
-        navInvite: "Invite bot",
-        navSupport: "Support",
-        navAdd: "Add to Discord",
-        loginButton: "Login",
-        logoutButton: "Log out",
-        heroBadge: "MULTIPURPOSE DISCORD BOT",
-        heroTitle: 'Your server.<br>Your <span>Zerox.</span>',
-        heroDescription: "Take your community to the next level with Project Zerox. Tools, systems and features designed to improve your server experience.",
-        heroInvite: "Add to Discord ↗",
-        heroCommands: "View commands",
-        featuresBadge: "FEATURES",
-        featuresTitle: "Everything you need",
-        featuresDescription: "A collection of tools to manage, organize and improve your Discord community.",
-        feature1Title: "Moderation",
-        feature1Desc: "Tools to keep your server organized and under control.",
-        feature2Title: "Automation",
-        feature2Desc: "Systems that help simplify your community tasks.",
-        feature3Title: "Information",
-        feature3Desc: "Check useful information about servers and users.",
-        feature4Title: "Utilities",
-        feature4Desc: "Practical features to make your experience easier.",
-        feature5Title: "Entertainment",
-        feature5Desc: "Fun and activities to keep your community active.",
-        feature6Title: "Systems",
-        feature6Desc: "Additional features to customize your server.",
-        showcaseBadge: "PROJECT ZEROX",
-        showcaseTitle: "Power in every command",
-        showcaseDescription: "Access different tools directly from Discord.",
-        command1Title: "Moderation",
-        command1Desc: "View the available commands.",
-        command2Title: "Information",
-        command2Desc: "Check the bot's response.",
-        command3Title: "Server",
-        command3Desc: "View server information.",
-        command4Title: "Welcome",
-        command4Desc: "Configure the welcome system.",
-        command5Title: "Tickets",
-        command5Desc: "Access the ticket system.",
-        command6Title: "Boost Tracker",
-        command6Desc: "Explore the boost tracking system.",
-        allCommandsTitle: "Discover all commands",
-        allCommandsDesc: "Explore the command list and discover Project Zerox tools.",
-        allCommandsButton: "View all commands ↗",
-        inviteTitle: "Bring Zerox to your server",
-        inviteDescription: "Add Project Zerox and discover all the tools it has to offer.",
-        inviteButton: "Add to Discord ↗",
-        supportTitle: "Need help?",
-        supportDescription: "Join our support server to get help, check updates and become part of the community.",
-        supportButton: "Support server ↗",
-        footerTagline: "Your server. Your Zerox.",
-        footerHome: "Home",
-        footerCommands: "Commands",
-        footerSupport: "Support",
-        footerRights: "All rights reserved."
-    },
+const params = new URLSearchParams(window.location.search);
+const serverId = params.get("id");
 
-    pt: {
-        title: "Project Zerox | Bot do Discord",
-        description: "Project Zerox - Um bot do Discord para levar seu servidor ao próximo nível.",
-        navHome: "Início",
-        navFeatures: "Recursos",
-        navCommands: "Comandos",
-        navDashboard: "Painel",
-        navInvite: "Adicionar bot",
-        navSupport: "Suporte",
-        navAdd: "Adicionar ao Discord",
-        loginButton: "Entrar",
-        logoutButton: "Sair",
-        heroBadge: "BOT MULTIFUNCIONAL DO DISCORD",
-        heroTitle: 'Seu servidor.<br>Seu <span>Zerox.</span>',
-        heroDescription: "Leve sua comunidade para o próximo nível com o Project Zerox. Ferramentas, sistemas e recursos criados para melhorar a experiência do seu servidor.",
-        heroInvite: "Adicionar ao Discord ↗",
-        heroCommands: "Ver comandos",
-        featuresBadge: "RECURSOS",
-        featuresTitle: "Tudo o que você precisa",
-        featuresDescription: "Uma coleção de ferramentas para administrar, organizar e melhorar sua comunidade do Discord.",
-        feature1Title: "Moderação",
-        feature1Desc: "Ferramentas para manter seu servidor organizado e sob controle.",
-        feature2Title: "Automação",
-        feature2Desc: "Sistemas que ajudam a simplificar as tarefas da sua comunidade.",
-        feature3Title: "Informações",
-        feature3Desc: "Consulte informações úteis sobre servidores e usuários.",
-        feature4Title: "Utilidades",
-        feature4Desc: "Recursos práticos para facilitar sua experiência.",
-        feature5Title: "Entretenimento",
-        feature5Desc: "Diversão e atividades para manter sua comunidade ativa.",
-        feature6Title: "Sistemas",
-        feature6Desc: "Recursos adicionais para personalizar seu servidor.",
-        showcaseBadge: "PROJECT ZEROX",
-        showcaseTitle: "Poder em cada comando",
-        showcaseDescription: "Acesse diferentes ferramentas diretamente pelo Discord.",
-        command1Title: "Moderação",
-        command1Desc: "Consulte os comandos disponíveis.",
-        command2Title: "Informações",
-        command2Desc: "Consulte a resposta do bot.",
-        command3Title: "Servidor",
-        command3Desc: "Consulte informações do servidor.",
-        command4Title: "Boas-vindas",
-        command4Desc: "Configure o sistema de boas-vindas.",
-        command5Title: "Tickets",
-        command5Desc: "Acesse o sistema de tickets.",
-        command6Title: "Boost Tracker",
-        command6Desc: "Consulte as funções do sistema de boosts.",
-        allCommandsTitle: "Descubra todos os comandos",
-        allCommandsDesc: "Explore a lista de comandos e conheça as ferramentas do Project Zerox.",
-        allCommandsButton: "Ver todos os comandos ↗",
-        inviteTitle: "Leve o Zerox para seu servidor",
-        inviteDescription: "Adicione o Project Zerox e descubra todas as ferramentas que ele oferece.",
-        inviteButton: "Adicionar ao Discord ↗",
-        supportTitle: "Precisa de ajuda?",
-        supportDescription: "Entre no nosso servidor de suporte para receber ajuda, conferir novidades e fazer parte da comunidade.",
-        supportButton: "Servidor de suporte ↗",
-        footerTagline: "Seu servidor. Seu Zerox.",
-        footerHome: "Início",
-        footerCommands: "Comandos",
-        footerSupport: "Suporte",
-        footerRights: "Todos os direitos reservados."
+const pageData = {
+    general: {
+        title: "General.",
+        description: "Información y estadísticas de tu servidor."
+    },
+    tickets: {
+        title: "Tickets.",
+        description: "Administra el sistema de soporte de tu comunidad."
+    },
+    boosttracker: {
+        title: "Boost Tracker.",
+        description: "Gestiona las notificaciones de mejoras del servidor."
+    },
+    welcome: {
+        title: "Bienvenidas.",
+        description: "Personaliza la experiencia de entrada de los miembros."
     }
 };
 
-function setLanguage(language) {
-    const dictionary = translations[language] || translations.es;
-
-    document.documentElement.lang = language === "pt" ? "pt-BR" : language;
-    document.title = dictionary.title;
-
-    document.querySelector('meta[name="description"]').content = dictionary.description;
-
-    document.querySelectorAll("[data-i18n]").forEach(element => {
-        const key = element.dataset.i18n;
-
-        if (dictionary[key] !== undefined) {
-            element.innerHTML = dictionary[key];
-        }
-    });
-
-    document.getElementById("languageSelect").value = language;
+function setText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value ?? "—";
 }
 
-/* COLOR THEMES */
+/* NAVIGATION */
 
-const themes = {
-    darkred: {
-        accent: "#8B0000",
-        accent2: "#B51225",
-        glow: "#E32636",
-        border: "rgba(181,18,37,.25)",
-        shadow: "rgba(181,18,37,.22)"
-    },
+document.querySelectorAll(".nav-item").forEach(button => {
+    button.addEventListener("click", () => {
+        const section = button.dataset.section;
+        if (!pageData[section]) return;
 
-    red: {
-        accent: "#B00000",
-        accent2: "#E00000",
-        glow: "#FF3030",
-        border: "rgba(255,48,48,.25)",
-        shadow: "rgba(255,0,0,.25)"
-    },
+        document.querySelectorAll(".nav-item").forEach(item => {
+            item.classList.remove("active");
+        });
 
-    darkblue: {
-        accent: "#071D59",
-        accent2: "#123D91",
-        glow: "#3478F6",
-        border: "rgba(52,120,246,.25)",
-        shadow: "rgba(20,70,180,.25)"
-    },
+        button.classList.add("active");
 
-    blue: {
-        accent: "#0047AB",
-        accent2: "#0878E8",
-        glow: "#339CFF",
-        border: "rgba(51,156,255,.25)",
-        shadow: "rgba(0,100,255,.25)"
-    },
+        document.querySelectorAll(".page-section").forEach(item => {
+            item.classList.remove("visible");
+        });
 
-    cyan: {
-        accent: "#007C91",
-        accent2: "#00AFC6",
-        glow: "#43E8FF",
-        border: "rgba(67,232,255,.25)",
-        shadow: "rgba(0,190,220,.25)"
-    },
+        document.getElementById("section-" + section).classList.add("visible");
 
-    darkpurple: {
-        accent: "#35105F",
-        accent2: "#60219B",
-        glow: "#A65CFF",
-        border: "rgba(166,92,255,.25)",
-        shadow: "rgba(100,30,180,.25)"
-    },
+        setText("pageTitle", pageData[section].title);
+        setText("pageDescription", pageData[section].description);
 
-    purple: {
-        accent: "#6500A8",
-        accent2: "#9400D3",
-        glow: "#C66BFF",
-        border: "rgba(198,107,255,.25)",
-        shadow: "rgba(140,0,220,.25)"
-    }
-};
-
-function setTheme(themeName) {
-    const theme = themes[themeName] || themes.darkred;
-    const root = document.documentElement;
-
-    Object.entries(theme).forEach(([property, value]) => {
-        root.style.setProperty("--" + property, value);
+        document.getElementById("sidebar").classList.remove("open");
     });
-
-    document.getElementById("themeSelect").value = themeName;
-}
-
-/* SELECTORS */
-
-document.getElementById("languageSelect").addEventListener("change", event => {
-    setLanguage(event.target.value);
-});
-
-document.getElementById("themeSelect").addEventListener("change", event => {
-    setTheme(event.target.value);
 });
 
 /* MOBILE MENU */
 
-const menuToggle = document.getElementById("menuToggle");
-const navLinks = document.getElementById("navLinks");
-
-menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-    menuToggle.textContent = navLinks.classList.contains("active") ? "✕" : "☰";
+document.getElementById("mobileMenu").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
 });
 
-navLinks.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-        navLinks.classList.remove("active");
-        menuToggle.textContent = "☰";
-    });
-});
+/* ICONS */
 
-/* STARFIELD */
+function setServerIcon(url) {
+    const mainImage = document.getElementById("mainServerIcon");
+    const mainFallback = document.getElementById("mainServerFallback");
+    const sidebarImage = document.getElementById("sidebarServerIcon");
+    const sidebarFallback = document.getElementById("sidebarServerFallback");
 
-const canvas = document.getElementById("starfield");
-const ctx = canvas.getContext("2d");
-
-let stars = [];
-let shootingStars = [];
-
-function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    createStars();
-}
-
-function createStars() {
-    stars = [];
-
-    const count = Math.min(150, Math.floor(window.innerWidth / 8));
-
-    for (let i = 0; i < count; i++) {
-        stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 1.7 + .3,
-            speed: Math.random() * .45 + .12,
-            opacity: Math.random() * .7 + .2
-        });
+    if (!url) {
+        mainImage.style.display = "none";
+        sidebarImage.style.display = "none";
+        mainFallback.style.display = "grid";
+        sidebarFallback.style.display = "grid";
+        return;
     }
+
+    mainImage.src = url;
+    sidebarImage.src = url;
+
+    mainImage.style.display = "block";
+    sidebarImage.style.display = "block";
+
+    mainFallback.style.display = "none";
+    sidebarFallback.style.display = "none";
+
+    mainImage.onerror = () => {
+        mainImage.style.display = "none";
+        mainFallback.style.display = "grid";
+    };
+
+    sidebarImage.onerror = () => {
+        sidebarImage.style.display = "none";
+        sidebarFallback.style.display = "grid";
+    };
 }
 
-function createShootingStar() {
-    shootingStars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height * .5,
-        length: Math.random() * 100 + 50,
-        speed: Math.random() * 7 + 5,
-        opacity: 1
-    });
-}
+/* SERVER DATA */
 
-function animateStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+async function loadServer() {
+    const loading = document.getElementById("generalLoading");
+    const content = document.getElementById("generalContent");
+    const error = document.getElementById("generalError");
 
-    const glow = getComputedStyle(document.documentElement)
-        .getPropertyValue("--glow").trim() || "#E32636";
+    loading.style.display = "block";
+    content.style.display = "none";
+    error.style.display = "none";
 
-    stars.forEach(star => {
-        star.y -= star.speed;
-
-        if (star.y < 0) {
-            star.y = canvas.height;
-            star.x = Math.random() * canvas.width;
-        }
-
-        ctx.globalAlpha = star.opacity;
-        ctx.fillStyle = glow;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = glow;
-
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fill();
-    });
-
-    shootingStars.forEach((star, index) => {
-        star.x += star.speed;
-        star.y += star.speed * .45;
-        star.opacity -= .012;
-
-        ctx.globalAlpha = Math.max(0, star.opacity);
-        ctx.strokeStyle = glow;
-        ctx.lineWidth = 1.5;
-        ctx.shadowBlur = 12;
-        ctx.shadowColor = glow;
-
-        ctx.beginPath();
-        ctx.moveTo(star.x, star.y);
-        ctx.lineTo(
-            star.x - star.length,
-            star.y - star.length * .45
-        );
-        ctx.stroke();
-
-        if (star.opacity <= 0) {
-            shootingStars.splice(index, 1);
-        }
-    });
-
-    ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
-
-    requestAnimationFrame(animateStars);
-}
-
-window.addEventListener("resize", resizeCanvas);
-
-resizeCanvas();
-animateStars();
-
-setLanguage("es");
-setTheme("darkred");
-
-setInterval(() => {
-    if (Math.random() > .45) createShootingStar();
-}, 2200);
-
-/* DISCORD AUTHENTICATION */
-
-async function updateAuthUI() {
-    const loginButton = document.getElementById("loginButton");
-    const authProfile = document.getElementById("authProfile");
-    const navAvatar = document.getElementById("navAvatar");
-    const navUsername = document.getElementById("navUsername");
+    if (!serverId || !/^\d{17,20}$/.test(serverId)) {
+        showError("El ID del servidor no es válido. Vuelve a Mis servidores y selecciónalo otra vez.");
+        return;
+    }
 
     try {
-        const response = await fetch("/api/auth/me", {
-            method: "GET",
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            throw new Error("No se pudo comprobar la sesión.");
-        }
+        const response = await fetch(
+            API.serverInfo + "?id=" + encodeURIComponent(serverId),
+            {
+                method: "GET",
+                credentials: "include",
+                headers: { "Accept": "application/json" }
+            }
+        );
 
         const data = await response.json();
 
-        if (!data.authenticated || !data.user) {
-            loginButton.hidden = false;
-            authProfile.hidden = true;
-            return;
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || data.error || "No se pudo obtener la información del servidor.");
         }
 
-        navUsername.textContent =
-            data.user.global_name || data.user.username || "Usuario";
+        const server = data.server || data.guild;
 
-        navAvatar.src =
-            data.user.avatar ||
-            "https://cdn.discordapp.com/embed/avatars/0.png";
+        if (!server) {
+            throw new Error("La API no devolvió los datos del servidor.");
+        }
 
-        navAvatar.onerror = () => {
-            navAvatar.src = "https://cdn.discordapp.com/embed/avatars/0.png";
-        };
+        setText("sidebarServerName", server.name || "Servidor");
+        setText("mainServerName", server.name || "Servidor");
+        setText("mainServerId", "ID: " + (server.id || serverId));
 
-        loginButton.hidden = true;
-        authProfile.hidden = false;
+        setText("memberCount",
+            typeof server.memberCount === "number"
+                ? server.memberCount.toLocaleString("es-CL")
+                : "—"
+        );
 
-    } catch (error) {
-        console.error("Error comprobando sesión:", error);
+        setText("channelCount",
+            typeof server.channelCount === "number"
+                ? server.channelCount.toLocaleString("es-CL")
+                : "—"
+        );
 
-        loginButton.hidden = false;
-        authProfile.hidden = true;
+        setText("roleCount",
+            typeof server.roleCount === "number"
+                ? server.roleCount.toLocaleString("es-CL")
+                : "—"
+        );
+
+        const iconUrl = server.icon
+            ? (String(server.icon).startsWith("http")
+                ? server.icon
+                : "https://cdn.discordapp.com/icons/" +
+                  server.id + "/" + server.icon + ".png?size=128")
+            : null;
+
+        setServerIcon(iconUrl);
+
+        loading.style.display = "none";
+        content.style.display = "block";
+
+    } catch (err) {
+        showError(err.message || "Ocurrió un error al cargar el servidor.");
     }
 }
 
-/* LOGOUT */
+function showError(message) {
+    document.getElementById("generalLoading").style.display = "none";
+    document.getElementById("generalContent").style.display = "none";
+    document.getElementById("generalError").style.display = "block";
+    setText("generalErrorMessage", message);
+}
 
-document.getElementById("logoutButton").addEventListener("click", async () => {
-    const logoutButton = document.getElementById("logoutButton");
+/* USER SESSION */
 
-    logoutButton.disabled = true;
-
+async function loadUser() {
     try {
-        const response = await fetch("/api/auth/logout", {
-            method: "POST"
+        const response = await fetch(API.authMe, {
+            method: "GET",
+            credentials: "include",
+            headers: { "Accept": "application/json" }
         });
 
-        if (response.ok) {
-            window.location.reload();
-        } else {
-            alert("No se pudo cerrar la sesión.");
-            logoutButton.disabled = false;
-        }
+        if (!response.ok) return;
+
+        const data = await response.json();
+        if (!data.authenticated || !data.user) return;
+
+        const user = data.user;
+        const avatar = user.avatar
+            ? "https://cdn.discordapp.com/avatars/" +
+              user.id + "/" + user.avatar + ".png?size=64"
+            : "https://cdn.discordapp.com/embed/avatars/0.png";
+
+        document.getElementById("userAvatar").src = avatar;
+        setText("userName", user.global_name || user.username || "Usuario");
+        document.getElementById("userInfo").style.display = "flex";
 
     } catch (error) {
-        console.error("Error cerrando la sesión:", error);
-        alert("Error al cerrar la sesión.");
-        logoutButton.disabled = false;
+        console.error("Error cargando sesión:", error);
     }
-});
+}
 
-/* CHECK SESSION */
+/* RETRY */
 
-updateAuthUI();
+document.getElementById("retryButton").addEventListener("click", loadServer);
 
+/* START */
+
+loadUser();
+loadServer();
 </script>
 
 </body>
