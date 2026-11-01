@@ -1,3 +1,4 @@
+
 const { unseal, getCookie } = require("../lib/session");
 
 module.exports = async (req, res) => {
@@ -20,9 +21,15 @@ module.exports = async (req, res) => {
 
     const user = session.user;
 
-    const avatar = user.avatar
-      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`
-      : `https://cdn.discordapp.com/embed/avatars/0.png`;
+    let avatar = null;
+
+    if (user.avatar && user.id) {
+      const extension = String(user.avatar).startsWith("a_")
+        ? "gif"
+        : "png";
+
+      avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${extension}?size=128`;
+    }
 
     return res.status(200).json({
       authenticated: true,
