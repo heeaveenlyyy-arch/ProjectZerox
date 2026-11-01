@@ -1,7 +1,6 @@
 
 const { unseal, getCookie } = require("./lib/session");
 
-const BOT_ID = "1534310875962540212";
 const DISCORD_API = "https://discord.com/api/v10";
 
 module.exports = async (req, res) => {
@@ -37,7 +36,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Comprobar que el usuario puede administrar este servidor.
+    // Verificar acceso del usuario al servidor.
     const userGuildsResponse = await fetch(
       `${DISCORD_API}/users/@me/guilds`,
       {
@@ -63,6 +62,7 @@ module.exports = async (req, res) => {
     }
 
     const permissions = BigInt(userGuild.permissions || "0");
+
     const canManage =
       userGuild.owner ||
       (permissions & 0x8n) === 0x8n ||
@@ -74,15 +74,18 @@ module.exports = async (req, res) => {
       });
     }
 
-    // Obtener información del servidor con el bot.
-    const guildResponse = await fetch(
-      `${DISCORD_API}/guilds/${id}?with_counts=true`,
-      {
-        headers: {
-          Authorization: `Bot ${botToken}`
-        }
-      }
-    );
+    const headers = {
+      Authorization: `Bot ${botToken}`
+    };
+
+    // Obtener información, canales, roles y emojis.
+    const [guildResponse, channelsResponse, rolesResponse, emojisResponse] =
+      await Promise.all([
+        fetch(`${DISCORD_API}/guilds/${id}?with_counts=true`, { headers }),
+        fetch(`${DISCORD_API}/guilds/${id}/channels`, { headers }),
+        fetch(`${DISCORD_API}/guilds/${id}/roles`, { headers }),
+        fetch(`${DISCORD_API}/guilds/${id}/emojis`, { headers })
+      ]);
 
     if (!guildResponse.ok) {
       return res.status(guildResponse.status).json({
@@ -90,36 +93,51 @@ module.exports = async (req, res) => {
       });
     }
 
-    const guild = await guildResponse.json();
-
-    // Obtener los canales del servidor.
-    const channelsResponse = await fetch(
-      `${DISCORD_API}/guilds/${id}/channels`,
-      {
-        headers: {
-          Authorization: `Bot ${botToken}`
-        }
-      }
-    );
-
-    if (!channelsResponse.ok) {
-      return res.status(channelsResponse.status).json({
-        error: "No se pudieron obtener los canales del servidor"
+    if (!channelsResponse.ok || !rolesResponse.ok || !emojisResponse.ok) {
+      return res.status(502).json({
+        error: "No se pudieron obtener los canales, roles o emojis del servidor"
       });
     }
 
-    const channels = await channelsResponse.json();
+    const [guild, channels, roles, emojis] = await Promise.all([
+      guildResponse.json(),
+      channelsResponse.json(),
+      rolesResponse.json(),
+      emojisResponse.json()
+    ]);
 
     return res.status(200).json({
       success: true,
+
       server: {
         id: guild.id,
         name: guild.name,
         icon: guild.icon,
         memberCount: guild.approximate_member_count ?? null,
         channelCount: channels.length,
-        roleCount: Array.isArray(guild.roles) ? guild.roles.length : null
-      }
+        roleCount: roles.length
+      },
+
+      channels: channels.map(channel => ({
+        id: channel.id,
+        name: channel.name,
+        type: channel.type,
+        parentId: channel.parent_id ?? null
+      })),
+
+      roles: roles.map(role => ({
+        id: role.id,
+        name: role.name,
+        color: role.color,
+        position: role.position,
+        managed: role.managed
+      })),
+
+      emojis: emojis.map(emoji => ({
+        id: emoji.id,
+        name: emoji.name,
+        animated: emoji.animated
+      }))
     });
 
   } catch (error) {
