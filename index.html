@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -181,53 +181,6 @@ button, select {
     height: 18px;
     flex-shrink: 0;
     fill: currentColor;
-}
-
-/* DISCORD USER PROFILE */
-
-.user-profile {
-    display: none;
-    align-items: center;
-    gap: 9px;
-    padding: 6px 10px;
-    background: #080808;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-}
-
-.user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--border);
-}
-
-.user-name {
-    color: white;
-    font-size: 13px;
-    font-weight: bold;
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.logout-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 7px 9px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 11px;
-    transition: .2s;
-}
-
-.logout-btn:hover {
-    color: white;
-    border-color: var(--glow);
-    background: rgba(181,18,37,.15);
 }
 
 .menu-toggle {
@@ -685,20 +638,6 @@ footer p {
         display: none;
     }
 
-    .user-profile {
-        padding: 5px;
-        gap: 5px;
-    }
-
-    .user-name {
-        display: none;
-    }
-
-    .logout-btn {
-        padding: 6px;
-        font-size: 10px;
-    }
-
     .hero {
         padding-left: 6%;
         padding-right: 6%;
@@ -771,10 +710,9 @@ footer p {
             <option value="purple">🟣 Morado</option>
         </select>
 
-        <!-- DISCORD LOGIN -->
+        <!-- LOGIN DISCORD CORREGIDO -->
         <a href="/api/auth/login"
            class="btn login-btn"
-           id="loginButton"
            aria-label="Iniciar sesión con Discord">
 
             <svg class="discord-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -783,13 +721,6 @@ footer p {
 
             <span class="login-text" data-i18n="loginButton">Iniciar sesión</span>
         </a>
-
-        <!-- DISCORD USER PROFILE -->
-        <div class="user-profile" id="userProfile">
-            <img class="user-avatar" id="userAvatar" src="" alt="Avatar de Discord">
-            <span class="user-name" id="userName"></span>
-            <button class="logout-btn" id="logoutButton" type="button" data-i18n="logoutButton">Cerrar Sesión</button>
-        </div>
 
         <a href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
            class="btn" data-i18n="navAdd">Añadir a Discord</a>
@@ -999,7 +930,6 @@ const translations = {
         navSupport: "Soporte",
         navAdd: "Añadir a Discord",
         loginButton: "Iniciar sesión",
-        logoutButton: "Cerrar Sesión",
         heroBadge: "✦ BOT DE DISCORD MULTIFUNCIONAL",
         heroTitle: 'Tu servidor.<br>Tu <span>Zerox.</span>',
         heroDescription: "Lleva tu comunidad al siguiente nivel con Project Zerox. Herramientas, sistemas y funciones diseñadas para mejorar la experiencia de tu servidor.",
@@ -1063,7 +993,6 @@ const translations = {
         navSupport: "Support",
         navAdd: "Add to Discord",
         loginButton: "Login",
-        logoutButton: "Log out",
         heroBadge: "✦ MULTIPURPOSE DISCORD BOT",
         heroTitle: 'Your server.<br>Your <span>Zerox.</span>',
         heroDescription: "Take your community to the next level with Project Zerox. Tools, systems and features designed to improve your server experience.",
@@ -1127,7 +1056,6 @@ const translations = {
         navSupport: "Suporte",
         navAdd: "Adicionar ao Discord",
         loginButton: "Entrar",
-        logoutButton: "Sair",
         heroBadge: "✦ BOT MULTIFUNCIONAL DO DISCORD",
         heroTitle: 'Seu servidor.<br>Seu <span>Zerox.</span>',
         heroDescription: "Leve sua comunidade para o próximo nível com o Project Zerox. Ferramentas, sistemas e recursos criados para melhorar a experiência do seu servidor.",
@@ -1299,79 +1227,6 @@ navLinks.querySelectorAll("a").forEach(link => {
     });
 });
 
-/* DISCORD USER SESSION */
-
-async function loadDiscordUser() {
-    const loginButton = document.getElementById("loginButton");
-    const userProfile = document.getElementById("userProfile");
-    const userAvatar = document.getElementById("userAvatar");
-    const userName = document.getElementById("userName");
-
-    try {
-        const response = await fetch("/api/auth/me", {
-            method: "GET",
-            credentials: "same-origin",
-            cache: "no-store"
-        });
-
-        if (!response.ok) {
-            loginButton.style.display = "inline-flex";
-            userProfile.style.display = "none";
-            return;
-        }
-
-        const data = await response.json();
-
-        if (!data.authenticated || !data.user) {
-            loginButton.style.display = "inline-flex";
-            userProfile.style.display = "none";
-            return;
-        }
-
-        userAvatar.src = data.user.avatar;
-        userName.textContent = data.user.global_name || data.user.username;
-
-        loginButton.style.display = "none";
-        userProfile.style.display = "flex";
-
-    } catch (error) {
-        console.error("Error al cargar usuario:", error);
-        loginButton.style.display = "inline-flex";
-        userProfile.style.display = "none";
-    }
-}
-
-/* DISCORD LOGOUT */
-
-document.getElementById("logoutButton").addEventListener("click", async () => {
-    const logoutButton = document.getElementById("logoutButton");
-    const language = document.getElementById("languageSelect").value;
-
-    logoutButton.disabled = true;
-    logoutButton.textContent = "...";
-
-    try {
-        const response = await fetch("/api/auth/logout", {
-            method: "POST",
-            credentials: "same-origin",
-            cache: "no-store"
-        });
-
-        if (response.ok) {
-            window.location.reload();
-        } else {
-            logoutButton.disabled = false;
-            logoutButton.textContent = translations[language].logoutButton;
-            console.error("No se pudo cerrar la sesión.");
-        }
-
-    } catch (error) {
-        logoutButton.disabled = false;
-        logoutButton.textContent = translations[language].logoutButton;
-        console.error("Error al cerrar sesión:", error);
-    }
-});
-
 /* STARFIELD */
 
 const canvas = document.getElementById("starfield");
@@ -1474,10 +1329,6 @@ animateStars();
 setLanguage("es");
 setTheme("darkred");
 
-/* LOAD DISCORD SESSION */
-
-loadDiscordUser();
-
 setInterval(() => {
     if (Math.random() > .45) createShootingStar();
 }, 2200);
@@ -1485,3 +1336,4 @@ setInterval(() => {
 
 </body>
 </html>
+```
