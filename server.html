@@ -1,4 +1,4 @@
-
+```html
 <!doctype html>
 <html lang="es">
 <head>
@@ -57,6 +57,7 @@ main{flex:1;min-width:0;padding:48px clamp(20px,5vw,65px);max-width:1500px;margi
 .status-dot{width:6px;height:6px;border-radius:50%;background:#888}
 .button{display:inline-flex;justify-content:center;align-items:center;border:1px solid #333;background:#151515;color:#eee;border-radius:6px;padding:10px 15px;font-size:11px}
 .button:hover{background:#222;border-color:#666}
+.button:disabled{opacity:.5;cursor:not-allowed}
 .button.secondary{background:transparent;color:#888}
 .loading-state,.error-state{padding:35px 20px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:9px;color:#888;font-size:12px;line-height:1.8}
 .error-state h3{color:#ddd;margin-bottom:8px}
@@ -228,6 +229,7 @@ main{padding:35px 17px}.card-grid{grid-template-columns:1fr 1fr}
 </div>
 <div class="ticket-actions">
 <button class="button" id="saveTicketsButton" type="button">Guardar configuración</button>
+<button class="button" id="publishTicketsButton" type="button">Enviar mensaje</button>
 <button class="button secondary" id="reloadTicketsButton" type="button">Recargar</button>
 </div>
 <div class="ticket-message" id="ticketMessage">La configuración se guardará en Supabase.</div>
@@ -575,7 +577,6 @@ async function loadTickets(){
  ticketMessage("Cargando canales, roles y configuración...");
 
  try{
-  // PRIMERA CONSULTA: CANALES Y ROLES DE DISCORD
   const serverUrl=API.serverInfo+"?id="+encodeURIComponent(serverId);
 
   console.log("[Zerox] Consultando servidor:",serverUrl);
@@ -601,11 +602,9 @@ async function loadTickets(){
   ticketServerData.channels=Array.isArray(serverData.channels)?serverData.channels:[];
   ticketServerData.roles=Array.isArray(serverData.roles)?serverData.roles:[];
 
-  // Mostrar canales y roles inmediatamente.
   renderTicketChannels("");
   renderTicketRoles([]);
 
-  // SEGUNDA CONSULTA: CONFIGURACIÓN DE SUPABASE
   const configUrl=API.ticketConfig+"?guildId="+encodeURIComponent(serverId);
 
   console.log("[Zerox] Consultando configuración:",configUrl);
@@ -647,7 +646,8 @@ async function loadTickets(){
   console.error("[Zerox] Error cargando tickets:",error);
 
   ticketMessage(error.message||"Error al cargar tickets.","error");
- }
+}
+
 }
 
 async function saveTickets(){
@@ -679,14 +679,86 @@ async function saveTickets(){
   }
 
   ticketMessage("Configuración guardada correctamente en Supabase.");
+  return true;
 
  }catch(error){
   console.error("[Zerox] Error guardando tickets:",error);
   ticketMessage(error.message||"Error al guardar.","error");
+  return false;
 
  }finally{
   button.disabled=false;
   button.textContent="Guardar configuración";
+ }
+}
+
+async function publishTicketPanel(){
+ const button=document.getElementById("publishTicketsButton");
+
+ if(!serverId||!/^\d{17,20}$/.test(serverId)){
+  ticketMessage("El ID del servidor no es válido.","error");
+  return;
+ }
+
+ const config=collectTicketConfig();
+
+ if(!config.channelId){
+  ticketMessage("Selecciona un canal antes de publicar.","error");
+  return;
+ }
+
+ if(!config.enabled){
+  ticketMessage("Activa el sistema de tickets antes de publicar.","error");
+  return;
+ }
+
+ button.disabled=true;
+ button.textContent="Enviando...";
+
+ try{
+  ticketMessage("Guardando configuración antes de publicar...");
+
+  const saved=await saveTickets();
+
+  if(!saved){
+   throw new Error("No se pudo guardar la configuración. No se publicó el panel.");
+  }
+
+  ticketMessage("Configuración guardada. Enviando solicitud a Zerox...");
+
+  const response=await fetch("/api/tickets/publish",{
+   method:"POST",
+   credentials:"include",
+   headers:{
+    "Content-Type":"application/json",
+    Accept:"application/json"
+   },
+   body:JSON.stringify({
+    guildId:serverId,
+    channelId:config.channelId
+   })
+  });
+
+  const data=await response.json();
+
+  if(!response.ok||!data.success){
+   throw new Error(
+    (data.error||"No se pudo enviar la solicitud.")+
+    " | HTTP "+response.status
+   );
+  }
+
+  ticketMessage(
+   "Solicitud enviada correctamente. Zerox publicará el panel en el canal seleccionado."
+  );
+
+ }catch(error){
+  console.error("[Zerox] Error publicando panel:",error);
+  ticketMessage(error.message||"Error al publicar el panel.","error");
+
+ }finally{
+  button.disabled=false;
+  button.textContent="Enviar mensaje";
  }
 }
 
@@ -701,6 +773,7 @@ async function saveTickets(){
 });
 
 document.getElementById("saveTicketsButton").addEventListener("click",saveTickets);
+document.getElementById("publishTicketsButton").addEventListener("click",publishTicketPanel);
 document.getElementById("reloadTicketsButton").addEventListener("click",loadTickets);
 document.getElementById("retryButton").addEventListener("click",loadServer);
 
@@ -709,3 +782,4 @@ loadServer();
 </script>
 </body>
 </html>
+```
