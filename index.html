@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -1008,45 +1007,49 @@ footer p {
         <small data-i18n="showcaseBadge">PROJECT ZEROX</small>
         <h2 data-i18n="showcaseTitle">Potencia en cada comando</h2>
         <p data-i18n="showcaseDescription">
-            Accede a diferentes herramientas directamente desde Discord.
+            Herramientas reales de moderación y utilidad disponibles en Project Zerox.
         </p>
     </div>
 
     <div class="command-grid">
         <article class="command-card">
-            <h3 data-i18n="command1Title">Moderación</h3>
-            <code>?help</code>
-            <p data-i18n="command1Desc">Consulta los comandos disponibles.</p>
+            <h3 data-i18n="command1Title">Bloquear canal</h3>
+            <code>/lock channel</code>
+            <p data-i18n="command1Desc">Bloquea el canal actual para impedir que los miembros envíen mensajes.</p>
         </article>
 
         <article class="command-card">
-            <h3 data-i18n="command2Title">Información</h3>
-            <code>?ping</code>
-            <p data-i18n="command2Desc">Consulta la respuesta del bot.</p>
+            <h3 data-i18n="command2Title">Desbloquear canal</h3>
+            <code>/lock unlock</code>
+            <code>/unlock</code>
+            <p data-i18n="command2Desc">Permite volver a utilizar un canal que se encontraba bloqueado.</p>
         </article>
 
         <article class="command-card">
-            <h3 data-i18n="command3Title">Servidor</h3>
-            <code>?serverinfo</code>
-            <p data-i18n="command3Desc">Consulta información del servidor.</p>
+            <h3 data-i18n="command3Title">Pregunta aleatoria</h3>
+            <code>/question pregunta:[texto]</code>
+            <code>?q [pregunta]</code>
+            <p data-i18n="command3Desc">Envía una pregunta y recibe una respuesta aleatoria en un embed.</p>
         </article>
 
         <article class="command-card">
-            <h3 data-i18n="command4Title">Bienvenida</h3>
-            <code>/welcome</code>
-            <p data-i18n="command4Desc">Configura el sistema de bienvenida.</p>
+            <h3 data-i18n="command4Title">Silenciar usuario</h3>
+            <code>/mute usuario:[usuario] tiempo:[duración] razon:[motivo]</code>
+            <p data-i18n="command4Desc">Aplica un tiempo de silencio a un usuario con una duración y un motivo.</p>
         </article>
 
         <article class="command-card">
-            <h3 data-i18n="command5Title">Tickets</h3>
-            <code>/ticket</code>
-            <p data-i18n="command5Desc">Accede al sistema de tickets.</p>
+            <h3 data-i18n="command5Title">Expulsar usuario</h3>
+            <code>/kick usuario:[usuario] razon:[motivo]</code>
+            <p data-i18n="command5Desc">Expulsa a un miembro del servidor e intenta notificarle mediante un mensaje privado.</p>
         </article>
 
         <article class="command-card">
-            <h3 data-i18n="command6Title">Boost Tracker</h3>
-            <code>/boosttracker</code>
-            <p data-i18n="command6Desc">Consulta las funciones del sistema de boosts.</p>
+            <h3 data-i18n="command6Title">Herramientas de moderación</h3>
+            <code>/lock</code>
+            <code>/mute</code>
+            <code>/kick</code>
+            <p data-i18n="command6Desc">Administra los canales y la actividad de los miembros con herramientas de moderación.</p>
         </article>
     </div>
 </section>
@@ -1141,19 +1144,19 @@ const translations = {
         feature6Desc: "Funciones adicionales para personalizar tu servidor.",
         showcaseBadge: "PROJECT ZEROX",
         showcaseTitle: "Potencia en cada comando",
-        showcaseDescription: "Accede a diferentes herramientas directamente desde Discord.",
-        command1Title: "Moderación",
-        command1Desc: "Consulta los comandos disponibles.",
-        command2Title: "Información",
-        command2Desc: "Consulta la respuesta del bot.",
-        command3Title: "Servidor",
-        command3Desc: "Consulta información del servidor.",
-        command4Title: "Bienvenida",
-        command4Desc: "Configura el sistema de bienvenida.",
-        command5Title: "Tickets",
-        command5Desc: "Accede al sistema de tickets.",
-        command6Title: "Boost Tracker",
-        command6Desc: "Consulta las funciones del sistema de boosts.",
+        showcaseDescription: "Herramientas reales de moderación y utilidad disponibles en Project Zerox.",
+        command1Title: "Bloquear canal",
+        command1Desc: "Bloquea el canal actual para impedir que los miembros envíen mensajes.",
+        command2Title: "Desbloquear canal",
+        command2Desc: "Permite volver a utilizar un canal que se encontraba bloqueado.",
+        command3Title: "Pregunta aleatoria",
+        command3Desc: "Envía una pregunta y recibe una respuesta aleatoria en un embed.",
+        command4Title: "Silenciar usuario",
+        command4Desc: "Aplica un tiempo de silencio a un usuario con una duración y un motivo.",
+        command5Title: "Expulsar usuario",
+        command5Desc: "Expulsa a un miembro del servidor e intenta notificarle mediante un mensaje privado.",
+        command6Title: "Herramientas de moderación",
+        command6Desc: "Administra los canales y la actividad de los miembros con herramientas de moderación.",
         allCommandsTitle: "Descubre todos los comandos",
         allCommandsDesc: "Explora la lista de comandos y conoce las herramientas de Project Zerox.",
         allCommandsButton: "Ver todos los comandos ↗",
@@ -1206,19 +1209,19 @@ const translations = {
         feature6Desc: "Additional features to customize your server.",
         showcaseBadge: "PROJECT ZEROX",
         showcaseTitle: "Power in every command",
-        showcaseDescription: "Access different tools directly from Discord.",
-        command1Title: "Moderation",
-        command1Desc: "View the available commands.",
-        command2Title: "Information",
-        command2Desc: "Check the bot's response.",
-        command3Title: "Server",
-        command3Desc: "View server information.",
-        command4Title: "Welcome",
-        command4Desc: "Configure the welcome system.",
-        command5Title: "Tickets",
-        command5Desc: "Access the ticket system.",
-        command6Title: "Boost Tracker",
-        command6Desc: "Explore the boost tracking system.",
+        showcaseDescription: "Real moderation and utility tools available in Project Zerox.",
+        command1Title: "Lock channel",
+        command1Desc: "Locks the current channel to prevent members from sending messages.",
+        command2Title: "Unlock channel",
+        command2Desc: "Allows members to use a channel that was previously locked.",
+        command3Title: "Random question",
+        command3Desc: "Submit a question and receive a random answer in an embed.",
+        command4Title: "Mute user",
+        command4Desc: "Temporarily mutes a user for a specified duration and reason.",
+        command5Title: "Kick user",
+        command5Desc: "Kicks a member from the server and attempts to notify them by direct message.",
+        command6Title: "Moderation tools",
+        command6Desc: "Manage channels and member activity with moderation tools.",
         allCommandsTitle: "Discover all commands",
         allCommandsDesc: "Explore the command list and discover Project Zerox tools.",
         allCommandsButton: "View all commands ↗",
@@ -1271,19 +1274,19 @@ const translations = {
         feature6Desc: "Recursos adicionais para personalizar seu servidor.",
         showcaseBadge: "PROJECT ZEROX",
         showcaseTitle: "Poder em cada comando",
-        showcaseDescription: "Acesse diferentes ferramentas diretamente pelo Discord.",
-        command1Title: "Moderação",
-        command1Desc: "Consulte os comandos disponíveis.",
-        command2Title: "Informações",
-        command2Desc: "Consulte a resposta do bot.",
-        command3Title: "Servidor",
-        command3Desc: "Consulte informações do servidor.",
-        command4Title: "Boas-vindas",
-        command4Desc: "Configure o sistema de boas-vindas.",
-        command5Title: "Tickets",
-        command5Desc: "Acesse o sistema de tickets.",
-        command6Title: "Boost Tracker",
-        command6Desc: "Consulte as funções do sistema de boosts.",
+        showcaseDescription: "Ferramentas reais de moderação e utilidade disponíveis no Project Zerox.",
+        command1Title: "Bloquear canal",
+        command1Desc: "Bloqueia o canal atual para impedir que os membros enviem mensagens.",
+        command2Title: "Desbloquear canal",
+        command2Desc: "Permite que os membros voltem a utilizar um canal que estava bloqueado.",
+        command3Title: "Pergunta aleatória",
+        command3Desc: "Envie uma pergunta e receba uma resposta aleatória em um embed.",
+        command4Title: "Silenciar usuário",
+        command4Desc: "Aplica um período de silêncio a um usuário com duração e motivo.",
+        command5Title: "Expulsar usuário",
+        command5Desc: "Expulsa um membro do servidor e tenta notificá-lo por mensagem privada.",
+        command6Title: "Ferramentas de moderação",
+        command6Desc: "Gerencie canais e a atividade dos membros com ferramentas de moderação.",
         allCommandsTitle: "Descubra todos os comandos",
         allCommandsDesc: "Explore a lista de comandos e conheça as ferramentas do Project Zerox.",
         allCommandsButton: "Ver todos os comandos ↗",
