@@ -12,26 +12,18 @@ module.exports = async (req, res) => {
   const sessionCookie = getCookie(req, "zerox_session");
 
   if (!sessionCookie) {
-    return res.status(401).json({ error: "No has iniciado sesión" });
+    return res.status(401).json({ error: "No has iniciado sesión." });
   }
 
   const session = unseal(sessionCookie);
 
-  if (!session || !session.accessToken) {
-    return res.status(401).json({ error: "Sesión inválida" });
-  }
-
-  const botToken = process.env.DISCORD_BOT_TOKEN;
-
-  if (!botToken) {
-    return res.status(500).json({
-      error: "Falta configurar DISCORD_BOT_TOKEN en Vercel"
-    });
+  if (!session?.accessToken) {
+    return res.status(401).json({ error: "Tu sesión expiró. Vuelve a iniciar sesión." });
   }
 
   try {
     const response = await fetch(
-      "https://discord.com/api/users/@me/guilds",
+      "https://discord.com/api/v10/users/@me/guilds",
       {
         headers: {
           Authorization: `Bearer ${session.accessToken}`
@@ -43,7 +35,9 @@ module.exports = async (req, res) => {
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: "No se pudieron obtener tus servidores"
+        error: response.status === 401
+          ? "Tu sesión de Discord expiró. Inicia sesión nuevamente."
+          : "Discord no pudo entregar la lista de servidores."
       });
     }
 
@@ -55,23 +49,34 @@ module.exports = async (req, res) => {
         (permissions & 0x20n) !== 0n;
     });
 
+    const botToken = process.env.DISCORD_BOT_TOKEN;
+    let presenceCheckAvailable = Boolean(botToken);
+
     const guilds = await Promise.all(
       manageableGuilds.map(async guild => {
-        let botInstalled = false;
+        let botInstalled = null;
 
-        try {
-          const memberResponse = await fetch(
-            `https://discord.com/api/v10/guilds/${guild.id}/members/${BOT_ID}`,
-            {
-              headers: {
-                Authorization: `Bot ${botToken}`
+        if (botToken) {
+          try {
+            const memberResponse = await fetch(
+              `https://discord.com/api/v10/guilds/${guild.id}/members/${BOT_ID}`,
+              {
+                headers: {
+                  Authorization: `Bot ${botToken}`
+                }
               }
-            }
-          );
+            );
 
-          botInstalled = memberResponse.ok;
-        } catch (error) {
-          console.error("Bot presence error:", error);
+            if (memberResponse.ok) {
+              botInstalled = true;
+            } else if (memberResponse.status === 404) {
+              botInstalled = false;
+            } else {
+              presenceCheckAvailable = false;
+            }
+          } catch (error) {
+            presenceCheckAvailable = false;
+          }
         }
 
         return {
@@ -86,13 +91,16 @@ module.exports = async (req, res) => {
       })
     );
 
-    return res.status(200).json({ guilds });
+    return res.status(200).json({
+      guilds,
+      presenceCheckAvailable
+    });
 
   } catch (error) {
     console.error("Guilds error:", error);
 
     return res.status(500).json({
-      error: "Error al consultar los servidores"
+      error: "Error de conexión al consultar Discord. Inténtalo nuevamente."
     });
   }
 };
