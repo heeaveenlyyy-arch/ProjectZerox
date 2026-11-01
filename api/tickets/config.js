@@ -22,12 +22,23 @@ async function verifyAccess(req, res, guildId) {
     }
   });
 
-  if (!response.ok) {
-    throw Object.assign(
-      new Error("Discord no pudo verificar tu cuenta. Vuelve a iniciar sesión."),
-      { status: 401 }
-    );
-  }
+if (!response.ok) {
+  const discordResponse = await response.text();
+
+  console.error("[Tickets Discord Guilds Error]", {
+    status: response.status,
+    response: discordResponse
+  });
+
+  throw Object.assign(
+    new Error("Error consultando los servidores de Discord"),
+    {
+      status: 502,
+      discordStatus: response.status,
+      discordResponse
+    }
+  );
+}
 
   const guilds = await response.json();
   const guild = guilds.find(item => item.id === guildId);
@@ -144,10 +155,10 @@ module.exports = async (req, res) => {
     });
   } catch (error) {
     console.error("[Tickets API] Error:", error);
-    return sendError(
-      res,
-      error.status || 500,
-      error.status ? error.message : "Error interno al guardar tickets"
-    );
+    return res.status(error.status || 500).json({
+  success: false,
+  error: error.message || "Error interno",
+  discordStatus: error.discordStatus || null
+});
   }
 };
