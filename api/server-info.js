@@ -36,10 +36,19 @@ module.exports = async (req, res) => {
     });
 
     if (!userGuildsResponse.ok) {
-      return res.status(401).json({
-        error: "Discord no pudo verificar tu cuenta. Vuelve a iniciar sesión."
-      });
-    }
+  const discordError = await userGuildsResponse.text();
+
+  console.error("[Discord Guilds Error]", {
+    status: userGuildsResponse.status,
+    response: discordError
+  });
+
+  return res.status(502).json({
+    error: "Error consultando los servidores de Discord",
+    discordStatus: userGuildsResponse.status,
+    discordResponse: discordError
+  });
+}
 
     const userGuilds = await userGuildsResponse.json();
     const userGuild = userGuilds.find(guild => guild.id === id);
