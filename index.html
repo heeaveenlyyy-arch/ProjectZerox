@@ -4,8 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b12">
-<title>ProjectZerox | Discord Bot</title>
+<meta name="theme-color" content="#000000">
+<title>Project Zerox | Discord Bot</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,13 +13,12 @@
 
 <style>
 :root {
-    --bg: #080b12;
-    --panel: #101722;
-    --panel2: #121d2a;
-    --blue: #54caff;
+    --bg: #000000;
+    --panel: #070707;
+    --blue: #65d5ff;
     --blue2: #168dcc;
-    --text: #f4f7fb;
-    --muted: #929eaf;
+    --text: #ffffff;
+    --muted: #929292;
     --border: rgba(255,255,255,.09);
 }
 
@@ -36,7 +35,7 @@ html {
 
 body {
     font-family: Inter, sans-serif;
-    background: var(--bg);
+    background: #000;
     color: var(--text);
     overflow-x: hidden;
 }
@@ -48,6 +47,23 @@ a {
 
 button {
     font: inherit;
+}
+
+/* STARFIELD */
+
+#starfield {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: .85;
+}
+
+main, footer {
+    position: relative;
+    z-index: 1;
 }
 
 /* NAVBAR */
@@ -63,19 +79,26 @@ button {
     align-items: center;
     justify-content: space-between;
     padding: 0 9%;
-    background: rgba(8,11,18,.82);
+    background: rgba(0,0,0,.88);
     backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(255,255,255,.07);
 }
 
 .logo {
     font-size: 21px;
     font-weight: 900;
-    letter-spacing: -1px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    transition: .3s;
+}
+
+.logo:hover {
+    text-shadow: 0 0 20px #65d5ff70;
 }
 
 .logo span {
     color: var(--blue);
+    margin-left: 5px;
 }
 
 .nav-links {
@@ -88,12 +111,27 @@ button {
     color: var(--muted);
     font-size: 13px;
     font-weight: 600;
+    position: relative;
     transition: .25s;
 }
 
-.nav-links a:hover,
-.nav-links a.active {
+.nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    height: 2px;
+    width: 0;
+    background: var(--blue);
+    transition: .3s;
+}
+
+.nav-links a:hover {
     color: var(--blue);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 .nav-actions {
@@ -104,7 +142,7 @@ button {
 
 .menu-toggle {
     display: none;
-    background: none;
+    background: #080808;
     color: white;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -126,14 +164,14 @@ button {
     font-size: 13px;
     font-weight: 800;
     border: 1px solid var(--blue);
-    transition: .25s;
+    transition: .3s;
     cursor: pointer;
 }
 
 .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px #54caff35;
-    background: #83dcff;
+    transform: translateY(-4px);
+    box-shadow: 0 0 35px #54caff60;
+    background: #a0e5ff;
 }
 
 .btn-outline {
@@ -143,18 +181,19 @@ button {
     gap: 9px;
     padding: 13px 22px;
     border-radius: 9px;
-    border: 1px solid var(--border);
-    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(255,255,255,.025);
     color: white;
     font-size: 13px;
     font-weight: 700;
-    transition: .25s;
+    transition: .3s;
 }
 
 .btn-outline:hover {
     border-color: var(--blue);
     color: var(--blue);
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    box-shadow: 0 0 25px #54caff20;
 }
 
 /* HERO */
@@ -168,6 +207,7 @@ button {
     padding: 160px 20px 110px;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
 }
 
 .hero::before {
@@ -175,20 +215,21 @@ button {
     position: absolute;
     width: 700px;
     height: 500px;
-    background: #087fc7;
-    filter: blur(180px);
-    opacity: .16;
+    background: #008dff;
+    filter: blur(190px);
+    opacity: .09;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
     pointer-events: none;
+    z-index: -1;
 }
 
 .hero-content {
     max-width: 900px;
     position: relative;
     z-index: 1;
-    animation: appear .9s ease both;
+    animation: appear 1s ease both;
 }
 
 .eyebrow {
@@ -197,13 +238,14 @@ button {
     gap: 9px;
     padding: 10px 17px;
     border: 1px solid #54caff40;
-    background: #54caff0d;
+    background: #54caff08;
     color: var(--blue);
     border-radius: 50px;
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 2px;
     margin-bottom: 30px;
+    box-shadow: 0 0 25px #54caff0c;
 }
 
 .hero h1 {
@@ -211,11 +253,15 @@ button {
     line-height: 1.05;
     letter-spacing: -5px;
     font-weight: 900;
+    text-shadow: 0 0 35px rgba(101,213,255,.12);
 }
 
 .hero h1 span {
-    color: var(--blue);
-    text-shadow: 0 0 35px #54caff40;
+    color: #fff;
+    text-shadow:
+        0 0 12px rgba(101,213,255,.7),
+        0 0 35px rgba(101,213,255,.3),
+        0 0 70px rgba(101,213,255,.15);
 }
 
 .hero-description {
@@ -244,12 +290,19 @@ button {
 }
 
 .preview {
-    background: linear-gradient(145deg,#141f2d,#0b111a);
+    background: rgba(5,5,5,.94);
     border: 1px solid #54caff30;
     border-radius: 16px;
     padding: 23px;
-    box-shadow: 0 25px 90px #0008;
+    box-shadow: 0 25px 90px #000;
     text-align: left;
+    transition: .4s;
+}
+
+.preview:hover {
+    border-color: #65d5ff75;
+    box-shadow: 0 0 45px #54caff12, 0 25px 90px #000;
+    transform: translateY(-4px);
 }
 
 .preview-top {
@@ -264,14 +317,16 @@ button {
     width: 9px;
     height: 9px;
     border-radius: 50%;
-    background: #54caff;
+    background: var(--blue);
     opacity: .8;
+    box-shadow: 0 0 10px var(--blue);
 }
 
 .preview-label {
     color: var(--muted);
     font-size: 11px;
     margin-left: 8px;
+    letter-spacing: 1px;
 }
 
 .preview-content {
@@ -282,10 +337,16 @@ button {
 }
 
 .preview-card {
-    background: #080e18;
+    background: #000;
     border: 1px solid var(--border);
     padding: 20px;
     border-radius: 11px;
+    transition: .3s;
+}
+
+.preview-card:hover {
+    border-color: #65d5ff60;
+    transform: translateY(-3px);
 }
 
 .preview-card small {
@@ -310,6 +371,7 @@ button {
 
 .section {
     padding: 110px 9%;
+    background: transparent;
 }
 
 .section-heading {
@@ -323,7 +385,6 @@ button {
     font-size: 10px;
     font-weight: 800;
     letter-spacing: 2px;
-    text-transform: uppercase;
 }
 
 .section-heading h2 {
@@ -334,6 +395,7 @@ button {
 
 .section-heading h2 span {
     color: var(--blue);
+    text-shadow: 0 0 22px rgba(101,213,255,.3);
 }
 
 .section-heading p {
@@ -355,16 +417,35 @@ button {
 
 .feature {
     padding: 30px;
-    background: linear-gradient(145deg,#131e2b,#0c121c);
-    border: 1px solid var(--border);
+    background: rgba(5,5,5,.94);
+    border: 1px solid rgba(255,255,255,.09);
     border-radius: 14px;
-    transition: .3s;
+    transition: .35s;
+    position: relative;
+    overflow: hidden;
+}
+
+.feature::before {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: var(--blue);
+    filter: blur(90px);
+    opacity: 0;
+    top: -80px;
+    right: -80px;
+    transition: .4s;
 }
 
 .feature:hover {
-    transform: translateY(-7px);
-    border-color: #54caff65;
-    box-shadow: 0 15px 40px #008bd51a;
+    transform: translateY(-8px);
+    border-color: #65d5ff80;
+    box-shadow: 0 0 25px rgba(0,170,255,.10), 0 15px 45px #000;
+}
+
+.feature:hover::before {
+    opacity: .12;
 }
 
 .feature-icon {
@@ -379,6 +460,7 @@ button {
     color: var(--blue);
     font-size: 22px;
     margin-bottom: 22px;
+    box-shadow: 0 0 20px #54caff10;
 }
 
 .feature h3 {
@@ -418,6 +500,7 @@ button {
 
 .showcase-text h2 span {
     color: var(--blue);
+    text-shadow: 0 0 22px rgba(101,213,255,.3);
 }
 
 .showcase-text p {
@@ -430,9 +513,9 @@ button {
 .showcase-panel {
     padding: 25px;
     border-radius: 16px;
-    background: linear-gradient(145deg,#142334,#0c131d);
+    background: #050505;
     border: 1px solid #54caff35;
-    box-shadow: 0 20px 70px #0005;
+    box-shadow: 0 20px 70px #000;
 }
 
 .command-example {
@@ -442,12 +525,18 @@ button {
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 9px;
-    background: #080e18;
+    background: #000;
     border: 1px solid var(--border);
+    transition: .3s;
 }
 
 .command-example:last-child {
     margin-bottom: 0;
+}
+
+.command-example:hover {
+    border-color: #65d5ff70;
+    transform: translateX(5px);
 }
 
 .command-example strong {
@@ -459,12 +548,12 @@ button {
     font-size: 11px;
 }
 
-/* COMMANDS CTA */
+/* COMMAND CTA */
 
 .command-section {
     text-align: center;
     padding: 85px 20px;
-    background: radial-gradient(ellipse at center,#0b75ad1c,transparent 70%);
+    background: #000;
 }
 
 .command-section h2 {
@@ -474,6 +563,7 @@ button {
 
 .command-section h2 span {
     color: var(--blue);
+    text-shadow: 0 0 22px rgba(101,213,255,.3);
 }
 
 .command-section p {
@@ -492,17 +582,34 @@ button {
     border: 1px solid #54caff35;
     border-radius: 20px;
     background:
-        radial-gradient(ellipse at top,#168dcc28,transparent 65%),
-        #0d1520;
+        radial-gradient(ellipse at bottom,rgba(0,130,255,.10),transparent 65%),
+        #000;
+    position: relative;
+    overflow: hidden;
+}
+
+.invite::before {
+    content: "";
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 150px;
+    background: #168dcc;
+    filter: blur(120px);
+    opacity: .18;
 }
 
 .invite h2 {
     font-size: clamp(29px,5vw,45px);
     letter-spacing: -2px;
+    position: relative;
 }
 
 .invite h2 span {
     color: var(--blue);
+    text-shadow: 0 0 22px rgba(101,213,255,.3);
 }
 
 .invite p {
@@ -510,6 +617,7 @@ button {
     font-size: 13px;
     line-height: 1.9;
     margin: 18px auto 28px;
+    position: relative;
 }
 
 /* FOOTER */
@@ -524,6 +632,7 @@ footer {
     gap: 18px;
     color: #718093;
     font-size: 11px;
+    background: #000;
 }
 
 footer strong {
@@ -553,6 +662,15 @@ footer strong {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% {
+        text-shadow: 0 0 12px #65d5ff30;
+    }
+    50% {
+        text-shadow: 0 0 30px #65d5ff90;
     }
 }
 
@@ -609,7 +727,7 @@ footer strong {
         left: 0;
         width: 100%;
         padding: 22px 5%;
-        background: #0b111b;
+        background: #050505;
         border-bottom: 1px solid var(--border);
         flex-direction: column;
         align-items: flex-start;
@@ -671,8 +789,10 @@ footer strong {
 
 <body>
 
+<canvas id="starfield" aria-hidden="true"></canvas>
+
 <header class="navbar">
-    <a class="logo" href="#inicio">Project<span>Zerox</span></a>
+    <a class="logo" href="#inicio">Project <span>Zerox</span></a>
 
     <nav class="nav-links" id="navLinks">
         <a href="#inicio">Inicio</a>
@@ -682,11 +802,14 @@ footer strong {
     </nav>
 
     <div class="nav-actions">
-        <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0" target="_blank" rel="noopener">
+        <a class="btn"
+           href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
+           target="_blank" rel="noopener">
             Añadir a Discord ↗
         </a>
 
-        <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+        <button class="menu-toggle" id="menuToggle"
+                aria-label="Abrir menú" aria-expanded="false">
             ☰
         </button>
     </div>
@@ -694,234 +817,239 @@ footer strong {
 
 <main>
 
-    <!-- HERO -->
+<!-- HERO -->
 
-    <section class="hero" id="inicio">
-        <div class="hero-content">
+<section class="hero" id="inicio">
+    <div class="hero-content">
 
-            <div class="eyebrow">
-                ✦ THE NEXT GENERATION OF DISCORD
-            </div>
+        <div class="eyebrow">
+            ✦ THE NEXT GENERATION OF DISCORD
+        </div>
 
-            <h1>
-                Your server.<br>
-                <span>Your Zerox.</span>
-            </h1>
+        <h1>
+            Your server.<br>
+            <span>Your Zerox.</span>
+        </h1>
 
-            <p class="hero-description">
-                Conoce ProjectZerox, una bot diseñada para llevar
-                tu comunidad de Discord a otro nivel.
-                Moderación, automatización, diversión y herramientas
-                en un solo lugar.
-            </p>
+        <p class="hero-description">
+            Conoce Project Zerox, un bot diseñado para llevar
+            tu comunidad de Discord a otro nivel.
+            Moderación, automatización, diversión y herramientas
+            en un solo lugar.
+        </p>
 
-            <div class="hero-buttons">
-                <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0" target="_blank" rel="noopener">
-                    Invitar ProjectZerox ↗
-                </a>
+        <div class="hero-buttons">
+            <a class="btn"
+               href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
+               target="_blank" rel="noopener">
+                Invitar Project Zerox ↗
+            </a>
 
-                <a class="btn-outline" href="commands.html">
-                    Explorar comandos →
-                </a>
-            </div>
+            <a class="btn-outline" href="commands.html">
+                Explorar comandos →
+            </a>
+        </div>
 
-            <div class="preview-area">
-                <div class="preview">
+        <div class="preview-area">
+            <div class="preview">
 
-                    <div class="preview-top">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <span class="preview-label">PROJECTZEROX / SYSTEM</span>
+                <div class="preview-top">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <span class="preview-label">PROJECT ZEROX / SYSTEM</span>
+                </div>
+
+                <div class="preview-content">
+
+                    <div class="preview-card">
+                        <small>01 / MODERATION</small>
+                        <h3>Control your server.</h3>
+                        <p>Herramientas para mantener tu comunidad organizada.</p>
                     </div>
 
-                    <div class="preview-content">
-
-                        <div class="preview-card">
-                            <small>01 / MODERATION</small>
-                            <h3>Control your server.</h3>
-                            <p>Herramientas para mantener tu comunidad organizada.</p>
-                        </div>
-
-                        <div class="preview-card">
-                            <small>02 / AUTOMATION</small>
-                            <h3>Make it easier.</h3>
-                            <p>Automatiza tareas y administra tu servidor.</p>
-                        </div>
-
+                    <div class="preview-card">
+                        <small>02 / AUTOMATION</small>
+                        <h3>Make it easier.</h3>
+                        <p>Automatiza tareas y administra tu servidor.</p>
                     </div>
+
                 </div>
             </div>
-
         </div>
-    </section>
 
-    <!-- FEATURES -->
+    </div>
+</section>
 
-    <section class="section" id="funciones">
+<!-- FEATURES -->
 
-        <div class="section-heading">
-            <span class="mini">DISCOVER PROJECTZEROX</span>
-            <h2>Todo lo que necesitas.<br><span>En un solo lugar.</span></h2>
+<section class="section" id="funciones">
+
+    <div class="section-heading">
+        <span class="mini">DISCOVER PROJECT ZEROX</span>
+        <h2>Todo lo que necesitas.<br><span>En un solo lugar.</span></h2>
+        <p>
+            Descubre algunas de las herramientas que Project Zerox
+            ofrece para tu comunidad.
+        </p>
+    </div>
+
+    <div class="feature-grid">
+
+        <article class="feature">
+            <div class="feature-icon">⌘</div>
+            <h3>Moderación</h3>
             <p>
-                Descubre algunas de las herramientas que ProjectZerox
-                ofrece para tu comunidad.
+                Administra tu servidor con herramientas
+                de moderación y control.
             </p>
+        </article>
+
+        <article class="feature">
+            <div class="feature-icon">✦</div>
+            <h3>Automatización</h3>
+            <p>
+                Configura sistemas automáticos para
+                facilitar la administración diaria.
+            </p>
+        </article>
+
+        <article class="feature">
+            <div class="feature-icon">◈</div>
+            <h3>Información</h3>
+            <p>
+                Consulta información útil sobre
+                miembros y servidores.
+            </p>
+        </article>
+
+        <article class="feature">
+            <div class="feature-icon">⚡</div>
+            <h3>Utilidades</h3>
+            <p>
+                Accede a herramientas prácticas
+                para tu comunidad.
+            </p>
+        </article>
+
+        <article class="feature">
+            <div class="feature-icon">♡</div>
+            <h3>Diversión</h3>
+            <p>
+                Añade entretenimiento e interacción
+                a tu servidor.
+            </p>
+        </article>
+
+        <article class="feature">
+            <div class="feature-icon">◇</div>
+            <h3>Sistemas</h3>
+            <p>
+                Utiliza sistemas como tickets,
+                bienvenidas y seguimiento de boosts.
+            </p>
+        </article>
+
+    </div>
+</section>
+
+<!-- SHOWCASE -->
+
+<section class="section">
+
+    <div class="showcase">
+
+        <div class="showcase-text">
+            <span class="mini">COMMAND CENTER</span>
+
+            <h2>
+                Encuentra tus<br>
+                <span>comandos favoritos.</span>
+            </h2>
+
+            <p>
+                Explora las categorías y descubre las herramientas
+                disponibles en Project Zerox.
+                Consulta los comandos y conoce cómo utilizarlos.
+            </p>
+
+            <a class="btn" href="commands.html">
+                Ver todos los comandos →
+            </a>
         </div>
 
-        <div class="feature-grid">
+        <div class="showcase-panel">
 
-            <article class="feature">
-                <div class="feature-icon">⌘</div>
-                <h3>Moderación</h3>
-                <p>
-                    Administra tu servidor con herramientas
-                    de moderación y control.
-                </p>
-            </article>
-
-            <article class="feature">
-                <div class="feature-icon">✦</div>
-                <h3>Automatización</h3>
-                <p>
-                    Configura sistemas automáticos para
-                    facilitar la administración diaria.
-                </p>
-            </article>
-
-            <article class="feature">
-                <div class="feature-icon">◈</div>
-                <h3>Información</h3>
-                <p>
-                    Consulta información útil sobre
-                    miembros y servidores.
-                </p>
-            </article>
-
-            <article class="feature">
-                <div class="feature-icon">⚡</div>
-                <h3>Utilidades</h3>
-                <p>
-                    Accede a herramientas prácticas
-                    para tu comunidad.
-                </p>
-            </article>
-
-            <article class="feature">
-                <div class="feature-icon">♡</div>
-                <h3>Diversión</h3>
-                <p>
-                    Añade entretenimiento e interacción
-                    a tu servidor.
-                </p>
-            </article>
-
-            <article class="feature">
-                <div class="feature-icon">◇</div>
-                <h3>Sistemas</h3>
-                <p>
-                    Utiliza sistemas como tickets,
-                    bienvenidas y seguimiento de boosts.
-                </p>
-            </article>
-
-        </div>
-    </section>
-
-    <!-- COMMANDS SHOWCASE -->
-
-    <section class="section">
-
-        <div class="showcase">
-
-            <div class="showcase-text">
-                <span class="mini">COMMAND CENTER</span>
-
-                <h2>
-                    Encuentra tus<br>
-                    <span>comandos favoritos.</span>
-                </h2>
-
-                <p>
-                    Explora las categorías y descubre las herramientas
-                    disponibles en ProjectZerox.
-                    Consulta los comandos y conoce cómo utilizarlos.
-                </p>
-
-                <a class="btn" href="commands.html">
-                    Ver todos los comandos →
-                </a>
+            <div class="command-example">
+                <strong>Moderación</strong>
+                <span>01</span>
             </div>
 
-            <div class="showcase-panel">
+            <div class="command-example">
+                <strong>Automatización</strong>
+                <span>02</span>
+            </div>
 
-                <div class="command-example">
-                    <strong>Moderación</strong>
-                    <span>01</span>
-                </div>
+            <div class="command-example">
+                <strong>Diversión</strong>
+                <span>03</span>
+            </div>
 
-                <div class="command-example">
-                    <strong>Automatización</strong>
-                    <span>02</span>
-                </div>
+            <div class="command-example">
+                <strong>Utilidades</strong>
+                <span>04</span>
+            </div>
 
-                <div class="command-example">
-                    <strong>Diversión</strong>
-                    <span>03</span>
-                </div>
-
-                <div class="command-example">
-                    <strong>Utilidades</strong>
-                    <span>04</span>
-                </div>
-
-                <div class="command-example">
-                    <strong>Información</strong>
-                    <span>05</span>
-                </div>
-
+            <div class="command-example">
+                <strong>Información</strong>
+                <span>05</span>
             </div>
 
         </div>
-    </section>
 
-    <!-- COMMAND CTA -->
+    </div>
+</section>
 
-    <section class="command-section">
-        <h2>Explore <span>ProjectZerox.</span></h2>
-        <p>
-            Descubre todos los comandos y las herramientas
-            disponibles para tu servidor.
-        </p>
+<!-- COMMAND CTA -->
 
-        <a class="btn-outline" href="commands.html">
-            Explorar documentación →
-        </a>
-    </section>
+<section class="command-section">
+    <h2>Explore <span>Project Zerox.</span></h2>
 
-    <!-- INVITE -->
+    <p>
+        Descubre todos los comandos y las herramientas
+        disponibles para tu servidor.
+    </p>
 
-    <section class="invite" id="invitar">
+    <a class="btn-outline" href="commands.html">
+        Explorar documentación →
+    </a>
+</section>
 
-        <h2>
-            Ready for <span>ProjectZerox?</span>
-        </h2>
+<!-- INVITE -->
 
-        <p>
-            Tu comunidad merece herramientas a otro nivel.<br>
-            Invita ProjectZerox y comienza a descubrir sus funciones.
-        </p>
+<section class="invite" id="invitar">
 
-        <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0" target="_blank" rel="noopener">
-            Añadir bot a Discord ↗
-        </a>
+    <h2>
+        Ready for <span>Project Zerox?</span>
+    </h2>
 
-    </section>
+    <p>
+        Tu comunidad merece herramientas a otro nivel.<br>
+        Invita Project Zerox y comienza a descubrir sus funciones.
+    </p>
+
+    <a class="btn"
+       href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
+       target="_blank" rel="noopener">
+        Añadir bot a Discord ↗
+    </a>
+
+</section>
 
 </main>
 
 <footer>
-    <span><strong>ProjectZerox</strong> © 2026</span>
+    <span><strong>Project Zerox</strong> © 2026</span>
 
     <div class="footer-links">
         <a href="#inicio">Inicio</a>
@@ -933,11 +1061,14 @@ footer strong {
 </footer>
 
 <script>
+/* MOBILE MENU */
+
 const menuToggle = document.getElementById("menuToggle");
 const navLinks = document.getElementById("navLinks");
 
 menuToggle.addEventListener("click", () => {
     const isOpen = navLinks.classList.toggle("open");
+
     menuToggle.setAttribute("aria-expanded", String(isOpen));
     menuToggle.textContent = isOpen ? "✕" : "☰";
 });
@@ -949,6 +1080,161 @@ navLinks.querySelectorAll("a").forEach(link => {
         menuToggle.textContent = "☰";
     });
 });
+
+/* STARFIELD ANIMATION */
+
+const canvas = document.getElementById("starfield");
+const ctx = canvas.getContext("2d");
+
+let stars = [];
+let shootingStars = [];
+let width = 0;
+let height = 0;
+let animationFrame;
+
+const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+).matches;
+
+function resizeStars() {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+
+    width = window.innerWidth;
+    height = window.innerHeight;
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+    const amount = Math.min(180, Math.floor(width / 7));
+
+    stars = Array.from({ length: amount }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.5 + .3,
+        speed: Math.random() * 1.15 + .35,
+        alpha: Math.random() * .7 + .2,
+        phase: Math.random() * Math.PI * 2,
+        twinkleSpeed: Math.random() * .025 + .005
+    }));
+}
+
+function createShootingStar() {
+    if (shootingStars.length >= 3) return;
+
+    shootingStars.push({
+        x: Math.random() * width,
+        y: height + 20,
+        length: Math.random() * 100 + 50,
+        speed: Math.random() * 7 + 5,
+        opacity: 1
+    });
+}
+
+function drawShootingStars() {
+    shootingStars.forEach((star, index) => {
+        const gradient = ctx.createLinearGradient(
+            star.x,
+            star.y,
+            star.x - star.length * .35,
+            star.y + star.length
+        );
+
+        gradient.addColorStop(0, `rgba(101,213,255,${star.opacity})`);
+        gradient.addColorStop(1, "rgba(101,213,255,0)");
+
+        ctx.beginPath();
+        ctx.moveTo(star.x, star.y);
+        ctx.lineTo(
+            star.x - star.length * .35,
+            star.y + star.length
+        );
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = "#65d5ff";
+        ctx.stroke();
+
+        star.x += star.speed * .35;
+        star.y -= star.speed;
+        star.opacity -= .008;
+
+        if (star.y < -100 || star.opacity <= 0) {
+            shootingStars.splice(index, 1);
+        }
+    });
+
+    ctx.shadowBlur = 0;
+}
+
+let lastShootingStar = 0;
+
+function animateStars(timestamp = 0) {
+    ctx.clearRect(0, 0, width, height);
+
+    for (const star of stars) {
+        star.y -= star.speed;
+
+        const twinkle = Math.sin(
+            timestamp * star.twinkleSpeed + star.phase
+        );
+
+        const opacity = Math.max(
+            .12,
+            Math.min(1, star.alpha + twinkle * .2)
+        );
+
+        if (star.y < -5) {
+            star.y = height + 5;
+            star.x = Math.random() * width;
+        }
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+
+        ctx.fillStyle = `rgba(150,220,255,${opacity})`;
+        ctx.shadowBlur = star.size > 1 ? 12 : 6;
+        ctx.shadowColor = "#65d5ff";
+        ctx.fill();
+    }
+
+    ctx.shadowBlur = 0;
+
+    if (timestamp - lastShootingStar > 2600 + Math.random() * 2500) {
+        createShootingStar();
+        lastShootingStar = timestamp;
+    }
+
+    drawShootingStars();
+
+    animationFrame = requestAnimationFrame(animateStars);
+}
+
+function startStarfield() {
+    resizeStars();
+
+    if (reduceMotion) {
+        ctx.clearRect(0, 0, width, height);
+
+        stars.forEach(star => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(150,220,255,.6)";
+            ctx.fill();
+        });
+
+        return;
+    }
+
+    cancelAnimationFrame(animationFrame);
+    animateStars();
+}
+
+window.addEventListener("resize", startStarfield);
+
+startStarfield();
 </script>
 
 </body>
