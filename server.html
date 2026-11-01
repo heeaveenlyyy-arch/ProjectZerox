@@ -256,6 +256,7 @@
       border-radius: 12px;
       transition: .22s;
       cursor: pointer;
+      text-align: left;
     }
 
     .module-card:hover {
@@ -635,23 +636,65 @@
       loading.hidden = true;
       content.hidden = true;
       error.hidden = false;
-
-      if (message) {
-        error.textContent = message;
-      }
+      error.textContent = message;
     }
 
     function getServerIcon(server) {
       if (server.icon) {
-        return `https://cdn.discordapp.com/icons/${server.id}/${server.icon}.png?size=128`;
+        const extension = server.icon.startsWith("a_") ? "gif" : "png";
+
+        return `https://cdn.discordapp.com/icons/${server.id}/${server.icon}.${extension}?size=128`;
       }
 
       return "https://cdn.discordapp.com/embed/avatars/0.png";
     }
 
+    async function loadServerStats() {
+      try {
+        const response = await fetch(
+          `/api/server-info?id=${encodeURIComponent(serverId)}`,
+          {
+            credentials: "include"
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.success || !data.server) {
+          throw new Error("Respuesta de estadísticas no válida");
+        }
+
+        const server = data.server;
+
+        document.getElementById("memberCount").textContent =
+          server.memberCount != null
+            ? Number(server.memberCount).toLocaleString("es-CL")
+            : "—";
+
+        document.getElementById("channelCount").textContent =
+          server.channelCount != null
+            ? Number(server.channelCount).toLocaleString("es-CL")
+            : "—";
+
+        document.getElementById("roleCount").textContent =
+          server.roleCount != null
+            ? Number(server.roleCount).toLocaleString("es-CL")
+            : "—";
+
+      } catch (err) {
+        console.error("Error cargando estadísticas:", err);
+      }
+    }
+
     async function loadServer() {
       if (!serverId) {
-        showError("No se indicó ningún servidor. Vuelve al Dashboard y pulsa «Ir» en un servidor.");
+        showError(
+          "No se indicó ningún servidor. Vuelve al Dashboard y pulsa «Ir» en un servidor."
+        );
         return;
       }
 
@@ -661,7 +704,9 @@
         });
 
         if (response.status === 401) {
-          showError("Tu sesión ha expirado. Vuelve al Dashboard e inicia sesión con Discord.");
+          showError(
+            "Tu sesión ha expirado. Vuelve al Dashboard e inicia sesión con Discord."
+          );
           return;
         }
 
@@ -674,11 +719,14 @@
         const server = guilds.find(guild => guild.id === serverId);
 
         if (!server) {
-          showError("No se encontró este servidor en tu lista. Comprueba que tengas permisos para administrarlo.");
+          showError(
+            "No se encontró este servidor en tu lista. Comprueba que tengas permisos para administrarlo."
+          );
           return;
         }
 
         document.getElementById("serverName").textContent = server.name;
+
         document.getElementById("welcomeTitle").textContent =
           `Bienvenido a ${server.name}`;
 
@@ -689,9 +737,14 @@
         content.hidden = false;
 
         loadUser();
+        loadServerStats();
+
       } catch (err) {
         console.error("Error cargando servidor:", err);
-        showError("Ocurrió un error al cargar el servidor. Inténtalo de nuevo.");
+
+        showError(
+          "Ocurrió un error al cargar el servidor. Inténtalo de nuevo."
+        );
       }
     }
 
@@ -710,6 +763,7 @@
           avatar.src = data.user.avatar;
           avatar.hidden = false;
         }
+
       } catch (err) {
         console.error("No se pudo cargar el perfil:", err);
       }
@@ -721,7 +775,10 @@
       });
 
       document.querySelectorAll(".nav-item").forEach(button => {
-        button.classList.toggle("active", button.dataset.page === page);
+        button.classList.toggle(
+          "active",
+          button.dataset.page === page
+        );
       });
 
       const selectedPage = document.getElementById(`page-${page}`);
@@ -753,4 +810,3 @@
   </script>
 </body>
 </html>
-
