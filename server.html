@@ -1,1 +1,756 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>Project Zerox | Dashboard del servidor</title>
+
+  <style>
+    :root {
+      --bg: #050505;
+      --panel: #0b0b0b;
+      --panel-hover: #111111;
+      --border: rgba(255,255,255,.08);
+      --text: #f5f5f5;
+      --muted: #888;
+      --accent: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    button, a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .background-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse at 50% -20%, rgba(255,255,255,.055), transparent 55%),
+        #050505;
+    }
+
+    .topbar {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+      border-bottom: 1px solid var(--border);
+      background: rgba(5,5,5,.85);
+      backdrop-filter: blur(16px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .back-link {
+      color: #aaa;
+      text-decoration: none;
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .back-link:hover {
+      color: white;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #222;
+    }
+
+    .layout {
+      width: min(1200px, 92%);
+      margin: 42px auto;
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 95px;
+      padding: 17px 12px;
+      background: rgba(12,12,12,.85);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+    }
+
+    .sidebar-title {
+      color: #666;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.7px;
+      padding: 5px 10px 14px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 11px;
+      margin: 3px 0;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      background: transparent;
+      color: #999;
+      text-align: left;
+      font-size: 13px;
+      transition: .2s;
+    }
+
+    .nav-item:hover {
+      color: white;
+      background: #151515;
+    }
+
+    .nav-item.active {
+      color: white;
+      background: #191919;
+      border-color: rgba(255,255,255,.09);
+    }
+
+    .nav-icon {
+      width: 19px;
+      text-align: center;
+      color: #aaa;
+      font-size: 15px;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 13px 5px;
+    }
+
+    main {
+      min-width: 0;
+      animation: appear .5s ease both;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .server-heading {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 25px;
+    }
+
+    .server-icon {
+      width: 67px;
+      height: 67px;
+      border-radius: 19px;
+      object-fit: cover;
+      background: #171717;
+      border: 1px solid var(--border);
+    }
+
+    .server-label {
+      color: #777;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+      margin-bottom: 7px;
+    }
+
+    .server-name {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 800;
+      letter-spacing: -.8px;
+      overflow-wrap: anywhere;
+    }
+
+    .welcome-panel {
+      padding: 29px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: linear-gradient(135deg, #101010, #090909);
+      margin-bottom: 23px;
+    }
+
+    .welcome-panel h1 {
+      font-size: clamp(22px, 3vw, 28px);
+      margin-bottom: 13px;
+      letter-spacing: -.7px;
+    }
+
+    .welcome-panel p {
+      color: #999;
+      font-size: 14px;
+      line-height: 1.8;
+      max-width: 720px;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
+      margin-bottom: 24px;
+    }
+
+    .module-card {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 19px;
+      min-height: 90px;
+      color: white;
+      text-decoration: none;
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: .22s;
+      cursor: pointer;
+    }
+
+    .module-card:hover {
+      background: #121212;
+      border-color: rgba(255,255,255,.2);
+      transform: translateY(-2px);
+    }
+
+    .module-icon {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: #151515;
+      color: #ddd;
+      font-size: 18px;
+    }
+
+    .module-card h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .module-card p {
+      color: #777;
+      font-size: 11px;
+    }
+
+    .stats-title {
+      color: #aaa;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      padding: 19px;
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .stat-number {
+      font-size: 27px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: #888;
+      font-size: 12px;
+    }
+
+    .page-section {
+      display: none;
+      animation: appear .3s ease both;
+    }
+
+    .page-section.active {
+      display: block;
+    }
+
+    .section-panel {
+      padding: 25px;
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-top: 20px;
+    }
+
+    .section-panel h2 {
+      font-size: 21px;
+      margin-bottom: 10px;
+    }
+
+    .section-panel p {
+      color: #888;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .coming-soon {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: #aaa;
+      font-size: 10px;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+
+    .status-message {
+      color: #888;
+      font-size: 13px;
+      padding: 25px;
+      text-align: center;
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .error {
+      color: #ddd;
+    }
+
+    .mobile-menu {
+      display: none;
+      width: 100%;
+      padding: 11px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #101010;
+      color: white;
+      text-align: left;
+    }
+
+    footer {
+      text-align: center;
+      color: #555;
+      font-size: 11px;
+      padding: 25px 10px 35px;
+    }
+
+    @media (max-width: 760px) {
+      .layout {
+        grid-template-columns: 1fr;
+        margin-top: 25px;
+      }
+
+      .sidebar {
+        position: static;
+        display: none;
+      }
+
+      .sidebar.mobile-open {
+        display: block;
+      }
+
+      .mobile-menu {
+        display: block;
+      }
+
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome-panel {
+        padding: 22px;
+      }
+
+      .stats-grid {
+        gap: 8px;
+      }
+
+      .stat-card {
+        padding: 14px 9px;
+      }
+
+      .stat-number {
+        font-size: 22px;
+      }
+
+      .stat-label {
+        font-size: 10px;
+      }
+
+      .topbar {
+        padding: 0 4%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="background-glow"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">Z</div>
+      <span>PROJECT ZEROX</span>
+    </div>
+
+    <div class="topbar-right">
+      <a class="back-link" href="dashboard.html">Volver al Dashboard</a>
+      <img id="userAvatar" class="user-avatar" alt="Usuario" hidden>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">MENÚ DEL SERVIDOR</div>
+
+      <button class="nav-item active" data-page="overview">
+        <span class="nav-icon">⌂</span>
+        Dashboard
+      </button>
+
+      <div class="sidebar-divider"></div>
+
+      <button class="nav-item" data-page="settings">
+        <span class="nav-icon">⚙</span>
+        Ajustes
+      </button>
+
+      <button class="nav-item" data-page="welcome">
+        <span class="nav-icon">✉</span>
+        Bienvenidas
+      </button>
+
+      <button class="nav-item" data-page="actions">
+        <span class="nav-icon">⌁</span>
+        Acciones
+      </button>
+
+      <button class="nav-item" data-page="autoroles">
+        <span class="nav-icon">♙</span>
+        Autoroles
+      </button>
+    </aside>
+
+    <main>
+      <button class="mobile-menu" id="mobileMenu">☰ Menú del servidor</button>
+
+      <div id="loading" class="status-message">
+        Cargando información del servidor...
+      </div>
+
+      <div id="error" class="status-message error" hidden>
+        No se pudo cargar el servidor. Comprueba que hayas iniciado sesión y vuelve al Dashboard.
+      </div>
+
+      <div id="serverContent" hidden>
+        <div class="server-heading">
+          <img id="serverIcon" class="server-icon" alt="Icono del servidor">
+          <div>
+            <div class="server-label">DASHBOARD DEL SERVIDOR</div>
+            <div class="server-name" id="serverName">Servidor</div>
+          </div>
+        </div>
+
+        <section class="page-section active" id="page-overview">
+          <div class="welcome-panel">
+            <h1 id="welcomeTitle">Bienvenido</h1>
+            <p>
+              Empieza desde aquí con una vista general de los módulos disponibles.
+              Explora las herramientas de Project Zerox y descubre todo lo que puedes
+              administrar en tu servidor desde un solo lugar.
+            </p>
+          </div>
+
+          <div class="module-grid">
+            <button class="module-card" data-open-page="settings">
+              <span class="module-icon">⚙</span>
+              <span>
+                <h3>Ajustes</h3>
+                <p>Configuración general del servidor</p>
+              </span>
+            </button>
+
+            <button class="module-card" data-open-page="welcome">
+              <span class="module-icon">✉</span>
+              <span>
+                <h3>Bienvenidas</h3>
+                <p>Configura los mensajes de bienvenida</p>
+              </span>
+            </button>
+
+            <button class="module-card" data-open-page="actions">
+              <span class="module-icon">⌁</span>
+              <span>
+                <h3>Acciones</h3>
+                <p>Herramientas y funciones del bot</p>
+              </span>
+            </button>
+
+            <button class="module-card" data-open-page="autoroles">
+              <span class="module-icon">♙</span>
+              <span>
+                <h3>Autoroles</h3>
+                <p>Administración de roles automáticos</p>
+              </span>
+            </button>
+          </div>
+
+          <div class="stats-title">ESTADÍSTICAS DEL SERVIDOR</div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number" id="memberCount">—</div>
+              <div class="stat-label">Miembros</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number" id="channelCount">—</div>
+              <div class="stat-label">Canales</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-number" id="roleCount">—</div>
+              <div class="stat-label">Roles</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-settings">
+          <div class="section-panel">
+            <h2>Ajustes</h2>
+            <p>
+              Aquí podrás administrar la configuración general de Project Zerox
+              para este servidor.
+            </p>
+            <span class="coming-soon">CONFIGURACIÓN EN DESARROLLO</span>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-welcome">
+          <div class="section-panel">
+            <h2>Bienvenidas</h2>
+            <p>
+              Próximamente podrás configurar el canal de bienvenida, el mensaje
+              que recibirán los nuevos miembros y otras opciones.
+            </p>
+            <span class="coming-soon">MÓDULO EN DESARROLLO</span>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-actions">
+          <div class="section-panel">
+            <h2>Acciones</h2>
+            <p>
+              Aquí estarán disponibles las herramientas y acciones del bot
+              para administrar tu comunidad.
+            </p>
+            <span class="coming-soon">MÓDULO EN DESARROLLO</span>
+          </div>
+        </section>
+
+        <section class="page-section" id="page-autoroles">
+          <div class="section-panel">
+            <h2>Autoroles</h2>
+            <p>
+              Próximamente podrás elegir qué roles se asignarán automáticamente
+              a los nuevos miembros.
+            </p>
+            <span class="coming-soon">MÓDULO EN DESARROLLO</span>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    PROJECT ZEROX · SERVER DASHBOARD
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const serverId = params.get("id");
+
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const content = document.getElementById("serverContent");
+
+    function showError(message) {
+      loading.hidden = true;
+      content.hidden = true;
+      error.hidden = false;
+
+      if (message) {
+        error.textContent = message;
+      }
+    }
+
+    function getServerIcon(server) {
+      if (server.icon) {
+        return `https://cdn.discordapp.com/icons/${server.id}/${server.icon}.png?size=128`;
+      }
+
+      return "https://cdn.discordapp.com/embed/avatars/0.png";
+    }
+
+    async function loadServer() {
+      if (!serverId) {
+        showError("No se indicó ningún servidor. Vuelve al Dashboard y pulsa «Ir» en un servidor.");
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/guilds", {
+          credentials: "include"
+        });
+
+        if (response.status === 401) {
+          showError("Tu sesión ha expirado. Vuelve al Dashboard e inicia sesión con Discord.");
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("No se pudieron obtener los servidores.");
+        }
+
+        const data = await response.json();
+        const guilds = Array.isArray(data.guilds) ? data.guilds : [];
+        const server = guilds.find(guild => guild.id === serverId);
+
+        if (!server) {
+          showError("No se encontró este servidor en tu lista. Comprueba que tengas permisos para administrarlo.");
+          return;
+        }
+
+        document.getElementById("serverName").textContent = server.name;
+        document.getElementById("welcomeTitle").textContent =
+          `Bienvenido a ${server.name}`;
+
+        document.getElementById("serverIcon").src = getServerIcon(server);
+
+        loading.hidden = true;
+        error.hidden = true;
+        content.hidden = false;
+
+        loadUser();
+      } catch (err) {
+        console.error("Error cargando servidor:", err);
+        showError("Ocurrió un error al cargar el servidor. Inténtalo de nuevo.");
+      }
+    }
+
+    async function loadUser() {
+      try {
+        const response = await fetch("/api/auth/me", {
+          credentials: "include"
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+
+        if (data.authenticated && data.user && data.user.avatar) {
+          const avatar = document.getElementById("userAvatar");
+          avatar.src = data.user.avatar;
+          avatar.hidden = false;
+        }
+      } catch (err) {
+        console.error("No se pudo cargar el perfil:", err);
+      }
+    }
+
+    function openPage(page) {
+      document.querySelectorAll(".page-section").forEach(section => {
+        section.classList.remove("active");
+      });
+
+      document.querySelectorAll(".nav-item").forEach(button => {
+        button.classList.toggle("active", button.dataset.page === page);
+      });
+
+      const selectedPage = document.getElementById(`page-${page}`);
+
+      if (selectedPage) {
+        selectedPage.classList.add("active");
+      }
+
+      document.getElementById("sidebar").classList.remove("mobile-open");
+    }
+
+    document.querySelectorAll(".nav-item").forEach(button => {
+      button.addEventListener("click", () => {
+        openPage(button.dataset.page);
+      });
+    });
+
+    document.querySelectorAll("[data-open-page]").forEach(button => {
+      button.addEventListener("click", () => {
+        openPage(button.dataset.openPage);
+      });
+    });
+
+    document.getElementById("mobileMenu").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.toggle("mobile-open");
+    });
+
+    loadServer();
+  </script>
+</body>
+</html>
+
