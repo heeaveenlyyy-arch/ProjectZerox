@@ -1,7 +1,4 @@
-
-const { getValidSession } = require("../lib/session");
-
-const DISCORD_API = "https://discord.com/api/v10";
+const { verifyGuildAccess } = require("../lib/discord-access");
 
 function sendError(res, status, error) {
     return res.status(status).json({
@@ -12,16 +9,11 @@ function sendError(res, status, error) {
 
 module.exports = async (req, res) => {
     if (req.method !== "POST") {
+        res.setHeader("Allow", "POST");
         return sendError(res, 405, "Método no permitido");
     }
 
     try {
-        const session = await getValidSession(req, res);
-
-        if (!session?.accessToken) {
-            return sendError(res, 401, "Sesión no válida");
-        }
-
         const { guildId, channelId } = req.body || {};
 
         if (
@@ -30,59 +22,31 @@ module.exports = async (req, res) => {
             !/^\d{17,20}$/.test(guildId) ||
             !/^\d{17,20}$/.test(channelId)
         ) {
-            return sendError(res, 400, "Servidor o canal no válido");
-        }
-
-        // Verificar acceso del usuario al servidor
-        const discordResponse = await fetch(
-            `${DISCORD_API}/users/@me/guilds`,
-            {
-                headers: {
-                    Authorization: `Bearer ${session.accessToken}`
-                }
-            }
-        );
-
-        if (!discordResponse.ok) {
             return sendError(
                 res,
-                502,
-                "No se pudo verificar tu acceso a Discord"
+                400,
+                "Servidor o canal no válido"
             );
         }
 
-        const guilds = await discordResponse.json();
-        const guild = guilds.find(item => item.id === guildId);
+        // Verificar acceso y permisos del usuario.
+        await verifyGuildAccess(req, res, guildId);
 
-        if (!guild) {
-            return sendError(res, 403, "No tienes acceso a este servidor");
-        }
-
-        const permissions = BigInt(guild.permissions || "0");
-
-        const canManage =
-            guild.owner ||
-            (permissions & 0x8n) === 0x8n ||
-            (permissions & 0x20n) === 0x20n;
-
-        if (!canManage) {
-            return sendError(
-                res,
-                403,
-                "No tienes permisos para administrar este servidor"
-            );
-        }
-
-        // Guardar la solicitud en Supabase
+        // Comprobar configuración de Supabase.
         const supabaseUrl = process.env.SUPABASE_URL;
         const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
         if (!supabaseUrl || !serviceKey) {
-            return sendError(res, 500, "Supabase no está configurado");
+            return sendError(
+                res,
+                500,
+                "Supabase no está configurado"
+            );
         }
 
+        // Registrar la solicitud para que Zerox la procese.
         const response = await fetch(
-            `${supabaseUrl}/rest/v1/ticket_publish_requests`,
+            `${supabaseUrl.replace(/\/+$/, "")}/rest/v1/ticket_publish_requests`,
             {
                 method: "POST",
                 headers: {
@@ -100,7 +64,12 @@ module.exports = async (req, res) => {
 
         if (!response.ok) {
             const details = await response.text();
-            console.error("[Ticket Publish Error]", details);
+
+            console.error(
+                "[Ticket Publish Error]",
+                response.status,
+                details
+            );
 
             return sendError(
                 res,
@@ -117,10 +86,10 @@ module.exports = async (req, res) => {
     } catch (error) {
         console.error("[Ticket Publish API]", error);
 
-     return sendError(
-    res,
-    error.status || 500,
-    error.message || "Error interno"
-);
+        return res.status(error.status || 500).json({
+            success: false,
+            error: error.message || "Error interno",
+            discordStatus: error.discordStatus || null
+        });
     }
 };
