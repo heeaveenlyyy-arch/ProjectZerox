@@ -324,7 +324,7 @@ Cargando información del servidor...
 <div><h3>Configuración de Bienvenidas</h3><p>Project Zerox / Welcome</p></div>
 </div>
 <p class="module-description">Configura el canal de bienvenida, personaliza el contenido del mensaje, utiliza variables dinámicas y prueba el resultado.</p>
-<div class="info-box"><strong>Integración pendiente.</strong><br>La configuración web todavía no está conectada al bot. Utiliza <strong>/welcome edit</strong> en Discord para administrar este módulo.</div>
+<div class="info-box"><strong>Integración pendiente.</strong><br>La configuración web todavía no está conectada al almacenamiento del bot. Utiliza <strong>/welcome edit</strong> en Discord para administrar este módulo.</div>
 </div>
 </section>
 </main>
@@ -493,7 +493,6 @@ typeof server.roleCount==="number"
 :"—"
 );
 
-/* CORRECCIÓN DEL ICONO DEL SERVIDOR */
 const iconUrl=getServerIconUrl({
 id:server.id||serverId,
 icon:server.icon
@@ -517,35 +516,45 @@ document.getElementById("generalError").style.display="block";
 setText("generalErrorMessage",message);
 }
 
-/* USER SESSION */
+/* USER SESSION - CORREGIDO */
 async function loadUser(){
 try{
 const response=await fetch(API.authMe,{
 method:"GET",
 credentials:"include",
-headers:{"Accept":"application/json"}
+headers:{
+"Accept":"application/json"
+}
 });
 
-if(!response.ok)return;
+if(!response.ok){
+console.error("Error HTTP al cargar usuario:",response.status);
+return;
+}
 
 const data=await response.json();
-if(!data.authenticated||!data.user)return;
+
+if(!data.authenticated||!data.user){
+return;
+}
 
 const user=data.user;
-
-const avatar=user.avatar
-?`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${String(user.avatar).startsWith("a_")?"gif":"png"}?size=64`
-:"https://cdn.discordapp.com/embed/avatars/0.png";
-
 const userAvatar=document.getElementById("userAvatar");
 
 userAvatar.onerror=()=>{
+userAvatar.onerror=null;
 userAvatar.src="https://cdn.discordapp.com/embed/avatars/0.png";
 };
 
-userAvatar.src=avatar;
+/* La API ya devuelve la URL completa del avatar */
+userAvatar.src=user.avatar||
+"https://cdn.discordapp.com/embed/avatars/0.png";
 
-setText("userName",user.global_name||user.username||"Usuario");
+setText(
+"userName",
+user.global_name||user.username||"Usuario"
+);
+
 document.getElementById("userInfo").style.display="flex";
 
 }catch(error){
