@@ -11,12 +11,10 @@
 :root {
     --bg: #050505;
     --panel: rgba(15,15,15,.88);
-    --panel2: #171717;
     --border: rgba(255,255,255,.09);
     --border-hover: rgba(255,255,255,.28);
     --text: #f5f5f5;
     --muted: #858585;
-    --soft: #bdbdbd;
 }
 
 * {
@@ -51,6 +49,12 @@ button, input {
 ::selection {
     background: rgba(255,255,255,.2);
     color: white;
+}
+
+/* VISIBILITY */
+
+.hidden {
+    display: none !important;
 }
 
 /* BACKGROUND */
@@ -114,7 +118,7 @@ header, main, footer {
 /* HEADER */
 
 header {
-    height: 78px;
+    min-height: 78px;
     padding: 0 7%;
     display: flex;
     justify-content: space-between;
@@ -199,6 +203,8 @@ nav a.active::after {
     padding: 80px 25px 110px;
 }
 
+/* HEADING */
+
 .heading {
     margin-bottom: 48px;
 }
@@ -251,7 +257,7 @@ nav a.active::after {
     to { transform: scaleX(1); }
 }
 
-/* REVEAL ANIMATIONS */
+/* REVEAL */
 
 .reveal {
     opacity: 0;
@@ -264,10 +270,6 @@ nav a.active::after {
 .reveal.visible {
     opacity: 1;
     transform: translateY(0);
-}
-
-.heading.reveal {
-    transition-delay: .1s;
 }
 
 /* LOGIN */
@@ -363,13 +365,6 @@ nav a.active::after {
     transform: translateY(-3px);
     background: white;
     box-shadow: 0 8px 30px rgba(255,255,255,.12);
-}
-
-.login-btn:active,
-.action-btn:active,
-.server-action:active,
-.refresh-btn:active {
-    transform: scale(.97);
 }
 
 /* PROFILE */
@@ -733,14 +728,6 @@ nav a.active::after {
     color: #c4c4c4;
 }
 
-.empty {
-    text-align: center;
-    color: #777;
-    padding: 40px 15px;
-    font-size: 12px;
-    grid-column: 1 / -1;
-}
-
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -894,7 +881,11 @@ footer {
     <section id="dashboardSection" class="hidden">
 
         <div class="profile reveal">
-            <img id="userAvatar" src="" alt="Avatar de Discord">
+            <img
+                id="userAvatar"
+                src="https://cdn.discordapp.com/embed/avatars/0.png"
+                alt="Avatar de Discord"
+            >
 
             <div class="profile-info">
                 <h2 id="userName">Usuario</h2>
@@ -923,7 +914,7 @@ footer {
         </div>
 
         <div id="serversList" class="servers"></div>
-        <p id="serverStatus" class="status">Cargando servidores...</p>
+        <p id="serverStatus" class="status hidden">Cargando servidores...</p>
 
     </section>
 
@@ -948,29 +939,13 @@ const refreshLabel = refreshButton.querySelector(".refresh-label");
 let allServers = [];
 let presenceCheckAvailable = false;
 
-/* SCROLL REVEAL */
+/* REVEAL */
 
 const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
 ).matches;
 
 let revealObserver;
-
-function observeReveals(root = document) {
-    const elements = root.querySelectorAll(".reveal:not(.visible)");
-
-    if (reduceMotion) {
-        elements.forEach(element => element.classList.add("visible"));
-        return;
-    }
-
-    if (!revealObserver) {
-        elements.forEach(element => element.classList.add("visible"));
-        return;
-    }
-
-    elements.forEach(element => revealObserver.observe(element));
-}
 
 if ("IntersectionObserver" in window && !reduceMotion) {
     revealObserver = new IntersectionObserver(entries => {
@@ -984,21 +959,30 @@ if ("IntersectionObserver" in window && !reduceMotion) {
         threshold: .12,
         rootMargin: "0px 0px -35px 0px"
     });
-} else {
-    revealObserver = null;
+}
+
+function observeReveals(root = document) {
+    root.querySelectorAll(".reveal:not(.visible)").forEach(element => {
+        if (reduceMotion || !revealObserver) {
+            element.classList.add("visible");
+        } else {
+            revealObserver.observe(element);
+        }
+    });
 }
 
 observeReveals();
 
-/* ESTADOS */
+/* STATUS */
 
 function showStatus(message, isError = false) {
     serverStatus.textContent = message;
-    serverStatus.className = isError ? "status error" : "status";
-    serverStatus.classList.remove("hidden");
+    serverStatus.className = isError
+        ? "status error"
+        : "status";
 }
 
-/* SERVIDORES */
+/* RENDER SERVERS */
 
 function renderServers() {
     const query = searchInput.value.trim().toLowerCase();
@@ -1069,7 +1053,8 @@ function renderServers() {
         } else if (server.botInstalled) {
             description.textContent = "Project Zerox está instalado";
             button.textContent = "Ir";
-            button.href = "server.html?id=" + encodeURIComponent(server.id);
+            button.href =
+                "server.html?id=" + encodeURIComponent(server.id);
         } else {
             description.textContent = "Project Zerox no está instalado";
             button.textContent = "Añadir";
@@ -1086,7 +1071,7 @@ function renderServers() {
     });
 }
 
-/* CARGAR SERVIDORES */
+/* LOAD SERVERS */
 
 async function loadServers() {
     refreshButton.disabled = true;
@@ -1136,7 +1121,7 @@ async function loadServers() {
     }
 }
 
-/* AUTENTICACIÓN */
+/* AUTHENTICATION */
 
 async function loadDashboard() {
     try {
@@ -1147,10 +1132,12 @@ async function loadDashboard() {
         const data = await response.json();
 
         if (!response.ok || !data.authenticated || !data.user) {
+            dashboardSection.classList.add("hidden");
             loginSection.classList.remove("hidden");
             return;
         }
 
+        loginSection.classList.add("hidden");
         dashboardSection.classList.remove("hidden");
 
         document.getElementById("userName").textContent =
@@ -1167,6 +1154,7 @@ async function loadDashboard() {
     } catch (error) {
         console.error("Authentication error:", error);
 
+        dashboardSection.classList.add("hidden");
         loginSection.classList.remove("hidden");
 
         loginSection.querySelector("p").textContent =
@@ -1174,12 +1162,12 @@ async function loadDashboard() {
     }
 }
 
-/* EVENTOS */
+/* EVENTS */
 
 searchInput.addEventListener("input", renderServers);
 refreshButton.addEventListener("click", loadServers);
 
-/* PARTÍCULAS */
+/* PARTICLES */
 
 const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
@@ -1260,7 +1248,7 @@ window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 animateParticles();
 
-/* INICIAR */
+/* START */
 
 loadDashboard();
 </script>
