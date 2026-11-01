@@ -117,9 +117,10 @@ module.exports = async (req, res) => {
     } catch (error) {
         console.error("[Ticket Publish API]", error);
 
-        return sendError(
-            error.status || 500,
-            error.message || "Error interno"
-        );
+     return sendError(
+    res,
+    error.status || 500,
+    error.message || "Error interno"
+);
     }
 };
