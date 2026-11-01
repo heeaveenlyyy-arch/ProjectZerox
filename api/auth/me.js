@@ -1,33 +1,23 @@
-
-const { unseal, getCookie } = require("../lib/session");
+const { getValidSession } = require("../lib/session");
 
 module.exports = async (req, res) => {
+  if (req.method !== "GET") {
+    res.setHeader("Allow", ["GET"]);
+    return res.status(405).json({ authenticated: false });
+  }
+
   try {
-    const sessionCookie = getCookie(req, "zerox_session");
+    const session = await getValidSession(req, res);
 
-    if (!sessionCookie) {
-      return res.status(200).json({
-        authenticated: false
-      });
-    }
-
-    const session = unseal(sessionCookie);
-
-    if (!session || !session.user) {
-      return res.status(200).json({
-        authenticated: false
-      });
+    if (!session?.user) {
+      return res.status(200).json({ authenticated: false });
     }
 
     const user = session.user;
-
     let avatar = null;
 
     if (user.avatar && user.id) {
-      const extension = String(user.avatar).startsWith("a_")
-        ? "gif"
-        : "png";
-
+      const extension = String(user.avatar).startsWith("a_") ? "gif" : "png";
       avatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${extension}?size=128`;
     }
 
@@ -40,12 +30,11 @@ module.exports = async (req, res) => {
         avatar
       }
     });
-
   } catch (error) {
     console.error("Error en /api/auth/me:", error);
-
     return res.status(500).json({
-      error: "Error al obtener la sesión"
+      authenticated: false,
+      error: "Error al comprobar la sesión"
     });
   }
 };
