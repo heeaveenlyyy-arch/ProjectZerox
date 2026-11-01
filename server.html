@@ -639,8 +639,18 @@
       error.textContent = message;
     }
 
+    // CORRECCIÓN DEL ICONO DEL SERVIDOR
     function getServerIcon(server) {
       if (server.icon) {
+        // Si la API ya entrega una URL completa, usarla directamente.
+        if (
+          server.icon.startsWith("https://") ||
+          server.icon.startsWith("http://")
+        ) {
+          return server.icon;
+        }
+
+        // Si entrega el hash de Discord, construir la URL.
         const extension = server.icon.startsWith("a_") ? "gif" : "png";
 
         return `https://cdn.discordapp.com/icons/${server.id}/${server.icon}.${extension}?size=128`;
@@ -730,7 +740,14 @@
         document.getElementById("welcomeTitle").textContent =
           `Bienvenido a ${server.name}`;
 
-        document.getElementById("serverIcon").src = getServerIcon(server);
+        const serverIcon = document.getElementById("serverIcon");
+
+        serverIcon.src = getServerIcon(server);
+
+        serverIcon.onerror = () => {
+          serverIcon.onerror = null;
+          serverIcon.src = "https://cdn.discordapp.com/embed/avatars/0.png";
+        };
 
         loading.hidden = true;
         error.hidden = true;
@@ -760,8 +777,13 @@
 
         if (data.authenticated && data.user && data.user.avatar) {
           const avatar = document.getElementById("userAvatar");
+
           avatar.src = data.user.avatar;
           avatar.hidden = false;
+
+          avatar.onerror = () => {
+            avatar.hidden = true;
+          };
         }
 
       } catch (err) {
