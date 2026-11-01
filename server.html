@@ -763,23 +763,22 @@ async function publishTicketPanel(){
 }
 
 [
- "ticketPublicTitle",
- "ticketPublicDesc",
- "ticketButtonText",
- "ticketButtonEmoji",
- "ticketColor"
-].forEach(id=>{
- document.getElementById(id).addEventListener("input",updateTicketPreview);
+    "ticketPublicTitle",
+    "ticketPublicDesc",
+    "ticketButtonText",
+    "ticketButtonEmoji",
+    "ticketColor"
+].forEach(id => {
+    document.getElementById(id).addEventListener("input", updateTicketPreview);
 });
 
-document.getElementById("saveTicketsButton").addEventListener("click",saveTickets);
-document.getElementById("publishTicketsButton").addEventListener("click",publishTicketPanel);
-document.getElementById("reloadTicketsButton").addEventListener("click",loadTickets);
-document.getElementById("retryButton").addEventListener("click",loadServer);
+document.getElementById("saveTicketsButton").addEventListener("click", saveTickets);
+document.getElementById("publishTicketsButton").addEventListener("click", publishTicketPanel);
+document.getElementById("reloadTicketsButton").addEventListener("click", loadTickets);
+document.getElementById("retryButton").addEventListener("click", loadServer);
 
 loadUser();
 loadServer();
 </script>
 </body>
 </html>
-```
