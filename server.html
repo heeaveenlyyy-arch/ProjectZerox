@@ -264,6 +264,8 @@ button, select {
 
 .hero-content {
     max-width: 650px;
+    position: relative;
+    z-index: 2;
 }
 
 .eyebrow {
@@ -304,31 +306,174 @@ button, select {
     gap: 13px;
 }
 
-/* HERO BOT AVATAR */
+/* DECORATED BOT AVATAR */
 
 .hero-preview {
     width: 340px;
     height: 340px;
     min-width: 280px;
-    border-radius: 50%;
-    padding: 9px;
-    background: linear-gradient(145deg, var(--glow), transparent 75%);
-    box-shadow: 0 0 55px var(--shadow);
-    transition: .35s ease;
+    position: relative;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
+    transition: transform .4s ease;
 }
 
 .hero-preview:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 85px var(--shadow);
+    transform: translateY(-7px);
 }
+
+/* Delicate circular outline */
+
+.hero-preview::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid var(--glow);
+    border-radius: 50%;
+    opacity: .45;
+    box-shadow: 0 0 22px var(--shadow);
+    animation: ringPulse 4s ease-in-out infinite;
+    z-index: -1;
+}
+
+/* Soft outer glow */
+
+.hero-preview::after {
+    content: "";
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: var(--shadow);
+    filter: blur(45px);
+    opacity: .55;
+    z-index: -2;
+}
+
+/* Bot image */
 
 .hero-preview img {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 86%;
+    height: 86%;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    box-shadow: 0 0 25px rgba(0,0,0,.7);
+}
+
+/* Decorations */
+
+.avatar-decoration {
+    position: absolute;
+    z-index: 3;
+    color: var(--glow);
+    text-shadow: 0 0 12px var(--shadow);
+    pointer-events: none;
+    user-select: none;
+}
+
+.decoration-heart {
+    font-size: 25px;
+    animation: floatHeart 4s ease-in-out infinite;
+}
+
+.decoration-star {
+    font-size: 22px;
+    animation: twinkle 2.5s ease-in-out infinite;
+}
+
+.decoration-sparkle {
+    font-size: 15px;
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+.heart-one {
+    top: 14%;
+    left: 4%;
+    transform: rotate(-15deg);
+}
+
+.heart-two {
+    bottom: 15%;
+    right: 1%;
+    font-size: 20px;
+    animation-delay: 1.2s;
+}
+
+.heart-three {
+    top: 48%;
+    right: -8%;
+    font-size: 16px;
+    animation-delay: .7s;
+}
+
+.star-one {
+    top: 2%;
+    right: 24%;
+}
+
+.star-two {
+    bottom: 4%;
+    left: 22%;
+    font-size: 19px;
+    animation-delay: .8s;
+}
+
+.star-three {
+    top: 34%;
+    left: -8%;
+    font-size: 17px;
+    animation-delay: 1.4s;
+}
+
+.sparkle-one {
+    top: 22%;
+    right: 2%;
+}
+
+.sparkle-two {
+    bottom: 27%;
+    left: 1%;
+    animation-delay: 1s;
+}
+
+.sparkle-three {
+    bottom: 2%;
+    right: 32%;
+    animation-delay: 1.7s;
+}
+
+@keyframes ringPulse {
+    0%, 100% {
+        opacity: .3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: .65;
+        transform: scale(1.025);
+    }
+}
+
+@keyframes floatHeart {
+    0%, 100% {
+        transform: translateY(0) rotate(-10deg);
+    }
+    50% {
+        transform: translateY(-9px) rotate(8deg);
+    }
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        opacity: .45;
+        transform: scale(.85);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
 }
 
 /* SECTIONS */
@@ -622,11 +767,10 @@ footer p {
     }
 
     .hero-preview {
-        width: 260px;
-        height: 260px;
-        min-width: 260px;
+        width: 280px;
+        height: 280px;
+        min-width: 280px;
         align-self: center;
-        transform: none;
     }
 
     .features-grid {
@@ -684,6 +828,24 @@ footer p {
         letter-spacing: -2px;
     }
 
+    .hero-preview {
+        width: 245px;
+        height: 245px;
+        min-width: 245px;
+    }
+
+    .heart-one {
+        left: 0;
+    }
+
+    .heart-three {
+        right: -4%;
+    }
+
+    .star-three {
+        left: -4%;
+    }
+
     section {
         padding: 75px 6%;
     }
@@ -710,6 +872,17 @@ footer p {
     .footer-links {
         flex-wrap: wrap;
         justify-content: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
     }
 }
 </style>
@@ -802,13 +975,27 @@ footer p {
         </div>
     </div>
 
-    <!-- BOT AVATAR -->
+    <!-- DECORATED BOT AVATAR -->
     <div class="hero-preview">
+
         <img
             src="https://cdn.discordapp.com/avatars/1534310875962540212/137046208090a4852329f360205a5e22.png?size=1024"
             alt="Project Zerox Bot"
             loading="eager"
         >
+
+        <span class="avatar-decoration decoration-heart heart-one">♡</span>
+        <span class="avatar-decoration decoration-heart heart-two">♥</span>
+        <span class="avatar-decoration decoration-heart heart-three">♡</span>
+
+        <span class="avatar-decoration decoration-star star-one">☆</span>
+        <span class="avatar-decoration decoration-star star-two">☆</span>
+        <span class="avatar-decoration decoration-star star-three">☆</span>
+
+        <span class="avatar-decoration decoration-sparkle sparkle-one">✧</span>
+        <span class="avatar-decoration decoration-sparkle sparkle-two">✧</span>
+        <span class="avatar-decoration decoration-sparkle sparkle-three">✧</span>
+
     </div>
 </section>
 
