@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="es">
 <head>
@@ -6,208 +7,705 @@
 <meta name="theme-color" content="#000">
 <title>Server Dashboard | Project Zerox</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0} :root{--bg:#000;--panel:#090909;--border:#222;--text:#f5f5f5;--muted:#858585}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#000;--panel:#090909;--border:#222;--text:#f5f5f5;--muted:#858585}
 body{min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#2222,transparent 55%),#000;color:var(--text);font-family:Arial,Helvetica,sans-serif}
-button,a{font:inherit}button{cursor:pointer}header{height:75px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#000f;position:sticky;top:0;z-index:10}
-.logo{display:flex;gap:9px;font-size:17px;font-weight:800;letter-spacing:2px;text-decoration:none}.logo .project{color:#fff}.logo .zerox{color:#999}
-.header-right,.user-info{display:flex;align-items:center;gap:18px}.header-link{color:#888;text-decoration:none;font-size:12px}.user-info{gap:9px;color:#aaa;font-size:12px}.user-avatar{width:31px;height:31px;border-radius:50%;object-fit:cover}.mobile-menu{display:none;background:#111;color:#fff;border:1px solid #292929;padding:8px 12px;border-radius:6px}
-.app{display:flex;min-height:calc(100vh - 75px)}.sidebar{width:245px;flex-shrink:0;padding:27px 14px;background:#070707;border-right:1px solid var(--border);position:sticky;top:75px;height:calc(100vh - 75px)}
-.server-card{padding:15px 12px;border:1px solid var(--border);background:var(--panel);border-radius:9px;display:flex;align-items:center;gap:12px;margin-bottom:30px}.server-icon{width:42px;height:42px;border-radius:9px;background:#171717;border:1px solid #292929;display:grid;place-items:center;flex-shrink:0;color:#bbb;object-fit:cover}.server-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.server-label{color:#777;font-size:10px;margin-top:5px}.sidebar-title{color:#666;font-size:10px;letter-spacing:2px;margin:0 10px 14px;text-transform:uppercase}
-.nav-item{width:100%;border:1px solid transparent;background:transparent;color:#999;text-align:left;padding:13px 12px;border-radius:7px;margin-bottom:5px;font-size:12px;display:flex;gap:11px;align-items:center}.nav-item:hover,.nav-item.active{background:#171717;border-color:#292929;color:#fff}.nav-icon{width:19px;color:#aaa}.sidebar-bottom{position:absolute;bottom:20px;left:14px;right:14px;border-top:1px solid var(--border);padding-top:15px}.back-link{display:block;color:#777;font-size:11px;padding:10px;text-decoration:none}
-main{flex:1;min-width:0;padding:48px clamp(20px,5vw,65px);max-width:1500px;margin:auto;width:100%}.page-heading{margin-bottom:32px}.page-heading small{color:#777;letter-spacing:4px;font-size:10px}.page-heading h1{font-size:clamp(32px,5vw,48px);letter-spacing:-2px;margin:13px 0}.page-heading p{color:var(--muted);line-height:1.8;font-size:13px}.heading-line{width:65px;height:2px;background:#555;margin-top:22px}
-.page-section{display:none}.page-section.visible{display:block}.section-heading{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:22px}.section-heading h2{font-size:18px}.section-heading p{color:#777;font-size:11px;margin-top:6px}
-.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:22px}.card,.module-card{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px;margin-bottom:14px}.card-label{color:#777;font-size:10px;letter-spacing:1px}.card-value{font-size:23px;font-weight:700;margin-top:8px}.card-description{color:#777;font-size:11px;margin-top:7px}.server-overview{display:flex;align-items:center;gap:18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:20px}.server-overview img{width:65px;height:65px;object-fit:cover;border-radius:12px}.server-overview p{color:#777;font-size:11px;margin-top:7px}
-.module-header{display:flex;align-items:center;gap:13px;margin-bottom:17px}.module-icon{width:40px;height:40px;display:grid;place-items:center;background:#141414;border:1px solid #292929;border-radius:8px;color:#bbb}.module-header h3{font-size:14px}.module-header p,.module-description{color:#888;font-size:11px;margin-top:5px;line-height:1.8}.status{display:inline-flex;gap:7px;color:#aaa;background:#121212;border:1px solid #292929;border-radius:5px;padding:7px 10px;font-size:10px}.status-dot{width:6px;height:6px;border-radius:50%;background:#888}
-.button{display:inline-flex;justify-content:center;align-items:center;border:1px solid #333;background:#151515;color:#eee;border-radius:6px;padding:10px 15px;font-size:11px}.button:hover{background:#222;border-color:#666}.button.secondary{background:transparent;color:#888}
-.loading-state,.error-state{padding:35px 20px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:9px;color:#888;font-size:12px;line-height:1.8}.error-state h3{color:#ddd;margin-bottom:8px}
-.ticket-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.ticket-field{display:flex;flex-direction:column;gap:8px;min-width:0}.ticket-field.full{grid-column:1/-1}.ticket-field label{color:#aaa;font-size:11px}
-.ticket-input,.ticket-select,.ticket-textarea{width:100%;background:#050505;border:1px solid #303030;border-radius:6px;padding:12px;color:#eee;font:inherit;font-size:12px;outline:none}.ticket-input:focus,.ticket-select:focus,.ticket-textarea:focus{border-color:#777}.ticket-textarea{resize:vertical;min-height:85px;line-height:1.6}.ticket-select option{background:#090909;color:white}.ticket-color{width:100%;height:42px;background:#050505;border:1px solid #303030;border-radius:6px;padding:4px}
-.ticket-roles{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#050505;border:1px solid #303030;border-radius:6px;max-height:180px;overflow:auto}.ticket-role{display:flex;align-items:center;gap:7px;background:#111;border:1px solid #292929;padding:8px 10px;border-radius:5px;color:#bbb;font-size:11px}.ticket-role input{accent-color:#aaa}
-.ticket-preview{background:#080808;border:1px solid #303030;border-radius:8px;padding:18px}.ticket-preview-label{color:#666;font-size:9px;letter-spacing:2px;margin-bottom:13px}.preview-embed{border-left:3px solid #5865F2;background:#101010;padding:15px;border-radius:4px}.preview-embed h4{font-size:14px;margin-bottom:9px}.preview-embed p{font-size:11px;color:#aaa;line-height:1.7;white-space:pre-wrap}.preview-button{display:inline-block;margin-top:13px;background:#303030;border:1px solid #555;padding:9px 13px;border-radius:5px;font-size:11px;color:white}.ticket-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.ticket-message{font-size:11px;color:#999;margin-top:13px;line-height:1.7}.ticket-message.error{color:#ff7777}
+button,a{font:inherit}button{cursor:pointer}
+header{height:75px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#000f;position:sticky;top:0;z-index:10}
+.logo{display:flex;gap:9px;font-size:17px;font-weight:800;letter-spacing:2px;text-decoration:none}
+.logo .project{color:#fff}.logo .zerox{color:#999}
+.header-right,.user-info{display:flex;align-items:center;gap:18px}
+.header-link{color:#888;text-decoration:none;font-size:12px}
+.user-info{gap:9px;color:#aaa;font-size:12px}
+.user-avatar{width:31px;height:31px;border-radius:50%;object-fit:cover}
+.mobile-menu{display:none;background:#111;color:#fff;border:1px solid #292929;padding:8px 12px;border-radius:6px}
+.app{display:flex;min-height:calc(100vh - 75px)}
+.sidebar{width:245px;flex-shrink:0;padding:27px 14px;background:#070707;border-right:1px solid var(--border);position:sticky;top:75px;height:calc(100vh - 75px)}
+.server-card{padding:15px 12px;border:1px solid var(--border);background:var(--panel);border-radius:9px;display:flex;align-items:center;gap:12px;margin-bottom:30px}
+.server-icon{width:42px;height:42px;border-radius:9px;background:#171717;border:1px solid #292929;display:grid;place-items:center;flex-shrink:0;color:#bbb;object-fit:cover}
+.server-name{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.server-label{color:#777;font-size:10px;margin-top:5px}
+.sidebar-title{color:#666;font-size:10px;letter-spacing:2px;margin:0 10px 14px;text-transform:uppercase}
+.nav-item{width:100%;border:1px solid transparent;background:transparent;color:#999;text-align:left;padding:13px 12px;border-radius:7px;margin-bottom:5px;font-size:12px;display:flex;gap:11px;align-items:center}
+.nav-item:hover,.nav-item.active{background:#171717;border-color:#292929;color:#fff}
+.nav-icon{width:19px;color:#aaa}
+.sidebar-bottom{position:absolute;bottom:20px;left:14px;right:14px;border-top:1px solid var(--border);padding-top:15px}
+.back-link{display:block;color:#777;font-size:11px;padding:10px;text-decoration:none}
+main{flex:1;min-width:0;padding:48px clamp(20px,5vw,65px);max-width:1500px;margin:auto;width:100%}
+.page-heading{margin-bottom:32px}
+.page-heading small{color:#777;letter-spacing:4px;font-size:10px}
+.page-heading h1{font-size:clamp(32px,5vw,48px);letter-spacing:-2px;margin:13px 0}
+.page-heading p{color:var(--muted);line-height:1.8;font-size:13px}
+.heading-line{width:65px;height:2px;background:#555;margin-top:22px}
+.page-section{display:none}.page-section.visible{display:block}
+.section-heading{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:22px}
+.section-heading h2{font-size:18px}
+.section-heading p{color:#777;font-size:11px;margin-top:6px}
+.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:22px}
+.card,.module-card{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:20px;margin-bottom:14px}
+.card-label{color:#777;font-size:10px;letter-spacing:1px}
+.card-value{font-size:23px;font-weight:700;margin-top:8px}
+.card-description{color:#777;font-size:11px;margin-top:7px}
+.server-overview{display:flex;align-items:center;gap:18px;background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:22px;margin-bottom:20px}
+.server-overview img{width:65px;height:65px;object-fit:cover;border-radius:12px}
+.server-overview p{color:#777;font-size:11px;margin-top:7px}
+.module-header{display:flex;align-items:center;gap:13px;margin-bottom:17px}
+.module-icon{width:40px;height:40px;display:grid;place-items:center;background:#141414;border:1px solid #292929;border-radius:8px;color:#bbb}
+.module-header h3{font-size:14px}
+.module-header p,.module-description{color:#888;font-size:11px;margin-top:5px;line-height:1.8}
+.status{display:inline-flex;gap:7px;color:#aaa;background:#121212;border:1px solid #292929;border-radius:5px;padding:7px 10px;font-size:10px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#888}
+.button{display:inline-flex;justify-content:center;align-items:center;border:1px solid #333;background:#151515;color:#eee;border-radius:6px;padding:10px 15px;font-size:11px}
+.button:hover{background:#222;border-color:#666}
+.button.secondary{background:transparent;color:#888}
+.loading-state,.error-state{padding:35px 20px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:9px;color:#888;font-size:12px;line-height:1.8}
+.error-state h3{color:#ddd;margin-bottom:8px}
+.ticket-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.ticket-field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.ticket-field.full{grid-column:1/-1}
+.ticket-field label{color:#aaa;font-size:11px}
+.ticket-input,.ticket-select,.ticket-textarea{width:100%;background:#050505;border:1px solid #303030;border-radius:6px;padding:12px;color:#eee;font:inherit;font-size:12px;outline:none}
+.ticket-input:focus,.ticket-select:focus,.ticket-textarea:focus{border-color:#777}
+.ticket-textarea{resize:vertical;min-height:85px;line-height:1.6}
+.ticket-select option{background:#090909;color:white}
+.ticket-color{width:100%;height:42px;background:#050505;border:1px solid #303030;border-radius:6px;padding:4px}
+.ticket-roles{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#050505;border:1px solid #303030;border-radius:6px;max-height:180px;overflow:auto}
+.ticket-role{display:flex;align-items:center;gap:7px;background:#111;border:1px solid #292929;padding:8px 10px;border-radius:5px;color:#bbb;font-size:11px}
+.ticket-role input{accent-color:#aaa}
+.ticket-preview{background:#080808;border:1px solid #303030;border-radius:8px;padding:18px}
+.ticket-preview-label{color:#666;font-size:9px;letter-spacing:2px;margin-bottom:13px}
+.preview-embed{border-left:3px solid #5865F2;background:#101010;padding:15px;border-radius:4px}
+.preview-embed h4{font-size:14px;margin-bottom:9px}
+.preview-embed p{font-size:11px;color:#aaa;line-height:1.7;white-space:pre-wrap}
+.preview-button{display:inline-block;margin-top:13px;background:#303030;border:1px solid #555;padding:9px 13px;border-radius:5px;font-size:11px;color:white}
+.ticket-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.ticket-message{font-size:11px;color:#999;margin-top:13px;line-height:1.7}
+.ticket-message.error{color:#ff7777}
 footer{border-top:1px solid var(--border);padding:25px;text-align:center;color:#555;font-size:10px;letter-spacing:1px}
-@media(max-width:1000px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){header{padding:0 17px;height:65px}.logo{font-size:14px}.header-link{display:none}.mobile-menu{display:block}.app{display:block}.sidebar{display:none;width:100%;height:auto;position:relative;top:0;padding:15px;border:0;border-bottom:1px solid var(--border)}.sidebar.open{display:block}.nav-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.nav-item{margin:0}.sidebar-bottom{position:static;margin-top:12px}main{padding:35px 17px}.card-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.ticket-form{grid-template-columns:1fr}.ticket-field.full{grid-column:auto}}@media(max-width:420px){.card-grid{grid-template-columns:1fr}}
+@media(max-width:1000px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){
+header{padding:0 17px;height:65px}.logo{font-size:14px}.header-link{display:none}
+.mobile-menu{display:block}.app{display:block}
+.sidebar{display:none;width:100%;height:auto;position:relative;top:0;padding:15px;border:0;border-bottom:1px solid var(--border)}
+.sidebar.open{display:block}.nav-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.nav-item{margin:0}.sidebar-bottom{position:static;margin-top:12px}
+main{padding:35px 17px}.card-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:650px){.ticket-form{grid-template-columns:1fr}.ticket-field.full{grid-column:auto}}
+@media(max-width:420px){.card-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
 <a href="index.html" class="logo"><span class="project">PROJECT</span><span class="zerox">ZEROX</span></a>
-<div class="header-right"><a href="dashboard.html" class="header-link">Mis servidores</a><div class="user-info" id="userInfo" style="display:none"><img class="user-avatar" id="userAvatar" alt=""><span id="userName"></span></div><button class="mobile-menu" id="mobileMenu" type="button">☰</button></div>
+<div class="header-right">
+<a href="dashboard.html" class="header-link">Mis servidores</a>
+<div class="user-info" id="userInfo" style="display:none">
+<img class="user-avatar" id="userAvatar" alt=""><span id="userName"></span>
+</div>
+<button class="mobile-menu" id="mobileMenu" type="button">☰</button>
+</div>
 </header>
+
 <div class="app">
 <aside class="sidebar" id="sidebar">
-<div class="server-card"><img class="server-icon" id="sidebarServerIcon" alt="" style="display:none"><div class="server-icon" id="sidebarServerFallback">◈</div><div style="min-width:0"><div class="server-name" id="sidebarServerName">Cargando servidor...</div><div class="server-label">SERVER DASHBOARD</div></div></div>
+<div class="server-card">
+<img class="server-icon" id="sidebarServerIcon" alt="" style="display:none">
+<div class="server-icon" id="sidebarServerFallback">◈</div>
+<div style="min-width:0">
+<div class="server-name" id="sidebarServerName">Cargando servidor...</div>
+<div class="server-label">SERVER DASHBOARD</div>
+</div>
+</div>
 <div class="sidebar-title">Administración</div>
 <div class="nav-list">
 <button class="nav-item active" data-section="general"><span class="nav-icon">⌂</span>General</button>
 <button class="nav-item" data-section="tickets"><span class="nav-icon">▤</span>Tickets</button>
 <button class="nav-item" data-section="boosttracker"><span class="nav-icon">✧</span>Boost Tracker</button>
 <button class="nav-item" data-section="welcome"><span class="nav-icon">◇</span>Bienvenidas</button>
-</div><div class="sidebar-bottom"><a href="dashboard.html" class="back-link">← Volver a mis servidores</a></div>
+</div>
+<div class="sidebar-bottom"><a href="dashboard.html" class="back-link">← Volver a mis servidores</a></div>
 </aside>
+
 <main>
-<div class="page-heading"><small>PROJECT ZEROX / SERVER MANAGEMENT</small><h1 id="pageTitle">General.</h1><p id="pageDescription">Información y estadísticas de tu servidor.</p><div class="heading-line"></div></div>
+<div class="page-heading">
+<small>PROJECT ZEROX / SERVER MANAGEMENT</small>
+<h1 id="pageTitle">General.</h1>
+<p id="pageDescription">Información y estadísticas de tu servidor.</p>
+<div class="heading-line"></div>
+</div>
+
 <section class="page-section visible" id="section-general">
 <div id="generalLoading" class="loading-state">Cargando información del servidor...</div>
 <div id="generalContent" style="display:none">
-<div class="server-overview"><img id="mainServerIcon" alt="" style="display:none"><div class="server-icon" id="mainServerFallback">◈</div><div><h3 id="mainServerName">Servidor</h3><p id="mainServerId">ID: —</p></div></div>
+<div class="server-overview">
+<img id="mainServerIcon" alt="" style="display:none">
+<div class="server-icon" id="mainServerFallback">◈</div>
+<div><h3 id="mainServerName">Servidor</h3><p id="mainServerId">ID: —</p></div>
+</div>
 <div class="card-grid">
 <div class="card"><div class="card-label">Miembros</div><div class="card-value" id="memberCount">—</div><div class="card-description">Miembros del servidor</div></div>
 <div class="card"><div class="card-label">Canales</div><div class="card-value" id="channelCount">—</div><div class="card-description">Canales disponibles</div></div>
 <div class="card"><div class="card-label">Roles</div><div class="card-value" id="roleCount">—</div><div class="card-description">Roles del servidor</div></div>
-</div><div class="module-card"><div class="module-header"><div class="module-icon">◈</div><div><h3>Project Zerox</h3><p>Estado de conexión</p></div></div><span class="status">Información cargada</span></div>
 </div>
-<div id="generalError" class="error-state" style="display:none"><h3>No se pudo cargar el servidor</h3><p id="generalErrorMessage">Comprueba tu sesión y vuelve a intentarlo.</p><button class="button" id="retryButton" type="button" style="margin-top:15px">Reintentar</button></div>
+<div class="module-card">
+<div class="module-header"><div class="module-icon">◈</div><div><h3>Project Zerox</h3><p>Estado de conexión</p></div></div>
+<span class="status">Información cargada</span>
+</div>
+</div>
+<div id="generalError" class="error-state" style="display:none">
+<h3>No se pudo cargar el servidor</h3>
+<p id="generalErrorMessage">Comprueba tu sesión y vuelve a intentarlo.</p>
+<button class="button" id="retryButton" type="button" style="margin-top:15px">Reintentar</button>
+</div>
 </section>
+
 <section class="page-section" id="section-tickets">
-<div class="section-heading"><div><h2>Sistema de Tickets</h2><p>Administración y personalización de tickets.</p></div><span class="status">Configuración</span></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">▤</div><div><h3>Configuración general</h3><p>Project Zerox / Tickets</p></div></div>
+<div class="section-heading">
+<div><h2>Sistema de Tickets</h2><p>Administración y personalización de tickets.</p></div>
+<span class="status">Configuración</span>
+</div>
+
+<div class="module-card">
+<div class="module-header"><div class="module-icon">▤</div><div><h3>Configuración general</h3><p>Project Zerox / Tickets</p></div></div>
 <div class="ticket-form">
-<div class="ticket-field full"><label for="ticketChannel">Canal donde se publicará el panel</label><select class="ticket-select" id="ticketChannel"><option value="">Cargando canales...</option></select></div>
-<div class="ticket-field full"><label>Roles de soporte</label><div class="ticket-roles" id="ticketRoles">Cargando roles...</div></div>
-<div class="ticket-field"><label for="ticketEnabled">Sistema de tickets</label><select class="ticket-select" id="ticketEnabled"><option value="true">Activado</option><option value="false">Desactivado</option></select></div>
-<div class="ticket-field"><label for="ticketColor">Color del mensaje</label><input class="ticket-color" type="color" id="ticketColor" value="#5865F2"></div>
-</div></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">✎</div><div><h3>Mensaje público</h3><p>Mensaje que verán los miembros.</p></div></div><div class="ticket-form">
+<div class="ticket-field full">
+<label for="ticketChannel">Canal donde se publicará el panel</label>
+<select class="ticket-select" id="ticketChannel"><option value="">Cargando canales...</option></select>
+</div>
+<div class="ticket-field full">
+<label>Roles de soporte</label>
+<div class="ticket-roles" id="ticketRoles">Cargando roles...</div>
+</div>
+<div class="ticket-field">
+<label for="ticketEnabled">Sistema de tickets</label>
+<select class="ticket-select" id="ticketEnabled">
+<option value="true">Activado</option><option value="false">Desactivado</option>
+</select>
+</div>
+<div class="ticket-field">
+<label for="ticketColor">Color del mensaje</label>
+<input class="ticket-color" type="color" id="ticketColor" value="#5865F2">
+</div>
+</div>
+</div>
+
+<div class="module-card">
+<div class="module-header"><div class="module-icon">✎</div><div><h3>Mensaje público</h3><p>Mensaje que verán los miembros.</p></div></div>
+<div class="ticket-form">
 <div class="ticket-field full"><label for="ticketPublicTitle">Título</label><input class="ticket-input" id="ticketPublicTitle" maxlength="256"></div>
 <div class="ticket-field full"><label for="ticketPublicDesc">Descripción</label><textarea class="ticket-textarea" id="ticketPublicDesc" maxlength="4000"></textarea></div>
-</div></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">✉</div><div><h3>Mensaje de bienvenida</h3><p>Contenido que aparecerá al abrir un ticket.</p></div></div><div class="ticket-form">
+</div>
+</div>
+
+<div class="module-card">
+<div class="module-header"><div class="module-icon">✉</div><div><h3>Mensaje de bienvenida</h3><p>Contenido que aparecerá al abrir un ticket.</p></div></div>
+<div class="ticket-form">
 <div class="ticket-field full"><label for="ticketWelcomeTitle">Título</label><input class="ticket-input" id="ticketWelcomeTitle" maxlength="256"></div>
 <div class="ticket-field full"><label for="ticketWelcomeDesc">Descripción</label><textarea class="ticket-textarea" id="ticketWelcomeDesc" maxlength="4000"></textarea></div>
 <div class="ticket-field full"><label for="ticketWelcomeOutside">Mensaje adicional</label><textarea class="ticket-textarea" id="ticketWelcomeOutside" maxlength="2000"></textarea></div>
-</div></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">⚙</div><div><h3>Botón de creación</h3><p>Personaliza el botón que abrirá los tickets.</p></div></div><div class="ticket-form">
+</div>
+</div>
+
+<div class="module-card">
+<div class="module-header"><div class="module-icon">⚙</div><div><h3>Botón de creación</h3><p>Personaliza el botón que abrirá los tickets.</p></div></div>
+<div class="ticket-form">
 <div class="ticket-field"><label for="ticketButtonText">Texto del botón</label><input class="ticket-input" id="ticketButtonText" maxlength="80"></div>
 <div class="ticket-field"><label for="ticketButtonEmoji">Emoji</label><input class="ticket-input" id="ticketButtonEmoji" maxlength="100"></div>
 <div class="ticket-field"><label for="ticketButtonStyle">Estilo</label><select class="ticket-select" id="ticketButtonStyle"><option>Primary</option><option>Secondary</option><option>Success</option></select></div>
-</div></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">◈</div><div><h3>Vista previa</h3><p>Vista aproximada del panel público.</p></div></div>
-<div class="ticket-preview"><div class="ticket-preview-label">PROJECT ZEROX / TICKET PREVIEW</div><div class="preview-embed" id="ticketPreview"><h4 id="previewTitle">📩 Sistema de Tickets</h4><p id="previewDescription">Para crear un ticket y hablar con soporte, presiona el botón de abajo.</p><span class="preview-button" id="previewButton">📩 Crear Ticket</span></div></div>
-<div class="ticket-actions"><button class="button" id="saveTicketsButton" type="button">Guardar configuración</button><button class="button secondary" id="reloadTicketsButton" type="button">Recargar</button></div>
+</div>
+</div>
+
+<div class="module-card">
+<div class="module-header"><div class="module-icon">◈</div><div><h3>Vista previa</h3><p>Vista aproximada del panel público.</p></div></div>
+<div class="ticket-preview">
+<div class="ticket-preview-label">PROJECT ZEROX / TICKET PREVIEW</div>
+<div class="preview-embed" id="ticketPreview">
+<h4 id="previewTitle">📩 Sistema de Tickets</h4>
+<p id="previewDescription">Para crear un ticket y hablar con soporte, presiona el botón de abajo.</p>
+<span class="preview-button" id="previewButton">📩 Crear Ticket</span>
+</div>
+</div>
+<div class="ticket-actions">
+<button class="button" id="saveTicketsButton" type="button">Guardar configuración</button>
+<button class="button secondary" id="reloadTicketsButton" type="button">Recargar</button>
+</div>
 <div class="ticket-message" id="ticketMessage">La configuración se guardará en Supabase.</div>
 </div>
 </section>
+
 <section class="page-section" id="section-boosttracker">
 <div class="section-heading"><div><h2>Boost Tracker</h2><p>Administración de notificaciones de mejoras.</p></div><span class="status">Módulo</span></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">✧</div><div><h3>Configuración de Boost Tracker</h3><p>Project Zerox / Boost Tracker</p></div></div><p class="module-description">Personaliza los anuncios de Server Boosts, el canal de notificaciones, el contenido del mensaje, el autor y las variables disponibles.</p><div class="info-box"><strong>Integración pendiente.</strong><br>Utiliza <strong>/boosttracker edit</strong> en Discord para administrar este módulo.</div></div>
+<div class="module-card">
+<div class="module-header"><div class="module-icon">✧</div><div><h3>Configuración de Boost Tracker</h3><p>Project Zerox / Boost Tracker</p></div></div>
+<p class="module-description">Personaliza los anuncios de Server Boosts, el canal de notificaciones, el contenido del mensaje, el autor y las variables disponibles.</p>
+<div class="info-box"><strong>Integración pendiente.</strong><br>Utiliza <strong>/boosttracker edit</strong> en Discord para administrar este módulo.</div>
+</div>
 </section>
+
 <section class="page-section" id="section-welcome">
 <div class="section-heading"><div><h2>Bienvenidas</h2><p>Administración de mensajes de bienvenida.</p></div><span class="status">Módulo</span></div>
-<div class="module-card"><div class="module-header"><div class="module-icon">◇</div><div><h3>Configuración de Bienvenidas</h3><p>Project Zerox / Welcome</p></div></div><p class="module-description">Configura el canal de bienvenida, personaliza el contenido del mensaje, utiliza variables dinámicas y prueba el resultado.</p><div class="info-box"><strong>Integración pendiente.</strong><br>Utiliza <strong>/welcome edit</strong> en Discord para administrar este módulo.</div></div>
+<div class="module-card">
+<div class="module-header"><div class="module-icon">◇</div><div><h3>Configuración de Bienvenidas</h3><p>Project Zerox / Welcome</p></div></div>
+<p class="module-description">Configura el canal de bienvenida, personaliza el contenido del mensaje, utiliza variables dinámicas y prueba el resultado.</p>
+<div class="info-box"><strong>Integración pendiente.</strong><br>Utiliza <strong>/welcome edit</strong> en Discord para administrar este módulo.</div>
+</div>
 </section>
-</main></div>
-<footer>PROJECT ZEROX · SERVER DASHBOARD</footer>
-<script>
-const API={serverInfo:"/api/server-info",authMe:"/api/auth/me",ticketConfig:"/api/tickets/config"};
-const params=new URLSearchParams(location.search),serverId=params.get("id");
-const pageData={general:{title:"General.",description:"Información y estadísticas de tu servidor."},tickets:{title:"Tickets.",description:"Administra el sistema de soporte de tu comunidad."},boosttracker:{title:"Boost Tracker.",description:"Gestiona las notificaciones de mejoras del servidor."},welcome:{title:"Bienvenidas.",description:"Personaliza la experiencia de entrada de los miembros."}};
-const setText=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value??"—";};
+</main>
+</div>
 
-document.querySelectorAll(".nav-item").forEach(button=>button.addEventListener("click",()=>{
-const section=button.dataset.section;if(!pageData[section])return;
-document.querySelectorAll(".nav-item").forEach(item=>item.classList.remove("active"));button.classList.add("active");
-document.querySelectorAll(".page-section").forEach(item=>item.classList.remove("visible"));
-document.getElementById("section-"+section).classList.add("visible");
-setText("pageTitle",pageData[section].title);setText("pageDescription",pageData[section].description);
-document.getElementById("sidebar").classList.remove("open");if(section==="tickets")loadTickets();
-}));
-document.getElementById("mobileMenu").addEventListener("click",()=>document.getElementById("sidebar").classList.toggle("open"));
+<footer>PROJECT ZEROX · SERVER DASHBOARD</footer>
+
+<script>
+const API={
+ serverInfo:"/api/server-info",
+ authMe:"/api/auth/me",
+ ticketConfig:"/api/tickets/config"
+};
+
+const params=new URLSearchParams(location.search);
+const serverId=params.get("id");
+
+const pageData={
+ general:{title:"General.",description:"Información y estadísticas de tu servidor."},
+ tickets:{title:"Tickets.",description:"Administra el sistema de soporte de tu comunidad."},
+ boosttracker:{title:"Boost Tracker.",description:"Gestiona las notificaciones de mejoras del servidor."},
+ welcome:{title:"Bienvenidas.",description:"Personaliza la experiencia de entrada de los miembros."}
+};
+
+const setText=(id,value)=>{
+ const el=document.getElementById(id);
+ if(el)el.textContent=value??"—";
+};
+
+document.querySelectorAll(".nav-item").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const section=button.dataset.section;
+  if(!pageData[section])return;
+
+  document.querySelectorAll(".nav-item").forEach(item=>item.classList.remove("active"));
+  button.classList.add("active");
+
+  document.querySelectorAll(".page-section").forEach(item=>item.classList.remove("visible"));
+  document.getElementById("section-"+section).classList.add("visible");
+
+  setText("pageTitle",pageData[section].title);
+  setText("pageDescription",pageData[section].description);
+
+  document.getElementById("sidebar").classList.remove("open");
+
+  if(section==="tickets")loadTickets();
+ });
+});
+
+document.getElementById("mobileMenu").addEventListener("click",()=>{
+ document.getElementById("sidebar").classList.toggle("open");
+});
 
 function setServerIcon(url){
-const pairs=[["mainServerIcon","mainServerFallback"],["sidebarServerIcon","sidebarServerFallback"]];
-pairs.forEach(([imageId,fallbackId])=>{const image=document.getElementById(imageId),fallback=document.getElementById(fallbackId);
-image.onerror=()=>{image.style.display="none";fallback.style.display="grid";};
-if(!url){image.removeAttribute("src");image.style.display="none";fallback.style.display="grid";return;}
-fallback.style.display="none";image.style.display="block";image.src=url;
-});
-}
-function iconUrl(server){if(!server?.id||!server.icon)return null;const hash=String(server.icon);if(/^https?:\/\//i.test(hash))return hash;return `https://cdn.discordapp.com/icons/${server.id}/${hash}.${hash.startsWith("a_")?"gif":"png"}?size=256`;}
-async function loadServer(){
-const loading=document.getElementById("generalLoading"),content=document.getElementById("generalContent"),error=document.getElementById("generalError");
-loading.style.display="block";content.style.display="none";error.style.display="none";
-if(!serverId||!/^\d{17,20}$/.test(serverId)){showError("El ID del servidor no es válido. Vuelve a Mis servidores y selecciónalo otra vez.");return;}
-try{
-const response=await fetch(API.serverInfo+"?id="+encodeURIComponent(serverId),{credentials:"include",headers:{Accept:"application/json"}});
-const data=await response.json();if(!response.ok||!data.success)throw new Error(data.error||"No se pudo obtener la información del servidor.");
-const server=data.server||data.guild;if(!server)throw new Error("La API no devolvió los datos del servidor.");
-setText("sidebarServerName",server.name||"Servidor");setText("mainServerName",server.name||"Servidor");setText("mainServerId","ID: "+(server.id||serverId));
-["memberCount","channelCount","roleCount"].forEach((id,i)=>{const key=["memberCount","channelCount","roleCount"][i];const value=server[key];setText(id,typeof value==="number"?value.toLocaleString("es-CL"):"—");});
-setServerIcon(iconUrl({id:server.id||serverId,icon:server.icon}));loading.style.display="none";content.style.display="block";
-}catch(err){showError(err.message||"Ocurrió un error al cargar el servidor.");console.error(err);}
-}
-function showError(message){document.getElementById("generalLoading").style.display="none";document.getElementById("generalContent").style.display="none";document.getElementById("generalError").style.display="block";setText("generalErrorMessage",message);}
-async function loadUser(){
-try{const response=await fetch(API.authMe,{credentials:"include",headers:{Accept:"application/json"}});if(!response.ok)return;const data=await response.json();if(!data.authenticated||!data.user)return;
-const user=data.user,avatar=document.getElementById("userAvatar");avatar.onerror=()=>{avatar.onerror=null;avatar.src="https://cdn.discordapp.com/embed/avatars/0.png";};
-avatar.src=user.avatar||"https://cdn.discordapp.com/embed/avatars/0.png";setText("userName",user.global_name||user.username||"Usuario");document.getElementById("userInfo").style.display="flex";
-}catch(error){console.error("Error cargando sesión:",error);}
+ const pairs=[
+  ["mainServerIcon","mainServerFallback"],
+  ["sidebarServerIcon","sidebarServerFallback"]
+ ];
+
+ pairs.forEach(([imageId,fallbackId])=>{
+  const image=document.getElementById(imageId);
+  const fallback=document.getElementById(fallbackId);
+
+  image.onerror=()=>{
+   image.style.display="none";
+   fallback.style.display="grid";
+  };
+
+  if(!url){
+   image.removeAttribute("src");
+   image.style.display="none";
+   fallback.style.display="grid";
+   return;
+  }
+
+  fallback.style.display="none";
+  image.style.display="block";
+  image.src=url;
+ });
 }
 
-const ticketDefaults={enabled:true,channelId:"",supportRoles:[],publicTitle:"📩 Sistema de Tickets",publicDesc:"Para crear un ticket y hablar con soporte, presiona el botón de abajo.",welcomeTitle:"Bienvenido/a a tu Ticket",welcomeDesc:"El equipo de soporte te atenderá en breve.",welcomeOutside:"Hola {mention}, gracias por abrir un ticket.",color:"#5865F2",buttonText:"Crear Ticket",buttonStyle:"Primary",buttonEmoji:"📩"};
-let ticketServerData={channels:[],roles:[]},ticketLoadSequence=0;
-function ticketMessage(message,type=""){const el=document.getElementById("ticketMessage");el.textContent=message;el.className="ticket-message "+type;}
+function iconUrl(server){
+ if(!server?.id||!server.icon)return null;
+
+ const hash=String(server.icon);
+
+ if(/^https?:\/\//i.test(hash))return hash;
+
+ return `https://cdn.discordapp.com/icons/${server.id}/${hash}.${hash.startsWith("a_")?"gif":"png"}?size=256`;
+}
+
+async function loadServer(){
+ const loading=document.getElementById("generalLoading");
+ const content=document.getElementById("generalContent");
+ const error=document.getElementById("generalError");
+
+ loading.style.display="block";
+ content.style.display="none";
+ error.style.display="none";
+
+ if(!serverId||!/^\d{17,20}$/.test(serverId)){
+  showError("El ID del servidor no es válido. Vuelve a Mis servidores y selecciónalo otra vez.");
+  return;
+ }
+
+ try{
+  const response=await fetch(API.serverInfo+"?id="+encodeURIComponent(serverId),{
+   credentials:"include",
+   headers:{Accept:"application/json"}
+  });
+
+  const data=await response.json();
+
+  if(!response.ok||!data.success){
+   throw new Error(data.error||"No se pudo obtener la información del servidor.");
+  }
+
+  const server=data.server||data.guild;
+
+  if(!server)throw new Error("La API no devolvió los datos del servidor.");
+
+  setText("sidebarServerName",server.name||"Servidor");
+  setText("mainServerName",server.name||"Servidor");
+  setText("mainServerId","ID: "+(server.id||serverId));
+
+  ["memberCount","channelCount","roleCount"].forEach((id,i)=>{
+   const key=["memberCount","channelCount","roleCount"][i];
+   const value=server[key];
+   setText(id,typeof value==="number"?value.toLocaleString("es-CL"):"—");
+  });
+
+  setServerIcon(iconUrl({id:server.id||serverId,icon:server.icon}));
+
+  loading.style.display="none";
+  content.style.display="block";
+
+ }catch(err){
+  showError(err.message||"Ocurrió un error al cargar el servidor.");
+  console.error("[Zerox] Error cargando servidor:",err);
+ }
+}
+
+function showError(message){
+ document.getElementById("generalLoading").style.display="none";
+ document.getElementById("generalContent").style.display="none";
+ document.getElementById("generalError").style.display="block";
+ setText("generalErrorMessage",message);
+}
+
+async function loadUser(){
+ try{
+  const response=await fetch(API.authMe,{
+   credentials:"include",
+   headers:{Accept:"application/json"}
+  });
+
+  if(!response.ok)return;
+
+  const data=await response.json();
+
+  if(!data.authenticated||!data.user)return;
+
+  const user=data.user;
+  const avatar=document.getElementById("userAvatar");
+
+  avatar.onerror=()=>{
+   avatar.onerror=null;
+   avatar.src="https://cdn.discordapp.com/embed/avatars/0.png";
+  };
+
+  avatar.src=user.avatar||"https://cdn.discordapp.com/embed/avatars/0.png";
+
+  setText("userName",user.global_name||user.username||"Usuario");
+  document.getElementById("userInfo").style.display="flex";
+
+ }catch(error){
+  console.error("Error cargando sesión:",error);
+ }
+}
+
+const ticketDefaults={
+ enabled:true,
+ channelId:"",
+ supportRoles:[],
+ publicTitle:"📩 Sistema de Tickets",
+ publicDesc:"Para crear un ticket y hablar con soporte, presiona el botón de abajo.",
+ welcomeTitle:"Bienvenido/a a tu Ticket",
+ welcomeDesc:"El equipo de soporte te atenderá en breve.",
+ welcomeOutside:"Hola {mention}, gracias por abrir un ticket.",
+ color:"#5865F2",
+ buttonText:"Crear Ticket",
+ buttonStyle:"Primary",
+ buttonEmoji:"📩"
+};
+
+let ticketServerData={channels:[],roles:[]};
+let ticketLoadSequence=0;
+
+function ticketMessage(message,type=""){
+ const el=document.getElementById("ticketMessage");
+ el.textContent=message;
+ el.className="ticket-message "+type;
+}
+
 function renderTicketRoles(selected=[]){
-const container=document.getElementById("ticketRoles");container.innerHTML="";
-const roles=ticketServerData.roles.filter(role=>!role.managed&&role.name!=="@everyone");
-if(!roles.length){container.textContent="No hay roles disponibles.";return;}
-roles.forEach(role=>{const label=document.createElement("label");label.className="ticket-role";const input=document.createElement("input");input.type="checkbox";input.value=role.id;input.checked=selected.includes(role.id);const name=document.createElement("span");name.textContent=role.name;label.append(input,name);container.appendChild(label);});
+ const container=document.getElementById("ticketRoles");
+ container.innerHTML="";
+
+ const roles=ticketServerData.roles.filter(role=>
+  !role.managed&&role.name!=="@everyone"
+ );
+
+ if(!roles.length){
+  container.textContent="No hay roles disponibles.";
+  return;
+ }
+
+ roles.forEach(role=>{
+  const label=document.createElement("label");
+  label.className="ticket-role";
+
+  const input=document.createElement("input");
+  input.type="checkbox";
+  input.value=role.id;
+  input.checked=selected.includes(role.id);
+
+  const name=document.createElement("span");
+  name.textContent=role.name;
+
+  label.append(input,name);
+  container.appendChild(label);
+ });
 }
+
 function renderTicketChannels(selected=""){
-const select=document.getElementById("ticketChannel");select.innerHTML="";
-const empty=document.createElement("option");empty.value="";empty.textContent="Selecciona un canal";select.appendChild(empty);
-ticketServerData.channels.filter(channel=>channel.type===0).forEach(channel=>{const option=document.createElement("option");option.value=channel.id;option.textContent="#"+channel.name;select.appendChild(option);});
-select.value=selected;
+ const select=document.getElementById("ticketChannel");
+ select.innerHTML="";
+
+ const empty=document.createElement("option");
+ empty.value="";
+ empty.textContent="Selecciona un canal";
+ select.appendChild(empty);
+
+ ticketServerData.channels
+  .filter(channel=>channel.type===0)
+  .forEach(channel=>{
+   const option=document.createElement("option");
+   option.value=channel.id;
+   option.textContent="#"+channel.name;
+   select.appendChild(option);
+  });
+
+ select.value=selected;
 }
+
 function fillTicketForm(config){
-const data={...ticketDefaults,...(config||{})};
-document.getElementById("ticketEnabled").value=String(data.enabled!==false);
-document.getElementById("ticketChannel").value=data.channelId||"";
-document.getElementById("ticketPublicTitle").value=data.publicTitle||"";
-document.getElementById("ticketPublicDesc").value=data.publicDesc||"";
-document.getElementById("ticketWelcomeTitle").value=data.welcomeTitle||"";
-document.getElementById("ticketWelcomeDesc").value=data.welcomeDesc||"";
-document.getElementById("ticketWelcomeOutside").value=data.welcomeOutside||"";
-document.getElementById("ticketColor").value=/^#[0-9a-fA-F]{6}$/.test(data.color||"")?data.color:"#5865F2";
-document.getElementById("ticketButtonText").value=data.buttonText||"Crear Ticket";
-document.getElementById("ticketButtonEmoji").value=data.buttonEmoji||"";
-document.getElementById("ticketButtonStyle").value=["Primary","Secondary","Success"].includes(data.buttonStyle)?data.buttonStyle:"Primary";
-renderTicketRoles(Array.isArray(data.supportRoles)?data.supportRoles:[]);updateTicketPreview();
+ const data={...ticketDefaults,...(config||{})};
+
+ document.getElementById("ticketEnabled").value=String(data.enabled!==false);
+ document.getElementById("ticketChannel").value=data.channelId||"";
+ document.getElementById("ticketPublicTitle").value=data.publicTitle||"";
+ document.getElementById("ticketPublicDesc").value=data.publicDesc||"";
+ document.getElementById("ticketWelcomeTitle").value=data.welcomeTitle||"";
+ document.getElementById("ticketWelcomeDesc").value=data.welcomeDesc||"";
+ document.getElementById("ticketWelcomeOutside").value=data.welcomeOutside||"";
+
+ document.getElementById("ticketColor").value=
+  /^#[0-9a-fA-F]{6}$/.test(data.color||"")?data.color:"#5865F2";
+
+ document.getElementById("ticketButtonText").value=data.buttonText||"Crear Ticket";
+ document.getElementById("ticketButtonEmoji").value=data.buttonEmoji||"";
+
+ document.getElementById("ticketButtonStyle").value=
+  ["Primary","Secondary","Success"].includes(data.buttonStyle)?data.buttonStyle:"Primary";
+
+ renderTicketRoles(Array.isArray(data.supportRoles)?data.supportRoles:[]);
+ updateTicketPreview();
 }
+
 function collectTicketConfig(){
-const supportRoles=[...document.querySelectorAll("#ticketRoles input:checked")].map(input=>input.value);
-return{...ticketDefaults,enabled:document.getElementById("ticketEnabled").value==="true",channelId:document.getElementById("ticketChannel").value,supportRoles,publicTitle:document.getElementById("ticketPublicTitle").value,publicDesc:document.getElementById("ticketPublicDesc").value,welcomeTitle:document.getElementById("ticketWelcomeTitle").value,welcomeDesc:document.getElementById("ticketWelcomeDesc").value,welcomeOutside:document.getElementById("ticketWelcomeOutside").value,color:document.getElementById("ticketColor").value,buttonText:document.getElementById("ticketButtonText").value,buttonStyle:document.getElementById("ticketButtonStyle").value,buttonEmoji:document.getElementById("ticketButtonEmoji").value};
+ const supportRoles=[
+  ...document.querySelectorAll("#ticketRoles input:checked")
+ ].map(input=>input.value);
+
+ return{
+  ...ticketDefaults,
+  enabled:document.getElementById("ticketEnabled").value==="true",
+  channelId:document.getElementById("ticketChannel").value,
+  supportRoles,
+  publicTitle:document.getElementById("ticketPublicTitle").value,
+  publicDesc:document.getElementById("ticketPublicDesc").value,
+  welcomeTitle:document.getElementById("ticketWelcomeTitle").value,
+  welcomeDesc:document.getElementById("ticketWelcomeDesc").value,
+  welcomeOutside:document.getElementById("ticketWelcomeOutside").value,
+  color:document.getElementById("ticketColor").value,
+  buttonText:document.getElementById("ticketButtonText").value,
+  buttonStyle:document.getElementById("ticketButtonStyle").value,
+  buttonEmoji:document.getElementById("ticketButtonEmoji").value
+ };
 }
+
 function updateTicketPreview(){
-const title=document.getElementById("ticketPublicTitle").value,description=document.getElementById("ticketPublicDesc").value,button=document.getElementById("ticketButtonText").value,emoji=document.getElementById("ticketButtonEmoji").value,color=document.getElementById("ticketColor").value;
-setText("previewTitle",title||"Sistema de Tickets");setText("previewDescription",description||"Descripción del sistema de tickets.");setText("previewButton",(emoji?emoji+" ":"")+(button||"Crear Ticket"));document.getElementById("ticketPreview").style.borderLeftColor=color;
+ const title=document.getElementById("ticketPublicTitle").value;
+ const description=document.getElementById("ticketPublicDesc").value;
+ const button=document.getElementById("ticketButtonText").value;
+ const emoji=document.getElementById("ticketButtonEmoji").value;
+ const color=document.getElementById("ticketColor").value;
+
+ setText("previewTitle",title||"Sistema de Tickets");
+ setText("previewDescription",description||"Descripción del sistema de tickets.");
+ setText("previewButton",(emoji?emoji+" ":"")+(button||"Crear Ticket"));
+
+ document.getElementById("ticketPreview").style.borderLeftColor=color;
 }
+
 async function loadTickets(){
-if(!serverId){ticketMessage("No se encontró el ID del servidor.","error");return;}
-const sequence=++ticketLoadSequence;ticketMessage("Cargando canales, roles y configuración...");
-try{
-const serverResponse=await fetch(API.serverInfo+"?id="+encodeURIComponent(serverId),{credentials:"include",headers:{Accept:"application/json"}});
-const serverData=await serverResponse.json();if(!serverResponse.ok||!serverData.success)throw new Error(serverData.error||"No se pudieron cargar los datos del servidor.");
-ticketServerData.channels=Array.isArray(serverData.channels)?serverData.channels:[];ticketServerData.roles=Array.isArray(serverData.roles)?serverData.roles:[];
-const configResponse=await fetch(API.ticketConfig+"?guildId="+encodeURIComponent(serverId),{credentials:"include",headers:{Accept:"application/json"}});
-const configData=await configResponse.json();if(!configResponse.ok||!configData.success)throw new Error(configData.error||"No se pudo cargar la configuración.");
-if(sequence!==ticketLoadSequence)return;renderTicketChannels(configData.config?.channelId||"");fillTicketForm(configData.config||ticketDefaults);
-ticketMessage(configData.config?"Configuración cargada correctamente desde Supabase.":"No hay configuración guardada desde el dashboard. Los valores iniciales son una referencia.");
-}catch(error){if(sequence!==ticketLoadSequence)return;console.error("Error cargando tickets:",error);ticketMessage(error.message||"Error al cargar tickets.","error");}
+ if(!serverId){
+  ticketMessage("No se encontró el ID del servidor.","error");
+  return;
+ }
+
+ const sequence=++ticketLoadSequence;
+
+ ticketMessage("Cargando canales, roles y configuración...");
+
+ try{
+  // PRIMERA CONSULTA: CANALES Y ROLES DE DISCORD
+  const serverUrl=API.serverInfo+"?id="+encodeURIComponent(serverId);
+
+  console.log("[Zerox] Consultando servidor:",serverUrl);
+
+  const serverResponse=await fetch(serverUrl,{
+   credentials:"include",
+   headers:{Accept:"application/json"}
+  });
+
+  const serverData=await serverResponse.json();
+
+  console.log("[Zerox] Server info:",serverResponse.status,serverData);
+
+  if(!serverResponse.ok||!serverData.success){
+   throw new Error(
+    (serverData.error||"No se pudieron cargar los datos del servidor.")+
+    " | HTTP "+serverResponse.status
+   );
+  }
+
+  if(sequence!==ticketLoadSequence)return;
+
+  ticketServerData.channels=Array.isArray(serverData.channels)?serverData.channels:[];
+  ticketServerData.roles=Array.isArray(serverData.roles)?serverData.roles:[];
+
+  // Mostrar canales y roles inmediatamente.
+  renderTicketChannels("");
+  renderTicketRoles([]);
+
+  // SEGUNDA CONSULTA: CONFIGURACIÓN DE SUPABASE
+  const configUrl=API.ticketConfig+"?guildId="+encodeURIComponent(serverId);
+
+  console.log("[Zerox] Consultando configuración:",configUrl);
+  console.log("[Zerox] Guild ID:",serverId);
+
+  const configResponse=await fetch(configUrl,{
+   credentials:"include",
+   headers:{Accept:"application/json"}
+  });
+
+  const configData=await configResponse.json();
+
+  console.log("[Zerox] Config response:",configResponse.status,configData);
+
+  if(!configResponse.ok||!configData.success){
+   const details=[
+    configData.error||"No se pudo cargar la configuración.",
+    "HTTP "+configResponse.status,
+    configData.discordStatus?"Discord HTTP "+configData.discordStatus:null
+   ].filter(Boolean).join(" | ");
+
+   throw new Error(details);
+  }
+
+  if(sequence!==ticketLoadSequence)return;
+
+  renderTicketChannels(configData.config?.channelId||"");
+  fillTicketForm(configData.config||ticketDefaults);
+
+  ticketMessage(
+   configData.config
+    ?"Configuración cargada correctamente desde Supabase."
+    :"No hay configuración guardada desde el dashboard. Los valores iniciales son una referencia."
+  );
+
+ }catch(error){
+  if(sequence!==ticketLoadSequence)return;
+
+  console.error("[Zerox] Error cargando tickets:",error);
+
+  ticketMessage(error.message||"Error al cargar tickets.","error");
+ }
 }
+
 async function saveTickets(){
-const button=document.getElementById("saveTicketsButton");button.disabled=true;button.textContent="Guardando...";
-try{
-const config=collectTicketConfig();const response=await fetch(API.ticketConfig,{method:"PUT",credentials:"include",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({guildId:serverId,config})});
-const data=await response.json();if(!response.ok||!data.success)throw new Error(data.error||"No se pudo guardar la configuración.");
-ticketMessage("Configuración guardada correctamente en Supabase.");
-}catch(error){console.error("Error guardando tickets:",error);ticketMessage(error.message||"Error al guardar.","error");}
-finally{button.disabled=false;button.textContent="Guardar configuración";}
+ const button=document.getElementById("saveTicketsButton");
+
+ button.disabled=true;
+ button.textContent="Guardando...";
+
+ try{
+  const config=collectTicketConfig();
+
+  const response=await fetch(API.ticketConfig,{
+   method:"PUT",
+   credentials:"include",
+   headers:{
+    "Content-Type":"application/json",
+    Accept:"application/json"
+   },
+   body:JSON.stringify({guildId:serverId,config})
+  });
+
+  const data=await response.json();
+
+  if(!response.ok||!data.success){
+   throw new Error(
+    (data.error||"No se pudo guardar la configuración.")+
+    " | HTTP "+response.status
+   );
+  }
+
+  ticketMessage("Configuración guardada correctamente en Supabase.");
+
+ }catch(error){
+  console.error("[Zerox] Error guardando tickets:",error);
+  ticketMessage(error.message||"Error al guardar.","error");
+
+ }finally{
+  button.disabled=false;
+  button.textContent="Guardar configuración";
+ }
 }
-["ticketPublicTitle","ticketPublicDesc","ticketButtonText","ticketButtonEmoji","ticketColor"].forEach(id=>document.getElementById(id).addEventListener("input",updateTicketPreview));
+
+[
+ "ticketPublicTitle",
+ "ticketPublicDesc",
+ "ticketButtonText",
+ "ticketButtonEmoji",
+ "ticketColor"
+].forEach(id=>{
+ document.getElementById(id).addEventListener("input",updateTicketPreview);
+});
+
 document.getElementById("saveTicketsButton").addEventListener("click",saveTickets);
 document.getElementById("reloadTicketsButton").addEventListener("click",loadTickets);
 document.getElementById("retryButton").addEventListener("click",loadServer);
-loadUser();loadServer();
+
+loadUser();
+loadServer();
 </script>
 </body>
 </html>
