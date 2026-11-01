@@ -788,7 +788,7 @@ footer p {
         <div class="user-profile" id="userProfile">
             <img class="user-avatar" id="userAvatar" src="" alt="Avatar de Discord">
             <span class="user-name" id="userName"></span>
-            <button class="logout-btn" id="logoutButton" type="button">Salir</button>
+            <button class="logout-btn" id="logoutButton" type="button" data-i18n="logoutButton">Cerrar Sesión</button>
         </div>
 
         <a href="https://discord.com/oauth2/authorize?client_id=1534310875962540212&scope=bot%20applications.commands&permissions=0"
@@ -999,6 +999,7 @@ const translations = {
         navSupport: "Soporte",
         navAdd: "Añadir a Discord",
         loginButton: "Iniciar sesión",
+        logoutButton: "Cerrar Sesión",
         heroBadge: "✦ BOT DE DISCORD MULTIFUNCIONAL",
         heroTitle: 'Tu servidor.<br>Tu <span>Zerox.</span>',
         heroDescription: "Lleva tu comunidad al siguiente nivel con Project Zerox. Herramientas, sistemas y funciones diseñadas para mejorar la experiencia de tu servidor.",
@@ -1062,6 +1063,7 @@ const translations = {
         navSupport: "Support",
         navAdd: "Add to Discord",
         loginButton: "Login",
+        logoutButton: "Log out",
         heroBadge: "✦ MULTIPURPOSE DISCORD BOT",
         heroTitle: 'Your server.<br>Your <span>Zerox.</span>',
         heroDescription: "Take your community to the next level with Project Zerox. Tools, systems and features designed to improve your server experience.",
@@ -1125,6 +1127,7 @@ const translations = {
         navSupport: "Suporte",
         navAdd: "Adicionar ao Discord",
         loginButton: "Entrar",
+        logoutButton: "Sair",
         heroBadge: "✦ BOT MULTIFUNCIONAL DO DISCORD",
         heroTitle: 'Seu servidor.<br>Seu <span>Zerox.</span>',
         heroDescription: "Leve sua comunidade para o próximo nível com o Project Zerox. Ferramentas, sistemas e recursos criados para melhorar a experiência do seu servidor.",
@@ -1342,6 +1345,7 @@ async function loadDiscordUser() {
 
 document.getElementById("logoutButton").addEventListener("click", async () => {
     const logoutButton = document.getElementById("logoutButton");
+    const language = document.getElementById("languageSelect").value;
 
     logoutButton.disabled = true;
     logoutButton.textContent = "...";
@@ -1349,20 +1353,21 @@ document.getElementById("logoutButton").addEventListener("click", async () => {
     try {
         const response = await fetch("/api/auth/logout", {
             method: "POST",
-            credentials: "same-origin"
+            credentials: "same-origin",
+            cache: "no-store"
         });
 
         if (response.ok) {
             window.location.reload();
         } else {
             logoutButton.disabled = false;
-            logoutButton.textContent = "Salir";
+            logoutButton.textContent = translations[language].logoutButton;
             console.error("No se pudo cerrar la sesión.");
         }
 
     } catch (error) {
         logoutButton.disabled = false;
-        logoutButton.textContent = "Salir";
+        logoutButton.textContent = translations[language].logoutButton;
         console.error("Error al cerrar sesión:", error);
     }
 });
