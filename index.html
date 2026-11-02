@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,19 +44,44 @@ button, select {
     font: inherit;
 }
 
+/* STARFIELD */
+
 #starfield {
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
+}
+
+/* MOUSE GLOW & TRAIL */
+
+#cursorTrail {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* CONTENT LAYERS */
+
+main,
+footer {
+    position: relative;
+    z-index: 2;
+}
+
+.navbar {
+    position: fixed;
+    z-index: 1000;
 }
 
 /* NAVBAR */
 
 .navbar {
-    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -67,7 +93,6 @@ button, select {
     background: rgba(0,0,0,.85);
     backdrop-filter: blur(18px);
     border-bottom: 1px solid var(--border);
-    z-index: 1000;
 }
 
 .logo {
@@ -841,12 +866,31 @@ footer p {
         justify-content: center;
     }
 }
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+    }
+}
+
+/* TOUCH DEVICES */
+
+@media (hover: none), (pointer: coarse) {
+    #cursorTrail {
+        display: none;
+    }
+}
 </style>
 </head>
 
 <body>
 
 <canvas id="starfield"></canvas>
+<canvas id="cursorTrail"></canvas>
 
 <header class="navbar">
     <a href="#inicio" class="logo">PROJECT <span>ZEROX</span></a>
@@ -931,7 +975,6 @@ footer p {
         </div>
     </div>
 
-    <!-- BOT AVATAR -->
     <div class="hero-preview" aria-label="Avatar de Project Zerox">
 
         <span class="avatar-decoration heart-one" aria-hidden="true">♡</span>
@@ -1430,8 +1473,16 @@ let stars = [];
 let shootingStars = [];
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     createStars();
 }
 
@@ -1442,8 +1493,8 @@ function createStars() {
 
     for (let i = 0; i < count; i++) {
         stars.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
             size: Math.random() * 1.7 + .3,
             speed: Math.random() * .45 + .12,
             opacity: Math.random() * .7 + .2
@@ -1453,8 +1504,8 @@ function createStars() {
 
 function createShootingStar() {
     shootingStars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height * .5,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight * .5,
         length: Math.random() * 100 + 50,
         speed: Math.random() * 7 + 5,
         opacity: 1
@@ -1462,7 +1513,7 @@ function createShootingStar() {
 }
 
 function animateStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     const glow = getComputedStyle(document.documentElement)
         .getPropertyValue("--glow").trim() || "#E32636";
@@ -1471,8 +1522,8 @@ function animateStars() {
         star.y -= star.speed;
 
         if (star.y < 0) {
-            star.y = canvas.height;
-            star.x = Math.random() * canvas.width;
+            star.y = window.innerHeight;
+            star.x = Math.random() * window.innerWidth;
         }
 
         ctx.globalAlpha = star.opacity;
@@ -1526,6 +1577,175 @@ setTheme("darkred");
 setInterval(() => {
     if (Math.random() > .45) createShootingStar();
 }, 2200);
+
+/* MOUSE GLOW & PARTICLE TRAIL */
+
+const trailCanvas = document.getElementById("cursorTrail");
+const trailCtx = trailCanvas.getContext("2d");
+
+let mouseX = -1000;
+let mouseY = -1000;
+let cursorVisible = false;
+
+let trailParticles = [];
+
+function resizeTrailCanvas() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    trailCanvas.width = window.innerWidth * dpr;
+    trailCanvas.height = window.innerHeight * dpr;
+
+    trailCanvas.style.width = window.innerWidth + "px";
+    trailCanvas.style.height = window.innerHeight + "px";
+
+    trailCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function getCurrentGlow() {
+    return getComputedStyle(document.documentElement)
+        .getPropertyValue("--glow")
+        .trim() || "#E32636";
+}
+
+window.addEventListener("mousemove", event => {
+    const previousX = mouseX;
+    const previousY = mouseY;
+
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+    cursorVisible = true;
+
+    // Distribuir partículas a lo largo del movimiento
+    const distance = Math.hypot(
+        mouseX - previousX,
+        mouseY - previousY
+    );
+
+    const particleCount = Math.min(
+        5,
+        Math.max(1, Math.ceil(distance / 12))
+    );
+
+    for (let i = 0; i < particleCount; i++) {
+        const progress = (i + 1) / particleCount;
+
+        trailParticles.push({
+            x: previousX + (mouseX - previousX) * progress,
+            y: previousY + (mouseY - previousY) * progress,
+            size: Math.random() * 2.5 + 1,
+            opacity: Math.random() * .45 + .45,
+            speedX: (Math.random() - .5) * 1.2,
+            speedY: (Math.random() - .5) * 1.2,
+            life: 1
+        });
+    }
+
+    if (trailParticles.length > 180) {
+        trailParticles.splice(0, trailParticles.length - 180);
+    }
+});
+
+document.addEventListener("mouseleave", () => {
+    cursorVisible = false;
+});
+
+document.addEventListener("mouseenter", () => {
+    cursorVisible = true;
+});
+
+window.addEventListener("blur", () => {
+    cursorVisible = false;
+});
+
+window.addEventListener("focus", () => {
+    cursorVisible = true;
+});
+
+function animateCursorTrail() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    trailCtx.clearRect(0, 0, width, height);
+
+    const glow = getCurrentGlow();
+
+    // Brillo principal alrededor del cursor
+    if (cursorVisible && mouseX >= 0 && mouseY >= 0) {
+        const gradient = trailCtx.createRadialGradient(
+            mouseX,
+            mouseY,
+            0,
+            mouseX,
+            mouseY,
+            125
+        );
+
+        gradient.addColorStop(0, glow + "35");
+        gradient.addColorStop(.35, glow + "18");
+        gradient.addColorStop(1, glow + "00");
+
+        trailCtx.globalAlpha = 1;
+        trailCtx.fillStyle = gradient;
+
+        trailCtx.beginPath();
+        trailCtx.arc(mouseX, mouseY, 125, 0, Math.PI * 2);
+        trailCtx.fill();
+
+        // Pequeño núcleo de luz
+        trailCtx.shadowBlur = 22;
+        trailCtx.shadowColor = glow;
+        trailCtx.fillStyle = glow;
+
+        trailCtx.globalAlpha = .12;
+
+        trailCtx.beginPath();
+        trailCtx.arc(mouseX, mouseY, 13, 0, Math.PI * 2);
+        trailCtx.fill();
+    }
+
+    // Partículas que desaparecen progresivamente
+    for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const particle = trailParticles[i];
+
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+
+        particle.life -= .018;
+        particle.opacity *= .97;
+
+        if (particle.life <= 0) {
+            trailParticles.splice(i, 1);
+            continue;
+        }
+
+        trailCtx.globalAlpha = particle.opacity * particle.life;
+        trailCtx.fillStyle = glow;
+        trailCtx.shadowBlur = 12;
+        trailCtx.shadowColor = glow;
+
+        trailCtx.beginPath();
+
+        trailCtx.arc(
+            particle.x,
+            particle.y,
+            particle.size * particle.life,
+            0,
+            Math.PI * 2
+        );
+
+        trailCtx.fill();
+    }
+
+    trailCtx.globalAlpha = 1;
+    trailCtx.shadowBlur = 0;
+
+    requestAnimationFrame(animateCursorTrail);
+}
+
+resizeTrailCanvas();
+animateCursorTrail();
+
+window.addEventListener("resize", resizeTrailCanvas);
 
 /* DISCORD AUTHENTICATION */
 
