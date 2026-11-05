@@ -61,27 +61,6 @@ main{flex:1;min-width:0;padding:48px clamp(20px,5vw,65px);max-width:1500px;margi
 .button.secondary{background:transparent;color:#888}
 .loading-state,.error-state{padding:35px 20px;text-align:center;background:var(--panel);border:1px solid var(--border);border-radius:9px;color:#888;font-size:12px;line-height:1.8}
 .error-state h3{color:#ddd;margin-bottom:8px}
-.ticket-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-.ticket-field{display:flex;flex-direction:column;gap:8px;min-width:0}
-.ticket-field.full{grid-column:1/-1}
-.ticket-field label{color:#aaa;font-size:11px}
-.ticket-input,.ticket-select,.ticket-textarea{width:100%;background:#050505;border:1px solid #303030;border-radius:6px;padding:12px;color:#eee;font:inherit;font-size:12px;outline:none}
-.ticket-input:focus,.ticket-select:focus,.ticket-textarea:focus{border-color:#777}
-.ticket-textarea{resize:vertical;min-height:85px;line-height:1.6}
-.ticket-select option{background:#090909;color:white}
-.ticket-color{width:100%;height:42px;background:#050505;border:1px solid #303030;border-radius:6px;padding:4px}
-.ticket-roles{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#050505;border:1px solid #303030;border-radius:6px;max-height:180px;overflow:auto}
-.ticket-role{display:flex;align-items:center;gap:7px;background:#111;border:1px solid #292929;padding:8px 10px;border-radius:5px;color:#bbb;font-size:11px}
-.ticket-role input{accent-color:#aaa}
-.ticket-preview{background:#080808;border:1px solid #303030;border-radius:8px;padding:18px}
-.ticket-preview-label{color:#666;font-size:9px;letter-spacing:2px;margin-bottom:13px}
-.preview-embed{border-left:3px solid #5865F2;background:#101010;padding:15px;border-radius:4px}
-.preview-embed h4{font-size:14px;margin-bottom:9px}
-.preview-embed p{font-size:11px;color:#aaa;line-height:1.7;white-space:pre-wrap}
-.preview-button{display:inline-block;margin-top:13px;background:#303030;border:1px solid #555;padding:9px 13px;border-radius:5px;font-size:11px;color:white}
-.ticket-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.ticket-message{font-size:11px;color:#999;margin-top:13px;line-height:1.7}
-.ticket-message.error{color:#ff7777}
 footer{border-top:1px solid var(--border);padding:25px;text-align:center;color:#555;font-size:10px;letter-spacing:1px}
 @media(max-width:1000px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){
@@ -92,7 +71,6 @@ header{padding:0 17px;height:65px}.logo{font-size:14px}.header-link{display:none
 .nav-item{margin:0}.sidebar-bottom{position:static;margin-top:12px}
 main{padding:35px 17px}.card-grid{grid-template-columns:1fr 1fr}
 }
-@media(max-width:650px){.ticket-form{grid-template-columns:1fr}.ticket-field.full{grid-column:auto}}
 @media(max-width:420px){.card-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -163,79 +141,22 @@ main{padding:35px 17px}.card-grid{grid-template-columns:1fr 1fr}
 
 <section class="page-section" id="section-tickets">
 <div class="section-heading">
-<div><h2>Sistema de Tickets</h2><p>Administración y personalización de tickets.</p></div>
-<span class="status">Configuración</span>
+<div><h2>Sistema de Tickets</h2><p>Configura el sistema de soporte de tu comunidad.</p></div>
+<span class="status"><span class="status-dot"></span>Configuración en Discord</span>
 </div>
 
 <div class="module-card">
-<div class="module-header"><div class="module-icon">▤</div><div><h3>Configuración general</h3><p>Project Zerox / Tickets</p></div></div>
-<div class="ticket-form">
-<div class="ticket-field full">
-<label for="ticketChannel">Canal donde se publicará el panel</label>
-<select class="ticket-select" id="ticketChannel"><option value="">Cargando canales...</option></select>
+<div class="module-header">
+<div class="module-icon">▤</div>
+<div><h3>Administración de Tickets</h3><p>Project Zerox / Tickets</p></div>
 </div>
-<div class="ticket-field full">
-<label>Roles de soporte</label>
-<div class="ticket-roles" id="ticketRoles">Cargando roles...</div>
+<p class="module-description">Configura el sistema de tickets directamente desde Discord. Prepara y publica un panel para que los miembros puedan contactar con el equipo de soporte.</p>
+<div style="margin-top:20px;padding:16px;background:#101010;border:1px solid #292929;border-radius:8px">
+<div style="color:#aaa;font-size:10px;letter-spacing:1.5px;margin-bottom:9px">CONFIGURACIÓN EN DISCORD</div>
+<p style="color:#ddd;font-size:12px;line-height:1.8">Utiliza <strong style="color:#fff">/ticket setup</strong> en tu servidor para configurar y publicar el panel de tickets.</p>
 </div>
-<div class="ticket-field">
-<label for="ticketEnabled">Sistema de tickets</label>
-<select class="ticket-select" id="ticketEnabled">
-<option value="true">Activado</option><option value="false">Desactivado</option>
-</select>
-</div>
-<div class="ticket-field">
-<label for="ticketColor">Color del mensaje</label>
-<input class="ticket-color" type="color" id="ticketColor" value="#5865F2">
-</div>
-</div>
-</div>
-
-<div class="module-card">
-<div class="module-header"><div class="module-icon">✎</div><div><h3>Mensaje público</h3><p>Mensaje que verán los miembros.</p></div></div>
-<div class="ticket-form">
-<div class="ticket-field full"><label for="ticketPublicTitle">Título</label><input class="ticket-input" id="ticketPublicTitle" maxlength="256"></div>
-<div class="ticket-field full"><label for="ticketPublicDesc">Descripción</label><textarea class="ticket-textarea" id="ticketPublicDesc" maxlength="4000"></textarea></div>
-</div>
-</div>
-
-<div class="module-card">
-<div class="module-header"><div class="module-icon">✉</div><div><h3>Mensaje de bienvenida</h3><p>Contenido que aparecerá al abrir un ticket.</p></div></div>
-<div class="ticket-form">
-<div class="ticket-field full"><label for="ticketWelcomeTitle">Título</label><input class="ticket-input" id="ticketWelcomeTitle" maxlength="256"></div>
-<div class="ticket-field full"><label for="ticketWelcomeDesc">Descripción</label><textarea class="ticket-textarea" id="ticketWelcomeDesc" maxlength="4000"></textarea></div>
-<div class="ticket-field full"><label for="ticketWelcomeOutside">Mensaje adicional</label><textarea class="ticket-textarea" id="ticketWelcomeOutside" maxlength="2000"></textarea></div>
-</div>
-</div>
-
-<div class="module-card">
-<div class="module-header"><div class="module-icon">⚙</div><div><h3>Botón de creación</h3><p>Personaliza el botón que abrirá los tickets.</p></div></div>
-<div class="ticket-form">
-<div class="ticket-field"><label for="ticketButtonText">Texto del botón</label><input class="ticket-input" id="ticketButtonText" maxlength="80"></div>
-<div class="ticket-field"><label for="ticketButtonEmoji">Emoji</label><input class="ticket-input" id="ticketButtonEmoji" maxlength="100"></div>
-<div class="ticket-field"><label for="ticketButtonStyle">Estilo</label><select class="ticket-select" id="ticketButtonStyle"><option>Primary</option><option>Secondary</option><option>Success</option></select></div>
-</div>
-</div>
-
-<div class="module-card">
-<div class="module-header"><div class="module-icon">◈</div><div><h3>Vista previa</h3><p>Vista aproximada del panel público.</p></div></div>
-<div class="ticket-preview">
-<div class="ticket-preview-label">PROJECT ZEROX / TICKET PREVIEW</div>
-<div class="preview-embed" id="ticketPreview">
-<h4 id="previewTitle">📩 Sistema de Tickets</h4>
-<p id="previewDescription">Para crear un ticket y hablar con soporte, presiona el botón de abajo.</p>
-<span class="preview-button" id="previewButton">📩 Crear Ticket</span>
-</div>
-</div>
-<div class="ticket-actions">
-<button class="button" id="saveTicketsButton" type="button">Guardar configuración</button>
-<button class="button" id="publishTicketsButton" type="button">Enviar mensaje</button>
-<button class="button secondary" id="reloadTicketsButton" type="button">Recargar</button>
-</div>
-<div class="ticket-message" id="ticketMessage">La configuración se guardará en Supabase.</div>
 </div>
 </section>
-
 <section class="page-section" id="section-boosttracker">
 <div class="section-heading"><div><h2>Boost Tracker</h2><p>Administración de notificaciones de mejoras.</p></div><span class="status">Módulo</span></div>
 <div class="module-card">
@@ -261,8 +182,7 @@ main{padding:35px 17px}.card-grid{grid-template-columns:1fr 1fr}
 <script>
 const API={
  serverInfo:"/api/server-info",
- authMe:"/api/auth/me",
- ticketConfig:"/api/tickets/config"
+ authMe:"/api/auth/me"
 };
 
 const params=new URLSearchParams(location.search);
@@ -270,7 +190,7 @@ const serverId=params.get("id");
 
 const pageData={
  general:{title:"General.",description:"Información y estadísticas de tu servidor."},
- tickets:{title:"Tickets.",description:"Administra el sistema de soporte de tu comunidad."},
+ tickets:{title:"Tickets.",description:"Configura el sistema de soporte de tu comunidad desde Discord."},
  boosttracker:{title:"Boost Tracker.",description:"Gestiona las notificaciones de mejoras del servidor."},
  welcome:{title:"Bienvenidas.",description:"Personaliza la experiencia de entrada de los miembros."}
 };
@@ -296,7 +216,6 @@ document.querySelectorAll(".nav-item").forEach(button=>{
 
   document.getElementById("sidebar").classList.remove("open");
 
-  if(section==="tickets")loadTickets();
  });
 });
 
@@ -431,350 +350,6 @@ async function loadUser(){
  }
 }
 
-const ticketDefaults={
- enabled:true,
- channelId:"",
- supportRoles:[],
- publicTitle:"📩 Sistema de Tickets",
- publicDesc:"Para crear un ticket y hablar con soporte, presiona el botón de abajo.",
- welcomeTitle:"Bienvenido/a a tu Ticket",
- welcomeDesc:"El equipo de soporte te atenderá en breve.",
- welcomeOutside:"Hola {mention}, gracias por abrir un ticket.",
- color:"#5865F2",
- buttonText:"Crear Ticket",
- buttonStyle:"Primary",
- buttonEmoji:"📩"
-};
-
-let ticketServerData={channels:[],roles:[]};
-let ticketLoadSequence=0;
-
-function ticketMessage(message,type=""){
- const el=document.getElementById("ticketMessage");
- el.textContent=message;
- el.className="ticket-message "+type;
-}
-
-function renderTicketRoles(selected=[]){
- const container=document.getElementById("ticketRoles");
- container.innerHTML="";
-
- const roles=ticketServerData.roles.filter(role=>
-  !role.managed&&role.name!=="@everyone"
- );
-
- if(!roles.length){
-  container.textContent="No hay roles disponibles.";
-  return;
- }
-
- roles.forEach(role=>{
-  const label=document.createElement("label");
-  label.className="ticket-role";
-
-  const input=document.createElement("input");
-  input.type="checkbox";
-  input.value=role.id;
-  input.checked=selected.includes(role.id);
-
-  const name=document.createElement("span");
-  name.textContent=role.name;
-
-  label.append(input,name);
-  container.appendChild(label);
- });
-}
-
-function renderTicketChannels(selected=""){
- const select=document.getElementById("ticketChannel");
- select.innerHTML="";
-
- const empty=document.createElement("option");
- empty.value="";
- empty.textContent="Selecciona un canal";
- select.appendChild(empty);
-
- ticketServerData.channels
-  .filter(channel=>channel.type===0)
-  .forEach(channel=>{
-   const option=document.createElement("option");
-   option.value=channel.id;
-   option.textContent="#"+channel.name;
-   select.appendChild(option);
-  });
-
- select.value=selected;
-}
-
-function fillTicketForm(config){
- const data={...ticketDefaults,...(config||{})};
-
- document.getElementById("ticketEnabled").value=String(data.enabled!==false);
- document.getElementById("ticketChannel").value=data.channelId||"";
- document.getElementById("ticketPublicTitle").value=data.publicTitle||"";
- document.getElementById("ticketPublicDesc").value=data.publicDesc||"";
- document.getElementById("ticketWelcomeTitle").value=data.welcomeTitle||"";
- document.getElementById("ticketWelcomeDesc").value=data.welcomeDesc||"";
- document.getElementById("ticketWelcomeOutside").value=data.welcomeOutside||"";
-
- document.getElementById("ticketColor").value=
-  /^#[0-9a-fA-F]{6}$/.test(data.color||"")?data.color:"#5865F2";
-
- document.getElementById("ticketButtonText").value=data.buttonText||"Crear Ticket";
- document.getElementById("ticketButtonEmoji").value=data.buttonEmoji||"";
-
- document.getElementById("ticketButtonStyle").value=
-  ["Primary","Secondary","Success"].includes(data.buttonStyle)?data.buttonStyle:"Primary";
-
- renderTicketRoles(Array.isArray(data.supportRoles)?data.supportRoles:[]);
- updateTicketPreview();
-}
-
-function collectTicketConfig(){
- const supportRoles=[
-  ...document.querySelectorAll("#ticketRoles input:checked")
- ].map(input=>input.value);
-
- return{
-  ...ticketDefaults,
-  enabled:document.getElementById("ticketEnabled").value==="true",
-  channelId:document.getElementById("ticketChannel").value,
-  supportRoles,
-  publicTitle:document.getElementById("ticketPublicTitle").value,
-  publicDesc:document.getElementById("ticketPublicDesc").value,
-  welcomeTitle:document.getElementById("ticketWelcomeTitle").value,
-  welcomeDesc:document.getElementById("ticketWelcomeDesc").value,
-  welcomeOutside:document.getElementById("ticketWelcomeOutside").value,
-  color:document.getElementById("ticketColor").value,
-  buttonText:document.getElementById("ticketButtonText").value,
-  buttonStyle:document.getElementById("ticketButtonStyle").value,
-  buttonEmoji:document.getElementById("ticketButtonEmoji").value
- };
-}
-
-function updateTicketPreview(){
- const title=document.getElementById("ticketPublicTitle").value;
- const description=document.getElementById("ticketPublicDesc").value;
- const button=document.getElementById("ticketButtonText").value;
- const emoji=document.getElementById("ticketButtonEmoji").value;
- const color=document.getElementById("ticketColor").value;
-
- setText("previewTitle",title||"Sistema de Tickets");
- setText("previewDescription",description||"Descripción del sistema de tickets.");
- setText("previewButton",(emoji?emoji+" ":"")+(button||"Crear Ticket"));
-
- document.getElementById("ticketPreview").style.borderLeftColor=color;
-}
-
-async function loadTickets(){
- if(!serverId){
-  ticketMessage("No se encontró el ID del servidor.","error");
-  return;
- }
-
- const sequence=++ticketLoadSequence;
-
- ticketMessage("Cargando canales, roles y configuración...");
-
- try{
-  const serverUrl=API.serverInfo+"?id="+encodeURIComponent(serverId);
-
-  console.log("[Zerox] Consultando servidor:",serverUrl);
-
-  const serverResponse=await fetch(serverUrl,{
-   credentials:"include",
-   headers:{Accept:"application/json"}
-  });
-
-  const serverData=await serverResponse.json();
-
-  console.log("[Zerox] Server info:",serverResponse.status,serverData);
-
-  if(!serverResponse.ok||!serverData.success){
-   throw new Error(
-    (serverData.error||"No se pudieron cargar los datos del servidor.")+
-    " | HTTP "+serverResponse.status
-   );
-  }
-
-  if(sequence!==ticketLoadSequence)return;
-
-  ticketServerData.channels=Array.isArray(serverData.channels)?serverData.channels:[];
-  ticketServerData.roles=Array.isArray(serverData.roles)?serverData.roles:[];
-
-  renderTicketChannels("");
-  renderTicketRoles([]);
-
-  const configUrl=API.ticketConfig+"?guildId="+encodeURIComponent(serverId);
-
-  console.log("[Zerox] Consultando configuración:",configUrl);
-  console.log("[Zerox] Guild ID:",serverId);
-
-  const configResponse=await fetch(configUrl,{
-   credentials:"include",
-   headers:{Accept:"application/json"}
-  });
-
-  const configData=await configResponse.json();
-
-  console.log("[Zerox] Config response:",configResponse.status,configData);
-
-  if(!configResponse.ok||!configData.success){
-   const details=[
-    configData.error||"No se pudo cargar la configuración.",
-    "HTTP "+configResponse.status,
-    configData.discordStatus?"Discord HTTP "+configData.discordStatus:null
-   ].filter(Boolean).join(" | ");
-
-   throw new Error(details);
-  }
-
-  if(sequence!==ticketLoadSequence)return;
-
-  renderTicketChannels(configData.config?.channelId||"");
-  fillTicketForm(configData.config||ticketDefaults);
-
-  ticketMessage(
-   configData.config
-    ?"Configuración cargada correctamente desde Supabase."
-    :"No hay configuración guardada desde el dashboard. Los valores iniciales son una referencia."
-  );
-
- }catch(error){
-  if(sequence!==ticketLoadSequence)return;
-
-  console.error("[Zerox] Error cargando tickets:",error);
-
-  ticketMessage(error.message||"Error al cargar tickets.","error");
-}
-
-}
-
-async function saveTickets(){
- const button=document.getElementById("saveTicketsButton");
-
- button.disabled=true;
- button.textContent="Guardando...";
-
- try{
-  const config=collectTicketConfig();
-
-  const response=await fetch(API.ticketConfig,{
-   method:"PUT",
-   credentials:"include",
-   headers:{
-    "Content-Type":"application/json",
-    Accept:"application/json"
-   },
-   body:JSON.stringify({guildId:serverId,config})
-  });
-
-  const data=await response.json();
-
-  if(!response.ok||!data.success){
-   throw new Error(
-    (data.error||"No se pudo guardar la configuración.")+
-    " | HTTP "+response.status
-   );
-  }
-
-  ticketMessage("Configuración guardada correctamente en Supabase.");
-  return true;
-
- }catch(error){
-  console.error("[Zerox] Error guardando tickets:",error);
-  ticketMessage(error.message||"Error al guardar.","error");
-  return false;
-
- }finally{
-  button.disabled=false;
-  button.textContent="Guardar configuración";
- }
-}
-
-async function publishTicketPanel(){
- const button=document.getElementById("publishTicketsButton");
-
- if(!serverId||!/^\d{17,20}$/.test(serverId)){
-  ticketMessage("El ID del servidor no es válido.","error");
-  return;
- }
-
- const config=collectTicketConfig();
-
- if(!config.channelId){
-  ticketMessage("Selecciona un canal antes de publicar.","error");
-  return;
- }
-
- if(!config.enabled){
-  ticketMessage("Activa el sistema de tickets antes de publicar.","error");
-  return;
- }
-
- button.disabled=true;
- button.textContent="Enviando...";
-
- try{
-  ticketMessage("Guardando configuración antes de publicar...");
-
-  const saved=await saveTickets();
-
-  if(!saved){
-   throw new Error("No se pudo guardar la configuración. No se publicó el panel.");
-  }
-
-  ticketMessage("Configuración guardada. Enviando solicitud a Zerox...");
-
-  const response=await fetch("/api/tickets/publish",{
-   method:"POST",
-   credentials:"include",
-   headers:{
-    "Content-Type":"application/json",
-    Accept:"application/json"
-   },
-   body:JSON.stringify({
-    guildId:serverId,
-    channelId:config.channelId
-   })
-  });
-
-  const data=await response.json();
-
-  if(!response.ok||!data.success){
-   throw new Error(
-    (data.error||"No se pudo enviar la solicitud.")+
-    " | HTTP "+response.status
-   );
-  }
-
-  ticketMessage(
-   "Solicitud enviada correctamente. Zerox publicará el panel en el canal seleccionado."
-  );
-
- }catch(error){
-  console.error("[Zerox] Error publicando panel:",error);
-  ticketMessage(error.message||"Error al publicar el panel.","error");
-
- }finally{
-  button.disabled=false;
-  button.textContent="Enviar mensaje";
- }
-}
-
-[
-    "ticketPublicTitle",
-    "ticketPublicDesc",
-    "ticketButtonText",
-    "ticketButtonEmoji",
-    "ticketColor"
-].forEach(id => {
-    document.getElementById(id).addEventListener("input", updateTicketPreview);
-});
-
-document.getElementById("saveTicketsButton").addEventListener("click", saveTickets);
-document.getElementById("publishTicketsButton").addEventListener("click", publishTicketPanel);
-document.getElementById("reloadTicketsButton").addEventListener("click", loadTickets);
 document.getElementById("retryButton").addEventListener("click", loadServer);
 
 loadUser();
